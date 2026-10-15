@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T19:28:31.478Z",
+    "updated": "2026-10-15T19:29:25.731Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
     "sites": [
@@ -131,7 +131,7 @@
         {
           "partId": "mv9xfurtg5v1",
           "partNo": "1100070787",
-          "name": "HEX BOLT",
+          "name": "HEX BOLTS",
           "qty": 1,
           "fig": "01-01",
           "item": "9",
@@ -206,6 +206,11 @@
         },
         {
           "ts": "2026-10-15T19:28:31.153Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T19:29:25.444Z",
           "user": "Fang Jiang",
           "kind": "edited"
         }
