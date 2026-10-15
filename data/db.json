@@ -3,7 +3,7 @@
     "version": 1,
     "updated": null,
     "updatedBy": null,
-    "nextReqNo": 4,
+    "nextReqNo": 2,
     "models": [
       {
         "code": "NFJ1175",
@@ -32,112 +32,82 @@
   "parts": [],
   "requests": [
     {
-      "id": "rq01",
+      "id": "rq0001",
       "no": "NFLG-0001",
-      "date": "2026-10-01",
-      "requester": "Sample requester",
-      "urgency": "high",
-      "status": "ordered",
-      "items": [
-        {
-          "partId": "",
-          "partNo": "NFJ1175-JAW-01",
-          "name": "Jaw plate, movable",
-          "qty": 2
-        }
-      ],
-      "reason": "Worn, replacement",
-      "needBy": "2026-11-15",
-      "quoteTotal": "USD 3,700",
-      "poNo": "PO-26-1042",
-      "shipping": "Matson (ocean)",
-      "eta": "2026-11-20",
-      "notes": "Sample data",
-      "history": [
-        {
-          "ts": "2026-10-01T18:00:00Z",
-          "user": "Sample requester",
-          "kind": "created"
-        },
-        {
-          "ts": "2026-10-03T19:30:00Z",
-          "user": "Fang",
-          "from": "requested",
-          "to": "quoting"
-        },
-        {
-          "ts": "2026-10-06T21:10:00Z",
-          "user": "Fang",
-          "from": "quoting",
-          "to": "ordered"
-        }
-      ],
+      "date": "2026-10-15",
+      "requester": "Fang Jiang",
       "model": "NFJ1175",
-      "unit": "Crusher #1"
-    },
-    {
-      "id": "rq02",
-      "no": "NFLG-0002",
-      "date": "2026-10-10",
-      "requester": "Sample requester",
-      "urgency": "urgent",
-      "status": "quoting",
-      "items": [
-        {
-          "partId": "",
-          "partNo": "NFJ1175-BRG-6320",
-          "name": "Main shaft bearing",
-          "qty": 1
-        }
-      ],
-      "reason": "Bearing noise",
-      "needBy": "2026-10-25",
-      "quoteTotal": "",
-      "poNo": "",
-      "shipping": "",
-      "eta": "",
-      "notes": "Sample data – comparing NFLG vs local SKF price",
-      "history": [
-        {
-          "ts": "2026-10-10T18:00:00Z",
-          "user": "Sample requester",
-          "kind": "created"
-        }
-      ],
-      "model": "NFJ1175",
-      "unit": "Crusher #1"
-    },
-    {
-      "id": "rq03",
-      "no": "NFLG-0003",
-      "date": "2026-10-12",
-      "requester": "Sample requester",
+      "unit": "NFJ1175YEUCQZG120067",
       "urgency": "normal",
       "status": "requested",
       "items": [
         {
           "partId": "",
-          "partNo": "NFS550-BURNER-NOZ",
-          "name": "Burner nozzle",
-          "qty": 2
+          "partNo": "1100070787",
+          "name": "HEX BOLT",
+          "qty": 1,
+          "fig": "01-01",
+          "item": "9",
+          "page": 11
+        },
+        {
+          "partId": "",
+          "partNo": "2100051935",
+          "name": "BEARING SPACER DRIVE SIDE",
+          "qty": 1,
+          "fig": "06-02-02",
+          "item": "4",
+          "page": 99
+        },
+        {
+          "partId": "",
+          "partNo": "2100051940",
+          "name": "OIL FLINGER",
+          "qty": 1,
+          "fig": "06-02-02",
+          "item": "7",
+          "page": 99
+        },
+        {
+          "partId": "",
+          "partNo": "1100031990",
+          "name": "WASHER",
+          "qty": 1,
+          "fig": "06-02-02",
+          "item": "8",
+          "page": 99
+        },
+        {
+          "partId": "",
+          "partNo": "1100070785",
+          "name": "HEX BOLT",
+          "qty": 1
+        },
+        {
+          "partId": "",
+          "partNo": "2100110406",
+          "name": "RETAINING WASHER",
+          "qty": 1,
+          "fig": "06-02-02",
+          "item": "11",
+          "page": 99
         }
       ],
-      "reason": "Spare",
-      "needBy": "",
+      "reason": "",
+      "needBy": "2026-11-15",
       "quoteTotal": "",
       "poNo": "",
       "shipping": "",
       "eta": "",
-      "notes": "Sample data",
+      "notes": "",
+      "photos": [],
       "history": [
         {
-          "ts": "2026-10-12T18:00:00Z",
-          "user": "Sample requester",
+          "ts": "2026-10-15T19:00:00Z",
+          "user": "Fang Jiang",
           "kind": "created"
         }
-      ],
-      "model": "NFS550",
-      "unit": "Screen #1"
+      ]
     }
   ],
   "service": [],
