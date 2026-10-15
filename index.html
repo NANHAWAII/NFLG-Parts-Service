@@ -108,10 +108,21 @@
   table.rq .trk a:hover{text-decoration:underline}
   #trk-go{margin-left:8px;font-weight:500}   /* carrier and number may sit on two lines; the number itself never breaks */
   table.rq tr.rowlink{cursor:pointer}
+  /* header as three rounded bands (No. | Request & parts | Procurement); white spacer columns between them */
+  table.rq tr:first-child th{background:var(--bg);border-bottom:0}
+  table.rq th.sp,table.rq td.sp{background:var(--panel)!important;padding:0!important;border:0!important}
+  table.rq tr:first-child th:first-child,table.rq tr:first-child th.sp+th{border-radius:8px 0 0 8px}
+  table.rq tr:first-child th:last-child,table.rq tr:first-child th:has(+th.sp){border-radius:0 8px 8px 0}
+  table.rq tr:first-child th.rqnoh{border-radius:8px}
+  table.rq{border-collapse:separate;border-spacing:0}
+  .panel.rq-panel{padding:6px 6px 2px}
+  table.rq td{border-bottom:1px solid var(--line)}
+  table.rq tr:last-child td{border-bottom:0}
+
   @media (max-width:1600px){ table.rq th,table.rq td{padding-left:8px;padding-right:8px} table.rq td.g.gl .sub{max-width:90px} table.rq .rqr{min-width:70px} }
   table.rq .fill{width:auto;padding:0}
   table.rq td.g.gl .sub{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  @media (min-width:1700px){ table.rq td.g.gl .sub{max-width:200px} table.rq th,table.rq td{padding-left:10px;padding-right:10px} }
+  @media (min-width:1700px){ table.rq td.g.gl .sub{max-width:200px} table.rq th,table.rq td{padding-left:8px;padding-right:8px} }
   table.rq td.num.g{padding-right:16px}
   table.rq .qty{font-weight:700;font-size:15.5px;color:var(--text)}
   table.rq td.g .iline{height:30px;line-height:30px}
@@ -658,14 +669,14 @@ function renderRequests(){
         <div class="rqc-items">${(r.items||[]).map(i=>`<div class="rqc-it"><span class="mono">${esc(i.partNo||'—')}</span><span class="rqc-nm">${esc(i.name||'')}</span><b>× ${esc(i.qty)}</b></div>`).join('')}</div>
         ${(r.poNo||r.shipping||r.eta||(r.files||[]).length)?`<div class="rqc-proc">${r.poNo?`<span>PO ${esc(r.poNo)}</span>`:''}${r.shipping?`<span>🚚 ${trackLink(r.shipping)}</span>`:''}${r.eta?`<span>ETA ${esc(r.eta)}</span>`:''}${(r.files||[]).map(f=>`<a href="${esc(docHref(f))}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📄 ${esc(f.name)}</a>`).join('')}</div>`:''}
       </div>`).join('')}</div>`:''}
-    ${false ? '' : `<div class="panel rq-panel">${list.length? `<table class="rq"><colgroup><col style="width:6%"><col style="width:5%"><col style="width:6%"><col style="width:8%"><col style="width:7.5%"><col style="width:7%"><col style="width:14.5%"><col style="width:3.5%"><col style="width:5%"><col style="width:12%"><col style="width:4.5%"><col style="width:21%"></colgroup><tr class="grph">${th('no','单号 No.','rqnoh').replace('<th ','<th rowspan="2" ')}<th colspan="7" class="gr">申请与配件 Request &amp; parts</th><th colspan="4">采购与物流 Procurement</th></tr><tr>${th('urgency','紧急度','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="c">附件</th></tr>
-      ${list.map(r=>`<tr class="rowlink" onclick="editRequest('${r.id}',null,event.target.closest('.pz')?'proc':'')"><td class="c rqno"><a href="#" onclick="event.stopPropagation();editRequest('${r.id}',null,'');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c">${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:`<span class="sub">${lbl(URGENCY,'normal')}</span>`}</td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span></td>
+    ${false ? '' : `<div class="panel rq-panel">${list.length? `<table class="rq"><colgroup><col style="width:6.94%"><col style="width:0.71%"><col style="width:4.94%"><col style="width:6.35%"><col style="width:6.59%"><col style="width:9.88%"><col style="width:6.12%"><col style="width:13.41%"><col style="width:3.06%"><col style="width:0.71%"><col style="width:6.82%"><col style="width:11.88%"><col style="width:5.65%"><col style="width:16.94%"></colgroup><tr>${th('no','单号 No.','rqnoh')}<th class="sp"></th>${th('urgency','紧急度','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th><th class="sp"></th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="c">附件</th></tr>
+      ${list.map(r=>`<tr class="rowlink" onclick="editRequest('${r.id}',null,event.target.closest('.pz')?'proc':'')"><td class="c rqno"><a href="#" onclick="event.stopPropagation();editRequest('${r.id}',null,'');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="sp"></td><td class="c">${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:`<span class="sub">${lbl(URGENCY,'normal')}</span>`}</td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span></td>
         <td class="rqr">${esc(r.requester)}</td>
         <td class="g gl c"><b>${esc(r.model||'')}</b>${r.unit?`<div class="sub" title="${esc(r.unit)}">${esc(r.unit)}</div>`:''}</td>
         <td class="g mono c">${(r.items||[]).map(i=>`<div class="iline">${esc(i.partNo||'—')}</div>`).join('')}</td>
         <td class="g nm">${(r.items||[]).map(i=>`<div class="iline" title="${esc(i.name||'')}">${esc(i.name||'')}</div>`).join('')}</td>
         <td class="g gr num c">${(r.items||[]).map(i=>`<div class="iline qty">× ${esc(i.qty)}</div>`).join('')}</td>
-        <td class="mono c pc pz">${esc(r.poNo)}</td><td class="mono trk pz">${trackLink(r.shipping)}</td><td class="c pz">${esc(r.eta)}</td><td class="fl pz">${(r.files||[]).map(f=>`<a href="${esc(docHref(f))}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${esc(f.name)}">${esc(f.name)}</a>`).join('')}</td>
+        <td class="sp pz"></td><td class="mono c pc pz">${esc(r.poNo)}</td><td class="mono trk pz">${trackLink(r.shipping)}</td><td class="c pz">${esc(r.eta)}</td><td class="fl pz">${(r.files||[]).map(f=>`<a href="${esc(docHref(f))}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${esc(f.name)}">${esc(f.name)}</a>`).join('')}</td>
         </tr>`).join('')}</table>` : `<div class="empty"><div class="ico">⚙</div>还没有申请。点「新申请」提交第一条。</div>`}</div>`}`;
 }
 function exportRequests(){ csv([['No','Date','Status','Urgency','Model','Requester','PartNo','Part','Qty','PO','ETA','Notes'],
