@@ -78,8 +78,8 @@
   table.rq .gr{border-right:2px solid color-mix(in srgb,var(--accent) 35%,transparent)}
   table.rq th.g{color:var(--accent)}
   table.rq .sub{font-size:12.5px;color:var(--muted);margin-top:3px}
-  table.rq .nm{width:1%;min-width:190px}
-  table.rq .nm .iline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:420px}
+  table.rq .nm{width:1%}
+  table.rq .nm .iline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:250px}
   table.rq .rqr{width:14%;min-width:80px}
   table.rq .trk{width:14%;white-space:nowrap}
   table.rq td.num.g{padding-right:16px}
@@ -432,7 +432,7 @@ function renderRequests(){
       ${list.map(r=>`<tr><td class="c"><a class="mono" href="#" onclick="editRequest('${r.id}');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.urgency!=='normal'?`<div style="margin-top:5px"><span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span></div>`:''}</td>
         <td class="g gl c"><b>${esc(r.model||'')}</b>${r.unit?`<div class="sub">${esc(r.unit)}</div>`:''}</td>
         <td class="g mono c">${(r.items||[]).map(i=>`<div class="iline">${esc(i.partNo||'—')}</div>`).join('')}</td>
-        <td class="g nm">${(r.items||[]).map(i=>`<div class="iline">${esc(i.name||'')}</div>`).join('')}${(r.photos||[]).length?`<small style="color:var(--muted)">📷 ${r.photos.length}</small>`:''}</td>
+        <td class="g nm">${(r.items||[]).map(i=>`<div class="iline" title="${esc(i.name||'')}">${esc(i.name||'')}</div>`).join('')}${(r.photos||[]).length?`<small style="color:var(--muted)">📷 ${r.photos.length}</small>`:''}</td>
         <td class="g gr num c">${(r.items||[]).map(i=>`<div class="iline qty">× ${esc(i.qty)}</div>`).join('')}</td>
         <td class="rqr">${esc(r.requester)}</td><td class="mono c">${esc(r.poNo)}</td><td class="mono trk">${esc(r.shipping||'')}</td><td class="c">${esc(r.eta)}</td>
         <td class="row-actions c"><button onclick="editRequest('${r.id}')">编辑</button></td></tr>`).join('')}</table>` : `<div class="empty"><div class="ico">⚙</div>还没有申请。点「新申请」提交第一条。</div>`}</div>`}`;
