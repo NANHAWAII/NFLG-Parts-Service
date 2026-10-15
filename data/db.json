@@ -1,9 +1,9 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T21:59:14.801Z",
+    "updated": "2026-10-15T22:01:44.441Z",
     "updatedBy": "Fang Jiang",
-    "nextReqNo": 2,
+    "nextReqNo": 3,
     "sites": [
       "Palamanui",
       "Waikoloa",
@@ -122,6 +122,19 @@
       "partNo": "1100025244",
       "nameZh": "",
       "nameEn": "SPLIT FLANG",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mva330ss49bk",
+      "partNo": "1100064561",
+      "nameZh": "",
+      "nameEn": "BOLT",
       "models": [
         "NFJ1175"
       ],
@@ -321,6 +334,38 @@
       "files": [],
       "materialCost": "0.00",
       "freightCost": ""
+    },
+    {
+      "id": "mva330ssjdbb",
+      "no": "NFLG-0002",
+      "date": "2026-10-15",
+      "status": "requested",
+      "history": [
+        {
+          "ts": "2026-10-15T22:01:44.140Z",
+          "user": "Fang Jiang",
+          "kind": "created"
+        }
+      ],
+      "requester": "Fang Jiang",
+      "unit": "NFJ1175YEUCQZG120067",
+      "model": "NFJ1175",
+      "urgency": "normal",
+      "items": [
+        {
+          "partId": "mva330ss49bk",
+          "partNo": "1100064561",
+          "name": "BOLT",
+          "qty": 1,
+          "fig": "01-01",
+          "item": "2",
+          "page": 11
+        }
+      ],
+      "reason": "",
+      "needBy": "",
+      "notes": "",
+      "photos": []
     }
   ],
   "service": [],
