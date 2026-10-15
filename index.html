@@ -171,15 +171,53 @@
   .hist{font-size:12px;color:var(--muted);max-height:120px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
   .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
   .filters select,.filters input{width:auto}
+  .rq-cards{display:none;gap:12px;grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+  @media (max-width:1250px){ .rq-panel{display:none} .rq-cards{display:grid} }
+  .rqc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow);cursor:pointer}
+  .rqc-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.rqc-no{font-weight:700;color:var(--accent);font-size:14px}
+  .rqc-meta{display:flex;align-items:baseline;gap:4px;margin:8px 0;font-size:14px;flex-wrap:wrap}
+  .rqc-items{background:color-mix(in srgb,var(--accent-soft) 55%,var(--panel));border-radius:9px;padding:4px 10px}
+  .rqc-it{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:6px 0;font-size:13.5px;align-items:center}
+  .rqc-it+.rqc-it{border-top:1px dashed color-mix(in srgb,var(--accent) 22%,transparent)}
+  .rqc-nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rqc-proc{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:13px;color:var(--muted)}
+  .modal{position:relative}
+  .mclose{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:15px;color:var(--muted)}
+  .mclose:hover{color:var(--text);border-color:var(--accent)}
+  .grid>*{min-width:0}
   @media (max-width: 900px){
-    .app{grid-template-columns:1fr}
-    nav{position:static;height:auto;flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--line)}
-    .brand{width:100%}
+    .app{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+    nav{position:sticky;top:0;z-index:30;height:auto;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:2px;padding:8px 10px;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
+    .brand{padding:0 10px 0 4px;font-size:15px;white-space:nowrap}.brand small{display:none}
+    nav button{padding:8px 10px;font-size:14px;white-space:nowrap;gap:6px}
+    nav #lang{margin:0 0 0 auto!important;padding:6px 10px}
     nav .spacer,.status{display:none}
-    .pipe{grid-template-columns:1fr 1fr}
     .grid{grid-template-columns:1fr}
-    main{padding:14px 16px}
-    table{font-size:12px}
+    main{padding:16px 14px 60px}
+    .topbar{gap:8px;margin-bottom:14px}.topbar h1{font-size:21px;flex-basis:100%}
+    .topbar .search{max-width:none;flex:1;min-width:0}
+    input,select,textarea{font-size:16px!important}   /* stops iPhone zooming in when a field is tapped */
+    .overlay{padding:0}
+    .modal{border-radius:0;min-height:100%;max-width:none;padding:18px 16px 28px}
+    .sec{padding:14px 12px}
+    .docwrap{max-width:none}
+    .dochead{flex-wrap:wrap}
+  }
+  @media (max-width: 600px){
+    .items table,.items tbody{display:block}
+    .items tr:first-child{display:none}
+    .items tr{display:grid;grid-template-columns:1fr 76px 40px;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+    .items td{padding:0!important;border:0}
+    .items td.pncell{grid-column:1/-1}
+    .items td:nth-child(2){grid-column:1/2}
+    .pn-dd{min-width:0;left:0;right:0}
+    .pn-opt{grid-template-columns:96px 1fr}.pn-fig{display:none}
+    .doctab .dm{display:none}
+    .sec-act .hint{display:none}
+    .rq-cards{grid-template-columns:1fr}
+    .brand{display:none}
+    nav .count{display:none}
+    .mclose{position:sticky;float:right;top:10px;z-index:5;margin:-4px -4px 0 0}
   }
   @media print{ nav,.topbar .btn,.row-actions,.filters{display:none!important} .app{display:block} main{padding:0} }
 </style>
@@ -484,7 +522,13 @@ function renderRequests(){
       <select onchange="sessionStorage.setItem('f.status',this.value);render()">${opts([['','全部状态 All']].concat(STATUSES), st)}</select>
       <span style="flex:1"></span>
 </div>
-    ${false ? '' : `<div class="panel">${list.length? `<table class="rq"><colgroup><col style="width:7%"><col style="width:7%"><col style="width:8%"><col style="width:9%"><col style="width:10%"><col style="width:9%"><col style="width:14%"><col style="width:5%"><col style="width:9%"><col style="width:11%"><col style="width:7%"><col style="width:4%"></colgroup><tr>${th('no','单号 No.','c')}${th('urgency','紧急度','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="c">附件</th></tr>
+    ${list.length?`<div class="rq-cards">${list.map(r=>`<div class="rqc" onclick="editRequest('${r.id}')">
+        <div class="rqc-top"><span class="mono rqc-no">${esc(r.no)}</span><span class="sub">${esc(r.date)}</span><span style="flex:1"></span>${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:''}<span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span></div>
+        <div class="rqc-meta"><b>${esc(r.model||'')}</b>${r.unit?` · <span class="sub" style="display:inline">${esc(r.unit)}</span>`:''}<span style="flex:1"></span><span class="sub" style="display:inline">${esc(r.requester||'')}</span></div>
+        <div class="rqc-items">${(r.items||[]).map(i=>`<div class="rqc-it"><span class="mono">${esc(i.partNo||'—')}</span><span class="rqc-nm">${esc(i.name||'')}</span><b>× ${esc(i.qty)}</b></div>`).join('')}</div>
+        ${(r.poNo||r.shipping||r.eta||(r.files||[]).length)?`<div class="rqc-proc">${r.poNo?`<span>PO ${esc(r.poNo)}</span>`:''}${r.shipping?`<span>🚚 ${esc(r.shipping)}</span>`:''}${r.eta?`<span>ETA ${esc(r.eta)}</span>`:''}${(r.files||[]).length?`<span>📎 ${r.files.length}</span>`:''}</div>`:''}
+      </div>`).join('')}</div>`:''}
+    ${false ? '' : `<div class="panel rq-panel">${list.length? `<table class="rq"><colgroup><col style="width:7%"><col style="width:7%"><col style="width:8%"><col style="width:9%"><col style="width:10%"><col style="width:9%"><col style="width:14%"><col style="width:5%"><col style="width:9%"><col style="width:11%"><col style="width:7%"><col style="width:4%"></colgroup><tr>${th('no','单号 No.','c')}${th('urgency','紧急度','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="c">附件</th></tr>
       ${list.map(r=>`<tr class="rowlink" onclick="editRequest('${r.id}')" title="Open"><td class="c"><a class="mono" href="#" onclick="event.stopPropagation();editRequest('${r.id}');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c">${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:`<span class="sub">${lbl(URGENCY,'normal')}</span>`}</td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span></td>
         <td class="rqr">${esc(r.requester)}</td>
         <td class="g gl c"><b>${esc(r.model||'')}</b>${r.unit?`<div class="sub" title="${esc(r.unit)}">${esc(r.unit)}</div>`:''}</td>
@@ -704,7 +748,7 @@ function downloadJson(){ const a=document.createElement('a'); a.href=URL.createO
 function uploadJson(){ const inp=document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange=async()=>{ try{ const j=JSON.parse(await inp.files[0].text()); if(!j.parts||!j.requests) throw new Error('不是本系统的 db.json'); snapshot(); db=Object.assign(emptyDb(),j); markDirty(); render(); toast('已恢复，记得保存'); }catch(e){alert(e.message);} }; inp.click(); }
 
 /* ============ modals ============ */
-function openModal(html){ $('#modal').innerHTML=L(html); $('#overlay').classList.add('open'); const f=$('#modal').querySelector('input,select,textarea'); if(f) f.focus(); }
+function openModal(html){ $('#modal').innerHTML='<button class="mclose" onclick="closeModal()" aria-label="Close">✕</button>'+L(html); $('#overlay').classList.add('open'); const f=$('#modal').querySelector('input,select,textarea'); if(f) f.focus(); }
 function closeModal(){ $('#overlay').classList.remove('open'); }
 $('#overlay').onclick=e=>{ if(e.target.id==='overlay') closeModal(); };
 const field=(id,label,inner)=>`<div><label class="f" for="${id}">${label}</label>${inner}</div>`;
