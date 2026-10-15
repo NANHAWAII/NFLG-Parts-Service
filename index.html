@@ -1017,7 +1017,7 @@ function exportRequestPDF(id){
   const imgs=[...el.querySelectorAll('img')].filter(i=>!i.complete);
   Promise.all(imgs.map(i=>new Promise(ok=>{ i.onload=i.onerror=ok; setTimeout(ok,4000); }))).then(()=>setTimeout(()=>window.print(),50));
 }
-function itemMeta(i){ const model=$('#r-model')?.value; if(!i.fig) return ''; const lk=i.page?manualLink(model,i.page):'';
+function itemMeta(i){ const model=$('#r-model')?.value; if(!i.fig) return '<div class="imeta">&nbsp;</div>'; const lk=i.page?manualLink(model,i.page):'';
   return `<div class="imeta">手册图 ${esc(i.fig)}${i.item?' 项 '+esc(i.item):''}${i.page?(lk?` · <a href="${esc(lk)}" target="_blank" title="Open manual page">p.${esc(i.page)}</a>`:` · p.${esc(i.page)}`):''}</div>`; }
 function renderItems(){
   $('#items').innerHTML = L(`<table><tr><th style="width:170px">零件号 Part No.</th><th>名称 / 描述</th><th style="width:84px">数量</th><th style="width:48px"></th></tr>
