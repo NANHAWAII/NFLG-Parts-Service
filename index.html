@@ -69,10 +69,10 @@
   .iline{height:24px;line-height:24px;white-space:nowrap}
   td .iline+.iline{margin-top:4px}
   td.nw,td.nw small{white-space:nowrap}
-  .panel:has(> table.rq){overflow-x:auto;width:fit-content;max-width:100%}
-  table.rq{width:auto}
-  table.rq th,table.rq td{padding:11px 8px}
-  table.rq .c{white-space:nowrap;width:1%}
+  .panel:has(> table.rq){overflow-x:auto}
+  table.rq{width:100%;min-width:1100px}
+  table.rq th,table.rq td{padding:12px 12px}
+  table.rq .c{white-space:nowrap}
   table.rq .g{background:color-mix(in srgb,var(--accent-soft) 55%,var(--panel))}
   table.rq th.g{background:color-mix(in srgb,var(--accent-soft) 55%,var(--panel))}
   table.rq .gl{border-left:2px solid color-mix(in srgb,var(--accent) 35%,transparent)}
@@ -80,11 +80,11 @@
   table.rq th{background:var(--panel);color:var(--muted);font-size:11.5px;letter-spacing:.06em;padding-top:12px;padding-bottom:12px;border-bottom:1px solid var(--line);vertical-align:bottom}
   table.rq th.g{color:color-mix(in srgb,var(--accent) 70%,var(--muted))}
   table.rq .sub{font-size:12.5px;color:var(--muted);margin-top:3px}
-  table.rq .nm{width:1%}
-  table.rq .nm .iline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:228px}
-  table.rq .rqr{width:1%;min-width:92px;white-space:nowrap}
+  table.rq .nm .iline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  table.rq td.nm{max-width:0}
+  table.rq .rqr{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0}
   table.rq .pc{padding-left:16px}
-  table.rq .trk{width:1%;white-space:nowrap}
+  table.rq .trk{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0}
   table.rq tr.rowlink{cursor:pointer}
   table.rq .fill{width:auto;padding:0}
   table.rq td.g.gl .sub{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -484,7 +484,7 @@ function renderRequests(){
       <select onchange="sessionStorage.setItem('f.status',this.value);render()">${opts([['','全部状态 All']].concat(STATUSES), st)}</select>
       <span style="flex:1"></span>
 </div>
-    ${false ? '' : `<div class="panel">${list.length? `<table class="rq"><tr>${th('no','单号 No.','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="c">附件</th></tr>
+    ${false ? '' : `<div class="panel">${list.length? `<table class="rq"><colgroup><col style="width:7%"><col style="width:8%"><col style="width:11%"><col style="width:10%"><col style="width:9%"><col style="width:15%"><col style="width:5%"><col style="width:9%"><col style="width:14%"><col style="width:7%"><col style="width:5%"></colgroup><tr>${th('no','单号 No.','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="c">附件</th></tr>
       ${list.map(r=>`<tr class="rowlink" onclick="editRequest('${r.id}')" title="Open"><td class="c"><a class="mono" href="#" onclick="event.stopPropagation();editRequest('${r.id}');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.urgency!=='normal'?`<div style="margin-top:5px"><span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span></div>`:''}</td>
         <td class="rqr">${esc(r.requester)}</td>
         <td class="g gl c"><b>${esc(r.model||'')}</b>${r.unit?`<div class="sub" title="${esc(r.unit)}">${esc(r.unit)}</div>`:''}</td>
