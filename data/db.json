@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T21:56:53.965Z",
+    "updated": "2026-10-15T21:59:14.801Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
     "sites": [
@@ -136,7 +136,7 @@
       "id": "rq0001",
       "no": "NFLG-0001",
       "date": "2026-10-15",
-      "requester": "Kanoa Jones",
+      "requester": "Micah Brandt",
       "model": "NFJ1175",
       "unit": "NFJ1175YEUCQZG120067",
       "urgency": "high",
@@ -309,6 +309,11 @@
         },
         {
           "ts": "2026-10-15T21:56:53.439Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T21:59:14.493Z",
           "user": "Fang Jiang",
           "kind": "edited"
         }
