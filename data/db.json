@@ -1,9 +1,9 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:03:20.511Z",
+    "updated": "2026-10-15T22:03:32.892Z",
     "updatedBy": "Fang Jiang",
-    "nextReqNo": 4,
+    "nextReqNo": 5,
     "sites": [
       "Palamanui",
       "Waikoloa",
@@ -148,6 +148,19 @@
       "partNo": "1100025200",
       "nameZh": "",
       "nameEn": "PRESSURE GAUGE- 0-160 BAR",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mva35cgd2m1g",
+      "partNo": "1100025151",
+      "nameZh": "",
+      "nameEn": "DESSICANT AIR BREATHER",
       "models": [
         "NFJ1175"
       ],
@@ -373,6 +386,38 @@
           "fig": "08-02",
           "item": "4",
           "page": 121
+        }
+      ],
+      "reason": "",
+      "needBy": "",
+      "notes": "",
+      "photos": []
+    },
+    {
+      "id": "mva35cgdytic",
+      "no": "NFLG-0004",
+      "date": "2026-10-15",
+      "status": "requested",
+      "history": [
+        {
+          "ts": "2026-10-15T22:03:32.557Z",
+          "user": "Fang Jiang",
+          "kind": "created"
+        }
+      ],
+      "requester": "Fang Jiang",
+      "unit": "NFJ1175YEUCQZG120067",
+      "model": "NFJ1175",
+      "urgency": "normal",
+      "items": [
+        {
+          "partId": "mva35cgd2m1g",
+          "partNo": "1100025151",
+          "name": "DESSICANT AIR BREATHER",
+          "qty": 1,
+          "fig": "08-07",
+          "item": "3",
+          "page": 151
         }
       ],
       "reason": "",
