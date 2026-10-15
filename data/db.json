@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T23:05:07.263Z",
+    "updated": "2026-10-15T23:09:56.589Z",
     "updatedBy": "Micah Brandt",
     "nextReqNo": 5,
     "sites": [
@@ -233,6 +233,19 @@
       "stock": 0,
       "minStock": "",
       "currency": "USD"
+    },
+    {
+      "id": "mva5iqaevtwb",
+      "partNo": "1100027885",
+      "nameZh": "",
+      "nameEn": "HELICOIL INSERT",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
     }
   ],
   "requests": [
@@ -283,10 +296,13 @@
           "page": 99
         },
         {
-          "partId": "mv9xfurtpczu",
-          "partNo": "1100070785",
-          "name": "HEX BOLT",
-          "qty": 2
+          "partId": "mva5iqaevtwb",
+          "partNo": "1100027885",
+          "name": "HELICOIL INSERT",
+          "qty": 2,
+          "fig": "06-02-02",
+          "item": "10",
+          "page": 99
         },
         {
           "partId": "mv9xfurtcx72",
@@ -494,6 +510,11 @@
         {
           "ts": "2026-10-15T23:04:18.053Z",
           "user": "Fang Jiang",
+          "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T23:09:56.246Z",
+          "user": "Micah Brandt",
           "kind": "edited"
         }
       ],
