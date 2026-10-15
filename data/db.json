@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T20:45:53.748Z",
+    "updated": "2026-10-15T20:49:05.857Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
     "sites": [
@@ -196,7 +196,7 @@
       ],
       "reason": "",
       "needBy": "2026-10-30",
-      "quoteTotal": "",
+      "quoteTotal": "10",
       "poNo": "",
       "shipping": "",
       "eta": "",
@@ -277,6 +277,11 @@
         },
         {
           "ts": "2026-10-15T20:45:51.892Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T20:49:05.360Z",
           "user": "Fang Jiang",
           "kind": "edited"
         }
