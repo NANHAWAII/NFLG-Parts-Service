@@ -350,7 +350,8 @@
   @media print{
     body.printing > *:not(#print-area){display:none!important}
     body.printing #print-area{display:block!important}
-    @page{size:letter;margin:14mm}
+    @page{size:letter;margin:0}   /* no browser header/footer (date, title, URL) */
+    body.printing #print-area{padding:14mm 14mm}
     html,body.printing{background:#fff!important}
   }
   #print-area{font:12px/1.45 Inter,Arial,sans-serif;color:#111;background:#fff}
@@ -1120,9 +1121,8 @@ function exportRequestPDF(id){
     <table><tr><th style="width:28px">#</th><th style="width:120px">${t('零件号','Part No.')}</th><th>${t('名称 / 描述','Name / description')}</th><th class="q">${t('数量','Qty')}</th><th style="width:150px">${t('手册位置','Manual ref.')}</th></tr>
       ${items.map((i,k)=>`<tr><td>${k+1}</td><td class="mono">${esc(i.partNo||'')}</td><td>${esc(i.name||'')}</td><td class="q">${esc(i.qty??'')}</td><td style="white-space:nowrap">${ref(i)}</td></tr>`).join('')}</table>
     ${(r.reason||r.notes)?`<h3>${t('原因 / 备注','Reason / notes')}</h3><div class="txt">${esc([r.reason,r.notes].filter(Boolean).join('\n'))}</div>`:''}
-    ${proc?`<h3>${t('采购与物流','Procurement & shipping')}</h3><div class="kv">${proc}</div>`:''}
     ${(r.photos||[]).length?`<h3>${t('照片','Photos')}</h3><div class="photos">${r.photos.map(p=>`<img src="${esc(rawHref(p))}">`).join('')}</div>`:''}
-    <div class="foot">${t('导出时间','Exported')} ${new Date().toLocaleString()}</div>`;
+    `;
   let el=$('#print-area'); if(!el){ el=document.createElement('div'); el.id='print-area'; document.body.appendChild(el); }
   el.innerHTML=html.replace(/[]/g,'');
   const title=document.title, done=()=>{ document.body.classList.remove('printing'); document.title=title; window.removeEventListener('afterprint',done); };
