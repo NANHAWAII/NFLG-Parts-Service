@@ -109,13 +109,14 @@
   #trk-go{margin-left:8px;font-weight:500}   /* carrier and number may sit on two lines; the number itself never breaks */
   table.rq tr.rowlink{cursor:pointer}
   /* one continuous header band; small dividers inside it mark the three parts (No. | Request & parts | Procurement) */
-  table.rq tr:first-child th{background:var(--bg);border-bottom:0}
-  table.rq tr:first-child th:first-child{border-radius:8px 0 0 8px}
-  table.rq tr:first-child th:last-child{border-radius:0 8px 8px 0}
+  table.rq tr:first-child th{background:var(--bg)}
+  table.rq tr:first-child th{border-bottom:1px solid var(--line)}
+  table.rq tr:first-child th:first-child,table.rq td:first-child{padding-left:16px}
+  table.rq tr:first-child th:last-child,table.rq td:last-child{padding-right:16px}
   table.rq th.sp,table.rq td.sp{padding:0!important;position:relative}
   table.rq th.sp::after{content:'';position:absolute;left:50%;top:50%;width:1px;height:18px;transform:translateY(-50%);background:color-mix(in srgb,var(--muted) 45%,transparent)}
   table.rq{border-collapse:separate;border-spacing:0}
-  .panel.rq-panel{padding:6px 6px 2px}
+  .panel.rq-panel{padding:0;overflow-x:auto}
   table.rq td{border-bottom:1px solid var(--line)}
   table.rq tr:last-child td{border-bottom:0}
 
