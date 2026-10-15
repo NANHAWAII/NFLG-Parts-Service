@@ -241,6 +241,7 @@ S = [
  ('— 工地/站点 —', '— 工地/站点 —', '— site —'), ('— 机型 Model —', '— 机型 —', '— model —'), ('— 选择设备 —', '— 选择设备 —', '— equipment —'),
  ('(库存 ', '(库存 ', '(stock '),
  ('导出 PDF', '导出 PDF', 'Export PDF'),
+ ('查询 Track ↗', '查询 ↗', 'Track ↗'),
  ('申请与配件 Request &amp; parts', '申请与配件', 'Request &amp; parts'), ('采购与物流 Procurement', '采购与物流', 'Procurement'),
  ('报价单 Parts Quote', '报价单', 'Parts Quote'), ('运费发票 Freight Invoice', '运费发票', 'Freight Invoice'), ('清关文件 Customs Docs', '清关文件', 'Customs Docs'), ('其他 Other', '其他', 'Other'), ('＋ 上传', '＋ 上传', '＋ Upload'),
  ('照片 Photos', '照片', 'Photos'), ('添加照片', '添加照片', 'Add photos'), ('已选 ', '已选 ', 'Selected: '),
