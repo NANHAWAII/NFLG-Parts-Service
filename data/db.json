@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T23:03:45.877Z",
+    "updated": "2026-10-15T23:04:08.559Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 4,
     "sites": [
@@ -474,15 +474,6 @@
         }
       ],
       "files": [
-        {
-          "path": "attachments/NFLG-0001/1792102155703-ONEYSHAGCN223500_Customs Docs.pdf",
-          "sha": "64b62b77a8bb1ebbbd8fce3cf786bd0bdfbbb153",
-          "name": "ONEYSHAGCN223500_Customs Docs.pdf",
-          "size": 301247,
-          "ts": "2026-10-15T22:09:17.796Z",
-          "user": "Fang Jiang",
-          "cat": "quote"
-        },
         {
           "path": "attachments/NFLG-0001/1792102161824-ONEYTAOGF0288300_Cutoms Docs.pdf",
           "sha": "dfd312f8377cd7f74a10adca109a8bac3863b37d",
