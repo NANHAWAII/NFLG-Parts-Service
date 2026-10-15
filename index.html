@@ -135,6 +135,8 @@
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 18px}
   .grid .full{grid-column:1/-1}
   .docwrap{max-width:1100px}
+  .setwrap{max-width:860px}
+  .setwrap .panel{margin-bottom:16px}
   .dochead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:4px 0 14px}
   .dochead .dt{font-size:18px;font-weight:700}.dochead .dt span{font-weight:400;color:var(--muted);font-size:15px;margin-left:6px}
   .dochead .ds{font-size:13px;color:var(--muted);margin-top:2px}
@@ -216,7 +218,7 @@
     .modal .actions{margin:12px 0 16px}
     .modal .actions.stick{position:sticky;bottom:0;z-index:5;background:var(--panel);margin:12px -14px 0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
     .note{margin-bottom:12px;padding:8px 12px;font-size:13px}
-    .docwrap{max-width:none}
+    .docwrap,.setwrap{max-width:none}
     .dochead{flex-wrap:wrap}
   }
   @media (max-width: 600px){
@@ -774,7 +776,7 @@ async function deleteFromRepo(path, sha){
 }
 
 function renderSettings(){
-  return `<div class="panel"><h2>GitHub 连接 Connection</h2><div style="padding:14px">
+  return `<div class="setwrap"><div class="panel"><h2>GitHub 连接 Connection</h2><div style="padding:14px">
     <div class="note">数据保存在同一个仓库的 <code>${DATA_PATH}</code>。浏览只需打开 Pages 链接；要编辑/保存需要一个有该仓库 <b>Contents: Read &amp; write</b> 权限的 fine-grained token，token 只存在你这台电脑的浏览器里。</div>
     <div class="grid">
       <div><label class="f">Owner (org / user)</label><input type="text" id="g-owner" value="${esc(gh.owner||'')}" placeholder="NANHAWAII"></div>
@@ -793,7 +795,7 @@ function renderSettings(){
     <button class="btn" onclick="downloadJson()">下载 db.json 备份</button>
     <button class="btn" onclick="uploadJson()">从 JSON 恢复</button>
     <button class="btn" onclick="const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;localStorage.setItem('nflg.theme',t)">切换深色/浅色</button>
-  </div></div>`;
+  </div></div></div>`;
 }
 function saveGh(){ Object.assign(gh,{owner:$('#g-owner').value.trim(),repo:$('#g-repo').value.trim(),branch:$('#g-branch').value.trim()||'main',user:$('#g-user').value.trim(),token:$('#g-token').value.trim()}); localStorage.setItem('nflg.gh',JSON.stringify(gh)); toast('已保存连接设置'); render(); }
 function teamLink(){ if(!gh.token||!gh.owner||!gh.repo) return alert('先填好 Owner / Repo / Token 并保存'); const t=btoa(JSON.stringify({owner:gh.owner,repo:gh.repo,branch:gh.branch||'main',token:gh.token})).replace(/\+/g,'-').replace(/\//g,'_'); const url=location.origin+location.pathname+'#t='+t; $('#team-link').value=url; navigator.clipboard?.writeText(url).then(()=>toast('已复制到剪贴板')).catch(()=>{}); }
