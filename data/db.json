@@ -33,7 +33,7 @@
   "requests": [
     {
       "id": "rq01",
-      "no": "PR-0001",
+      "no": "NFLG-0001",
       "date": "2026-10-01",
       "requester": "Sample requester",
       "urgency": "high",
@@ -77,7 +77,7 @@
     },
     {
       "id": "rq02",
-      "no": "PR-0002",
+      "no": "NFLG-0002",
       "date": "2026-10-10",
       "requester": "Sample requester",
       "urgency": "urgent",
@@ -109,7 +109,7 @@
     },
     {
       "id": "rq03",
-      "no": "PR-0003",
+      "no": "NFLG-0003",
       "date": "2026-10-12",
       "requester": "Sample requester",
       "urgency": "normal",

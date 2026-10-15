@@ -7,7 +7,7 @@ index.html                   站点（全部逻辑在这一个文件里）
 data/db.json                 数据：申请 / 机型 / 文档记录
 data/manual-index/<机型>.json 零配件手册索引（申请时「查手册」用）
 docs/<机型>/                  上传的手册、图纸（通过网页上传）
-attachments/PR-xxxx/          申请附带的照片（网页自动压缩后上传）
+attachments/NFLG-xxxx/          申请附带的照片（网页自动压缩后上传）
 tools/build_manual_index.py  从零配件手册 PDF 生成索引的脚本
 README.md
 ```
@@ -52,7 +52,7 @@ python tools/build_manual_index.py "NFS550 Spare Parts Manual.pdf" NFS550 > data
 
 | 模块 | 内容 |
 |---|---|
-| 配件申请 Requests | 单号自动生成 (PR-0001…)，状态流：已申请 → 询价中 → 已下单 → 在途 → 已到货 → 关闭；采购部看板拖拽改状态；采购字段（报价、PO#、运输单号、ETA）；每条申请带进度记录、照片 |
+| 配件申请 Requests | 单号自动生成 (NFLG-0001…)，状态流：已申请 → 询价中 → 已下单 → 在途 → 已到货 → 关闭；采购部看板拖拽改状态；采购字段（报价、PO#、运输单号、ETA）；每条申请带进度记录、照片 |
 | 文档库 Documents | 按机型存放手册、图纸、选型文件；零配件手册索引支持申请时按名称查零件号 |
 | 设置 Settings | GitHub 连接、角色、团队链接、站点列表、公告、备份 / 恢复、深色模式 |
 

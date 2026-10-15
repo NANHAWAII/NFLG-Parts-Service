@@ -729,9 +729,9 @@ async function saveRequest(id){
   const btn=$('#r-save'); btn.disabled=true;
   let photos=[];
   if(draftPhotos.length){ if(!gh.token){ alert('上传照片需要通过团队链接打开本页（或配置 token）。本次先不带照片提交。'); }
-    else for(const [k,f] of draftPhotos.entries()){ btn.textContent=L(`上传照片 ${k+1}/${draftPhotos.length}…`); try{ const blob=await compressImage(f); const path=`attachments/${(id? db.requests.find(x=>x.id===id).no : 'PR-'+String(db.meta.nextReqNo||1).padStart(4,'0'))}/${Date.now()}-${k}.jpg`; const up=await uploadToRepo(path,blob); photos.push({path:up.path,sha:up.sha,name:f.name}); }catch(e){ alert('照片上传失败：'+e.message); } } }
+    else for(const [k,f] of draftPhotos.entries()){ btn.textContent=L(`上传照片 ${k+1}/${draftPhotos.length}…`); try{ const blob=await compressImage(f); const path=`attachments/${(id? db.requests.find(x=>x.id===id).no : 'NFLG-'+String(db.meta.nextReqNo||1).padStart(4,'0'))}/${Date.now()}-${k}.jpg`; const up=await uploadToRepo(path,blob); photos.push({path:up.path,sha:up.sha,name:f.name}); }catch(e){ alert('照片上传失败：'+e.message); } } }
   snapshot(); let r; const isNew=!id;
-  if(id) r=db.requests.find(x=>x.id===id); else { const n=db.meta.nextReqNo||1; db.meta.nextReqNo=n+1; r={id:uid(),no:'PR-'+String(n).padStart(4,'0'),date:today(),status:'requested',history:[{ts:new Date().toISOString(),user:me(),kind:'created'}]}; db.requests.push(r); }
+  if(id) r=db.requests.find(x=>x.id===id); else { const n=db.meta.nextReqNo||1; db.meta.nextReqNo=n+1; r={id:uid(),no:'NFLG-'+String(n).padStart(4,'0'),date:today(),status:'requested',history:[{ts:new Date().toISOString(),user:me(),kind:'created'}]}; db.requests.push(r); }
   const prev=r.status;
   if(!v('model')) return toast('请选择机型'); Object.assign(r,{requester:v('req'),unit:v('unit'),model:v('model'),urgency:v('urg'),items,reason:v('reason'),needBy:v('need'),notes:v('notes'),photos:[...(r.photos||[]),...photos]});
   if(isProc()) Object.assign(r,{status:v('status')||r.status,date:v('date')||r.date,quoteTotal:v('quote'),poNo:v('po'),shipping:v('ship'),eta:v('eta')});
