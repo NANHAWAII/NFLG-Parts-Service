@@ -4,7 +4,7 @@ import json, re, sys, pathlib
 
 S = [
  # nav / views
- ('NFLG Parts Service<small>南方路机配件服务 · Nan, Inc. 内部</small>', 'NFLG Parts Service<small>南方路机配件服务 · Nan, Inc. 内部</small>', 'NFLG Parts Service<small>Nan, Inc. internal · 南方路机 parts</small>'),
+ ('NFLG Parts Service<small>南方路机配件服务 · Nan, Inc. 内部</small>', 'NFLG Parts Service<small>南方路机配件服务 · Nan, Inc. 内部</small>', 'NFLG Parts Service<small>Nan, Inc. internal · NFLG parts</small>'),
  ('配件申请 Requests', '配件申请', 'Requests'),
  ('概览 Dashboard', '概览', 'Dashboard'),
  ('配件目录 Parts Catalog', '配件目录', 'Parts Catalog'),
@@ -106,7 +106,7 @@ S = [
  ('＋ 添加一行', '＋ 添加一行', '＋ Add line'),
  ('查手册 Find in parts manual', '查手册', 'Find in parts manual'),
  ('输入零件号、英文或中文名，如 jaw plate / 颚板 / 1100024929', '输入零件号、英文或中文名，如 jaw plate / 颚板 / 1100024929', 'Type a part number or name, e.g. jaw plate / 颚板 / 1100024929'),
- ('打开 ', '打开 ', 'Open '), ('零配件手册', '零配件手册', 'spare parts manual'),
+ ('请先在上面选择机型', '请先在上面选择机型', 'Select a model above first'), ('打开 ', '打开 ', 'Open '), ('零配件手册', '零配件手册', 'spare parts manual'),
  ('的零配件手册还没上传到文档库', '的零配件手册还没上传到文档库', ': spare parts manual not in Documents yet'),
  ('还没有手册索引（用 tools/build_manual_index.py 生成）', '还没有手册索引（用 tools/build_manual_index.py 生成）', ': no manual index yet (generate with tools/build_manual_index.py)'),
  ('· 装机数 ', '· 装机数 ', '· qty on machine '),
