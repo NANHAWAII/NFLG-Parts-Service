@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:58:07.618Z",
+    "updated": "2026-10-15T22:58:15.030Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 4,
     "sites": [
@@ -538,6 +538,11 @@
           "ts": "2026-10-15T22:58:07.287Z",
           "user": "Fang Jiang",
           "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T22:58:14.725Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
         }
       ],
       "requester": "Fang Jiang",
@@ -588,8 +593,8 @@
           "cat": "customs"
         }
       ],
-      "materialCost": "",
-      "freightCost": "",
+      "materialCost": "10.00",
+      "freightCost": "10.00",
       "poNo": "EQ-002-XXXX",
       "shipping": "",
       "eta": "2026-11-30"
