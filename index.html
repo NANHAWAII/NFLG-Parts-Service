@@ -78,16 +78,17 @@
   table.rq th,table.rq td{padding:12px 12px}
   table.rq .c{white-space:nowrap}
   table.rq .gl{border-left:0}
-  table.rq .gr{border-right:1px solid var(--line)}
+  table.rq .gr{border-right:0}
   table.rq th{background:var(--panel);color:var(--muted);font-size:11.5px;letter-spacing:.06em;padding-top:12px;padding-bottom:12px;border-bottom:1px solid var(--line);vertical-align:bottom}
   table.rq tr.grph th{font-size:11px;letter-spacing:.08em;color:var(--text);padding:9px 12px 0;border-bottom:0;vertical-align:bottom}
   table.rq tr.grph th::after{content:'';display:block;height:3px;border-radius:2px;margin-top:7px;background:var(--accent)}
   table.rq tr.grph th:last-child::after{background:#3fa66b}
-  table.rq tr.grph th:last-child{padding-left:16px}
+  /* three colour bars are the only group dividers: no vertical rules */
+  table.rq tr.grph th{padding-left:10px;padding-right:10px}
+  table.rq tr.grph th:not(:last-child)::after{margin-right:6px}
   table.rq tr.grph th.rqnoh{vertical-align:top;cursor:pointer}
   table.rq tr.grph th.rqnoh::after{background:var(--text)}
   /* request number: leads the whole row */
-  table.rq td.rqno{border-right:1px solid var(--line)}
   table.rq td.rqno a{font-size:17px;font-weight:800;color:var(--text);text-decoration:none;letter-spacing:.01em;white-space:nowrap}
   table.rq tr.rowlink:hover td.rqno a{color:var(--accent)}
   table.rq td.rqno .sub{margin-top:4px}
@@ -95,7 +96,7 @@
   table.rq .nm .iline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
   table.rq td.nm{max-width:0}
   table.rq .rqr{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0}
-  table.rq .pc{padding-left:16px;white-space:nowrap}
+  table.rq .pc{white-space:nowrap}
   table.rq td.fl a{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;line-height:1.6;text-decoration:none;padding:1px 6px;margin:0 -6px;border-radius:5px}
   /* clear hover on links inside a (hovered) row */
   table.rq td.fl a:hover,table.rq .trk a:hover{background:color-mix(in srgb,var(--accent) 16%,var(--panel));color:var(--accent);text-decoration:underline}
@@ -110,7 +111,7 @@
   @media (max-width:1600px){ table.rq th,table.rq td{padding-left:8px;padding-right:8px} table.rq td.g.gl .sub{max-width:90px} table.rq .rqr{min-width:70px} }
   table.rq .fill{width:auto;padding:0}
   table.rq td.g.gl .sub{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  @media (min-width:1700px){ table.rq td.g.gl .sub{max-width:200px} table.rq th,table.rq td{padding-left:10px;padding-right:10px} table.rq .gl{padding-left:16px!important} table.rq .pc{padding-left:20px} }
+  @media (min-width:1700px){ table.rq td.g.gl .sub{max-width:200px} table.rq th,table.rq td{padding-left:10px;padding-right:10px} }
   table.rq td.num.g{padding-right:16px}
   table.rq .qty{font-weight:700;font-size:15.5px;color:var(--text)}
   table.rq td.g .iline{height:30px;line-height:30px}
