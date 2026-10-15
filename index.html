@@ -144,13 +144,15 @@
   .prochead{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   .prochead>*{min-width:0}
   .prochead .span2{grid-column:span 2}
-  .fslots{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .fslot{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
-  .fslot-h{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px}
-  .fslot .frow{display:flex;align-items:center;gap:6px;padding:3px 0;background:none;border:0;margin:0}
-  .fslot .frow a{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13.5px}
-  .fslot .fx{border:0;background:none;color:var(--bad);cursor:pointer;font-size:12px;padding:2px 4px}
-  .fup{display:inline-block;margin-top:4px;font-size:13px;color:var(--accent);cursor:pointer;font-weight:500}
+  .fslots{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .fslot{display:flex;align-items:center;gap:10px;padding:7px 12px;min-width:0;min-height:40px}
+  .fslot+.fslot{border-top:1px solid var(--line)}
+  .fslot-h{flex:0 0 130px;font-size:13px;font-weight:600;color:var(--muted)}
+  .fslot-files{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:4px 8px}
+  .fslot .frow{display:inline-flex;align-items:center;gap:2px;max-width:100%;padding:2px 4px 2px 8px;background:var(--accent-soft);border:0;border-radius:6px;margin:0}
+  .fslot .frow a{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;max-width:220px}
+  .fslot .fx{border:0;background:none;color:var(--bad);cursor:pointer;font-size:11px;padding:2px 4px}
+  .fup{flex:0 0 auto;font-size:13px;color:var(--accent);cursor:pointer;font-weight:500;white-space:nowrap}
   .fup:hover{text-decoration:underline}
   .money{position:relative}
   .money span{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
@@ -254,7 +256,7 @@
     .rqfoot{grid-template-columns:1fr}
     .prochead{grid-template-columns:1fr 1fr;gap:10px}
     .prochead .span2{grid-column:1/-1}
-    .fslots{grid-template-columns:1fr;gap:8px}
+    .fslot-h{flex-basis:100px}
     label.f{font-size:12.5px;margin-bottom:3px}
     input[type=text],input[type=number],input[type=date],input[type=password],select,textarea{padding:8px 10px}
     .sec-act{position:sticky;bottom:0;z-index:4;background:inherit;margin:4px -12px -14px;padding:10px 12px;border-top:1px solid var(--line);border-radius:0 0 12px 12px}
@@ -1022,8 +1024,8 @@ function editRequest(id, partId){
       </div>
       <div class="full"><div class="fslots">${FILE_CATS.concat((r.files||[]).some(f=>!FILE_CATS.some(c=>c[0]===f.cat))?[['','其他 Other']]:[]).map(([c,lab])=>{
           const fs=(r.files||[]).map((f,k)=>[f,k]).filter(([f])=>c?f.cat===c:!FILE_CATS.some(x=>x[0]===f.cat));
-          return `<div class="fslot"><div class="fslot-h">${lab}</div>
-            ${fs.map(([f,k])=>`<div class="frow"><a href="${esc(docHref(f))}" target="_blank" rel="noopener" title="${esc(f.name)} · ${fmtSize(f.size)} · ${esc(f.user||'')} · ${esc((f.ts||'').slice(0,10))}">📄 ${esc(f.name)}</a><button class="fx" title="Delete" onclick="removeProcFile('${id}',${k})">✕</button></div>`).join('')}
+          return `<div class="fslot"><div class="fslot-h">${lab}</div><div class="fslot-files">
+            ${fs.map(([f,k])=>`<div class="frow"><a href="${esc(docHref(f))}" target="_blank" rel="noopener" title="${esc(f.name)} · ${fmtSize(f.size)} · ${esc(f.user||'')} · ${esc((f.ts||'').slice(0,10))}">${esc(f.name)}</a><button class="fx" title="Delete" onclick="removeProcFile('${id}',${k})">✕</button></div>`).join('')}</div>
             ${c?`<label class="fup">＋ 上传<input type="file" multiple style="display:none" onchange="uploadProcFiles('${id}',this.files,'${c}')"></label>`:''}</div>`; }).join('')}</div>
         <span class="fmeta" id="up-status"></span></div>
       <div class="full sec-act"><span class="hint">Enter ↵</span><button class="btn primary" id="r-save-proc" onclick="saveRequest('${id}','proc')">保存采购与物流</button></div>
