@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:46:34.988Z",
-    "updatedBy": "",
+    "updated": "2026-10-15T22:55:15.434Z",
+    "updatedBy": "Fang Jiang",
     "nextReqNo": 3,
     "sites": [
       "Palamanui",
@@ -249,7 +249,7 @@
       "reason": "",
       "needBy": "2026-10-30",
       "quoteTotal": "10",
-      "poNo": "EQ-002-XXXX",
+      "poNo": "Fang to reimburse",
       "shipping": "UPS 1Z9W52A30421753371",
       "eta": "2026-10-22",
       "notes": "",
@@ -412,6 +412,11 @@
           "user": "",
           "from": "requested",
           "to": "processing"
+        },
+        {
+          "ts": "2026-10-15T22:55:14.928Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
         }
       ],
       "files": [
