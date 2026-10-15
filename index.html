@@ -79,9 +79,14 @@
   table.rq th.g{color:var(--accent)}
   table.rq .sub{font-size:12.5px;color:var(--muted);margin-top:3px}
   table.rq .nm{width:1%}
-  table.rq .nm .iline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:250px}
-  table.rq .rqr{width:14%;min-width:80px}
-  table.rq .trk{width:14%;white-space:nowrap}
+  table.rq .nm .iline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:228px}
+  table.rq .rqr{width:1%;min-width:92px;white-space:nowrap}
+  table.rq .pc{padding-left:16px}
+  table.rq .trk{width:1%;white-space:nowrap}
+  table.rq tr.rowlink{cursor:pointer}
+  table.rq .fill{width:auto;padding:0}
+  @media (min-width:1700px){ table.rq td.g.gl .sub{max-width:200px} table.rq th,table.rq td{padding-left:12px;padding-right:12px} table.rq .gl{padding-left:16px!important} table.rq .pc{padding-left:20px} }
+  table.rq td.g.gl .sub{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   table.rq td.num.g{padding-right:16px}
   table.rq .qty{font-weight:700;font-size:15.5px;color:var(--text)}
   table.rq td.g .iline{height:30px;line-height:30px}
@@ -428,14 +433,15 @@ function renderRequests(){
       ${isProc()?`<label><input type="checkbox" id="kanban" ${sessionStorage.getItem('f.kanban')==='1'?'checked':''} onchange="sessionStorage.setItem('f.kanban',this.checked?'1':'0');render()"> 看板 Kanban</label>`:''}
       <span style="flex:1"></span>
 </div>
-    ${isProc()&&sessionStorage.getItem('f.kanban')==='1' ? pipelineHtml(list) : `<div class="panel">${list.length? `<table class="rq"><tr>${th('no','单号 No.','c')}${th('status','状态','c')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('requester','申请人','rqr')}${th('poNo','PO#','c')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="c"></th></tr>
-      ${list.map(r=>`<tr><td class="c"><a class="mono" href="#" onclick="editRequest('${r.id}');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.urgency!=='normal'?`<div style="margin-top:5px"><span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span></div>`:''}</td>
-        <td class="g gl c"><b>${esc(r.model||'')}</b>${r.unit?`<div class="sub">${esc(r.unit)}</div>`:''}</td>
+    ${isProc()&&sessionStorage.getItem('f.kanban')==='1' ? pipelineHtml(list) : `<div class="panel">${list.length? `<table class="rq"><tr>${th('no','单号 No.','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="fill"></th></tr>
+      ${list.map(r=>`<tr class="rowlink" onclick="editRequest('${r.id}')" title="Open"><td class="c"><a class="mono" href="#" onclick="event.stopPropagation();editRequest('${r.id}');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.urgency!=='normal'?`<div style="margin-top:5px"><span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span></div>`:''}</td>
+        <td class="rqr">${esc(r.requester)}</td>
+        <td class="g gl c"><b>${esc(r.model||'')}</b>${r.unit?`<div class="sub" title="${esc(r.unit)}">${esc(r.unit)}</div>`:''}</td>
         <td class="g mono c">${(r.items||[]).map(i=>`<div class="iline">${esc(i.partNo||'—')}</div>`).join('')}</td>
         <td class="g nm">${(r.items||[]).map(i=>`<div class="iline" title="${esc(i.name||'')}">${esc(i.name||'')}</div>`).join('')}${(r.photos||[]).length?`<small style="color:var(--muted)">📷 ${r.photos.length}</small>`:''}</td>
         <td class="g gr num c">${(r.items||[]).map(i=>`<div class="iline qty">× ${esc(i.qty)}</div>`).join('')}</td>
-        <td class="rqr">${esc(r.requester)}</td><td class="mono c">${esc(r.poNo)}</td><td class="mono trk">${esc(r.shipping||'')}</td><td class="c">${esc(r.eta)}</td>
-        <td class="row-actions c"><button onclick="editRequest('${r.id}')">编辑</button></td></tr>`).join('')}</table>` : `<div class="empty"><div class="ico">⚙</div>还没有申请。点「新申请」提交第一条。</div>`}</div>`}`;
+        <td class="mono c pc">${esc(r.poNo)}</td><td class="mono trk">${esc(r.shipping||'')}</td><td class="c">${esc(r.eta)}</td><td class="fill"></td>
+        </tr>`).join('')}</table>` : `<div class="empty"><div class="ico">⚙</div>还没有申请。点「新申请」提交第一条。</div>`}</div>`}`;
 }
 function exportRequests(){ csv([['No','Date','Status','Urgency','Model','Requester','PartNo','Part','Qty','PO','ETA','Notes'],
   ...db.requests.flatMap(r=>(r.items||[]).map(i=>[r.no,r.date,r.status,r.urgency,(r.model||'')+(r.unit?' '+r.unit:''),r.requester,i.partNo,i.name,i.qty,r.poNo,r.eta,r.notes]))],'nflg-requests.csv'); }
