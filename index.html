@@ -301,7 +301,7 @@
   </nav>
   <main>
     <div class="topbar">
-      <h1 id="title">概览</h1>
+      <h1 id="title"></h1>
       <input type="text" id="q" class="search" placeholder="搜索 Search… (零件号 / 名称 / 机型 / 申请人)">
       <button class="btn" id="reload" title="Get the latest changes">⟳ 刷新</button>
       <button class="btn primary" id="save">保存 Save</button>
@@ -341,7 +341,9 @@ const unesc = s => String(s??'').replace(/[\uE000\uE001]/g,'');
 function setLang(l){ LANG=l; localStorage.setItem('nflg.lang',l); document.documentElement.lang=l==='zh'?'zh-CN':'en'; applyStaticL(); render(); }
 let NAV_SRC=null;
 function applyStaticL(){ const nav=document.querySelector('nav'); if(!NAV_SRC) NAV_SRC=nav.innerHTML; nav.innerHTML=L(NAV_SRC); document.querySelectorAll('nav button[data-view]').forEach(b=>b.onclick=()=>{ view=b.dataset.view; render(); }); $('#lang').onclick=()=>setLang(LANG==='zh'?'en':'zh'); $('#lang').textContent=LANG==='zh'?'EN':'中文';
-  const q=$('#q'); q.placeholder=L(q.dataset.ph||(q.dataset.ph=q.placeholder)); for(const id of ['reload']){ const b=$('#'+id); b.dataset.src=b.dataset.src||b.innerHTML; b.dataset.t=b.dataset.t||b.title; b.innerHTML=L(b.dataset.src); b.title=L(b.dataset.t); } }
+  const q=$('#q'); q.placeholder=L(q.dataset.ph||(q.dataset.ph=q.placeholder)); for(const id of ['reload']){ const b=$('#'+id); b.dataset.src=b.dataset.src||b.innerHTML; b.dataset.t=b.dataset.t||b.title; b.innerHTML=L(b.dataset.src); b.title=L(b.dataset.t); }
+  if(!$('#title').textContent) $('#title').textContent=L({requests:'配件申请 Parts Requests',docs:'文档库 Documents',settings:'设置 Settings'}[view]||'');
+  const sv=$('#save'); if(sv&&/保存 Save/.test(sv.textContent)) sv.textContent=L('保存 Save'); }
 const _alert=window.alert, _confirm=window.confirm; window.alert=m=>_alert(unesc(L(m))); window.confirm=m=>_confirm(unesc(L(m)));   // GitHub hard limit is 100 MB per file; keep headroom for base64 + API timeouts
 
 /* ============ state ============ */
