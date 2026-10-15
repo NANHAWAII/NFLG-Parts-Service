@@ -241,6 +241,7 @@ S = [
  ('— 工地/站点 —', '— 工地/站点 —', '— site —'), ('— 机型 Model —', '— 机型 —', '— model —'), ('— 选择设备 —', '— 选择设备 —', '— equipment —'),
  ('(库存 ', '(库存 ', '(stock '),
  ('导出 PDF', '导出 PDF', 'Export PDF'),
+ ('材料费 Material cost', '材料费', 'Material cost'), ('运费 Freight cost', '运费', 'Freight cost'),
  ('这条新申请还没提交，确定放弃？', '这条新申请还没提交，确定放弃？', 'This new request has not been submitted. Discard it?'),
  ('已保存', '已保存', 'Saved'),
  ('删除这张照片？', '删除这张照片？', 'Delete this photo?'),
