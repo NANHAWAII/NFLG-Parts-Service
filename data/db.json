@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T19:29:30.282Z",
+    "updated": "2026-10-15T19:55:59.095Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
     "sites": [
@@ -122,7 +122,7 @@
       "id": "rq0001",
       "no": "NFLG-0001",
       "date": "2026-10-15",
-      "requester": "Fang Jiang",
+      "requester": "Kanoa Jones",
       "model": "NFJ1175",
       "unit": "NFJ1175YEUCQZG120067",
       "urgency": "high",
@@ -181,7 +181,7 @@
         }
       ],
       "reason": "",
-      "needBy": "2026-11-15",
+      "needBy": "2026-10-30",
       "quoteTotal": "",
       "poNo": "",
       "shipping": "",
@@ -216,6 +216,11 @@
         },
         {
           "ts": "2026-10-15T19:29:29.982Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T19:55:58.562Z",
           "user": "Fang Jiang",
           "kind": "edited"
         }
