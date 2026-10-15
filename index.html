@@ -510,7 +510,7 @@ function merge3(b,l,r){
   const num=no=>parseInt(String(no||'').replace(/\D/g,''))||0;
   let next=Math.max(0,...out.requests.map(x=>num(x.no)))+1;
   for(const x of out.requests){ if(!remoteIds.has(x.id) && used.has(x.no)){ x.no='NFLG-'+String(next++).padStart(4,'0'); } }
-  out.meta.nextReqNo=Math.max(next, Math.max(0,...out.requests.map(x=>num(x.no)))+1);
+  out.meta.nextReqNo=Math.max(0,...out.requests.map(x=>num(x.no)))+1;
   return out; }
 
 const apiUrl = () => `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${DATA_PATH}`;
@@ -935,7 +935,15 @@ function trackUrl(t){
 const trackLink=(t,cls='')=>{ const u=trackUrl(t); return u?`<a class="${cls}" href="${esc(u)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Track shipment">${esc(t)}&nbsp;↗</a>`:esc(t||''); };
 const field=(id,label,inner)=>`<div><label class="f" for="${id}">${label}</label>${inner}</div>`;
 const inp=(id,val,type='text',extra='')=>`<input type="${type}" id="${id}" value="${esc(val??'')}" ${extra}>`;
-function del(coll,id){ if(!confirm('确定删除？')) return; snapshot(); db[coll]=db[coll].filter(x=>x.id!==id); markDirty(); render(); }
+// next request number = highest existing + 1 (deleting the newest request frees its number)
+const reqNum = no => parseInt(String(no||'').replace(/\D/g,''))||0;
+const nextReqNo = () => Math.max(0,...db.requests.map(x=>reqNum(x.no)))+1;
+function del(coll,id){ if(!confirm('确定删除？')) return; snapshot();
+  const gone=(db[coll]||[]).find(x=>x.id===id);
+  db[coll]=db[coll].filter(x=>x.id!==id);
+  if(coll==='requests'){ db.meta.nextReqNo=nextReqNo();
+    if(gone&&gh.token) for(const f of [...(gone.files||[]),...(gone.photos||[])]) deleteFromRepo(f.path,f.sha).catch(()=>{}); }   // its attachments go too
+  markDirty(); render(); }
 
 /* --- equipment --- */
 function editEquipment(id){
@@ -1187,9 +1195,9 @@ async function saveRequest(id, part){
   const btn=$('#r-save-'+part)||$('#r-save')||document.createElement('button'); const btnTxt=btn.textContent; btn.disabled=true;
   let photos=[];
   if(doReq&&draftPhotos.length){ if(!gh.token){ alert('上传照片需要通过团队链接打开本页（或配置 token）。本次先不带照片提交。'); }
-    else for(const [k,f] of draftPhotos.entries()){ btn.textContent=L(`上传照片 ${k+1}/${draftPhotos.length}…`); try{ const blob=await compressImage(f); const path=`attachments/${(id? db.requests.find(x=>x.id===id).no : 'NFLG-'+String(db.meta.nextReqNo||1).padStart(4,'0'))}/${Date.now()}-${k}.jpg`; const up=await uploadToRepo(path,blob); photos.push({path:up.path,sha:up.sha,name:f.name}); }catch(e){ alert('照片上传失败：'+e.message); } } }
+    else for(const [k,f] of draftPhotos.entries()){ btn.textContent=L(`上传照片 ${k+1}/${draftPhotos.length}…`); try{ const blob=await compressImage(f); const path=`attachments/${(id? db.requests.find(x=>x.id===id).no : 'NFLG-'+String(nextReqNo()).padStart(4,'0'))}/${Date.now()}-${k}.jpg`; const up=await uploadToRepo(path,blob); photos.push({path:up.path,sha:up.sha,name:f.name}); }catch(e){ alert('照片上传失败：'+e.message); } } }
   snapshot(); let r; const isNew=!id;
-  if(id) r=db.requests.find(x=>x.id===id); else { const n=db.meta.nextReqNo||1; db.meta.nextReqNo=n+1; r={id:uid(),no:'NFLG-'+String(n).padStart(4,'0'),date:today(),status:'requested',history:[{ts:new Date().toISOString(),user:me(),kind:'created'}]}; db.requests.push(r); }
+  if(id) r=db.requests.find(x=>x.id===id); else { const n=nextReqNo(); db.meta.nextReqNo=n+1; r={id:uid(),no:'NFLG-'+String(n).padStart(4,'0'),date:today(),status:'requested',history:[{ts:new Date().toISOString(),user:me(),kind:'created'}]}; db.requests.push(r); }
   const prev=r.status;
   if(doReq) Object.assign(r,{requester:v('req'),unit:v('unit'),model:v('model'),urgency:v('urg'),items,reason:v('reason'),needBy:v('need'),notes:'',photos:[...(r.photos||[]),...photos]});
   if(doProc) Object.assign(r,{status:v('status')||r.status,date:v('date')||r.date,materialCost:moneyFmt(v('mcost')),freightCost:moneyFmt(v('fcost')),poNo:v('po'),shipping:v('ship'),eta:v('eta')});

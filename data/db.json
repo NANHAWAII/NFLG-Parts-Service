@@ -3,7 +3,7 @@
     "version": 1,
     "updated": "2026-10-15T23:09:56.589Z",
     "updatedBy": "Micah Brandt",
-    "nextReqNo": 5,
+    "nextReqNo": 3,
     "sites": [
       "Palamanui",
       "Waikoloa",
@@ -552,7 +552,7 @@
     },
     {
       "id": "mva5cj2kmz56",
-      "no": "NFLG-0004",
+      "no": "NFLG-0002",
       "date": "2026-10-15",
       "status": "requested",
       "history": [
