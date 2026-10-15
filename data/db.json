@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:57:36.155Z",
+    "updated": "2026-10-15T22:57:43.381Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 4,
     "sites": [
@@ -522,6 +522,12 @@
           "user": "Fang Jiang",
           "kind": "files",
           "n": 1
+        },
+        {
+          "ts": "2026-10-15T22:57:43.072Z",
+          "user": "Fang Jiang",
+          "kind": "files",
+          "n": 1
         }
       ],
       "requester": "Fang Jiang",
@@ -579,6 +585,15 @@
           "ts": "2026-10-15T22:57:35.845Z",
           "user": "Fang Jiang",
           "cat": "freight"
+        },
+        {
+          "path": "attachments/NFLG-0003/1792105061180-ONEYSHAGCN223500_Customs Docs.pdf",
+          "sha": "64b62b77a8bb1ebbbd8fce3cf786bd0bdfbbb153",
+          "name": "ONEYSHAGCN223500_Customs Docs.pdf",
+          "size": 301247,
+          "ts": "2026-10-15T22:57:43.072Z",
+          "user": "Fang Jiang",
+          "cat": "customs"
         }
       ]
     }
