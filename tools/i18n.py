@@ -119,7 +119,7 @@ S = [
  ('采购部 Procurement</small>', '采购部</small>', 'Procurement</small>'),
  ('申请日期', '申请日期', 'Request date'),
  ('保存申请信息', '保存申请信息', 'Save request'), ('保存采购与物流', '保存采购与物流', 'Save procurement'), ('已保存 ✓', '已保存 ✓', 'Saved ✓'), ('关闭', '关闭', 'Close'),
- ('配件 Parts', '配件', 'Parts'), ('物流单号 Tracking', '物流单号', 'Tracking'),
+ ('配件 Parts', '配件', 'Parts'), ('输入零件号，自动带出名称', '输入零件号，自动带出名称', 'Type part no. — name fills in'), ('物流单号 Tracking', '物流单号', 'Tracking'),
  ('申请信息 Request', '申请信息', 'Request'), ('申请人填写 · filled by requester', '申请人填写', 'filled by requester'),
  ('采购与物流 Procurement &amp; shipping', '采购与物流', 'Procurement &amp; shipping'), ('采购部更新 · updated by procurement', '采购部更新', 'updated by procurement'),
  ('报价 Quote（总价）', '报价（总价）', 'Quote (total)'),
