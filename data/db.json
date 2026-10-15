@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:56:48.071Z",
+    "updated": "2026-10-15T22:57:16.755Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 4,
     "sites": [
@@ -187,6 +187,32 @@
       "partNo": "1100045425",
       "nameZh": "",
       "nameEn": "BOLT",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mva52g08l13v",
+      "partNo": "1100028848",
+      "nameZh": "",
+      "nameEn": "HARDENED WASHER",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mva52g081pja",
+      "partNo": "1100025701",
+      "nameZh": "",
+      "nameEn": "TEST POINT",
       "models": [
         "NFJ1175"
       ],
@@ -479,6 +505,11 @@
           "ts": "2026-10-15T22:56:47.790Z",
           "user": "Fang Jiang",
           "kind": "created"
+        },
+        {
+          "ts": "2026-10-15T22:57:16.424Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
         }
       ],
       "requester": "Fang Jiang",
@@ -494,6 +525,24 @@
           "fig": "02-03",
           "item": "11",
           "page": 21
+        },
+        {
+          "partId": "mva52g08l13v",
+          "partNo": "1100028848",
+          "name": "HARDENED WASHER",
+          "qty": 1,
+          "fig": "02-01",
+          "item": "24",
+          "page": 15
+        },
+        {
+          "partId": "mva52g081pja",
+          "partNo": "1100025701",
+          "name": "TEST POINT",
+          "qty": 1,
+          "fig": "01-01",
+          "item": "3",
+          "page": 11
         }
       ],
       "reason": "",
