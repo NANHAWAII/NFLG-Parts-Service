@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T23:04:18.468Z",
+    "updated": "2026-10-15T23:04:43.390Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 4,
     "sites": [
@@ -515,110 +515,6 @@
       ],
       "materialCost": "58.00",
       "freightCost": "200.00"
-    },
-    {
-      "id": "mva51twuvdwi",
-      "no": "NFLG-0003",
-      "date": "2026-10-15",
-      "status": "requested",
-      "history": [
-        {
-          "ts": "2026-10-15T22:56:47.790Z",
-          "user": "Fang Jiang",
-          "kind": "created"
-        },
-        {
-          "ts": "2026-10-15T22:57:16.424Z",
-          "user": "Fang Jiang",
-          "kind": "edited"
-        },
-        {
-          "ts": "2026-10-15T22:57:30.965Z",
-          "user": "Fang Jiang",
-          "kind": "files",
-          "n": 1
-        },
-        {
-          "ts": "2026-10-15T22:57:35.845Z",
-          "user": "Fang Jiang",
-          "kind": "files",
-          "n": 1
-        },
-        {
-          "ts": "2026-10-15T22:57:43.072Z",
-          "user": "Fang Jiang",
-          "kind": "files",
-          "n": 1
-        },
-        {
-          "ts": "2026-10-15T22:57:51.660Z",
-          "user": "Fang Jiang",
-          "kind": "edited"
-        },
-        {
-          "ts": "2026-10-15T22:58:07.287Z",
-          "user": "Fang Jiang",
-          "kind": "edited"
-        },
-        {
-          "ts": "2026-10-15T22:58:14.725Z",
-          "user": "Fang Jiang",
-          "kind": "edited"
-        }
-      ],
-      "requester": "Fang Jiang",
-      "unit": "NFJ1175YEUCQZG120067",
-      "model": "NFJ1175",
-      "urgency": "normal",
-      "items": [
-        {
-          "partId": "mva51twumt26",
-          "partNo": "1100045425",
-          "name": "BOLT",
-          "qty": 1,
-          "fig": "02-03",
-          "item": "11",
-          "page": 21
-        }
-      ],
-      "reason": "",
-      "needBy": "",
-      "notes": "",
-      "photos": [],
-      "files": [
-        {
-          "path": "attachments/NFLG-0003/1792105049150-ONEYSHAGCN223500_Customs Docs.pdf",
-          "sha": "64b62b77a8bb1ebbbd8fce3cf786bd0bdfbbb153",
-          "name": "ONEYSHAGCN223500_Customs Docs.pdf",
-          "size": 301247,
-          "ts": "2026-10-15T22:57:30.965Z",
-          "user": "Fang Jiang",
-          "cat": "quote"
-        },
-        {
-          "path": "attachments/NFLG-0003/1792105053128-ONEYSHAGCN223500_Customs Docs.pdf",
-          "sha": "64b62b77a8bb1ebbbd8fce3cf786bd0bdfbbb153",
-          "name": "ONEYSHAGCN223500_Customs Docs.pdf",
-          "size": 301247,
-          "ts": "2026-10-15T22:57:35.845Z",
-          "user": "Fang Jiang",
-          "cat": "freight"
-        },
-        {
-          "path": "attachments/NFLG-0003/1792105061180-ONEYSHAGCN223500_Customs Docs.pdf",
-          "sha": "64b62b77a8bb1ebbbd8fce3cf786bd0bdfbbb153",
-          "name": "ONEYSHAGCN223500_Customs Docs.pdf",
-          "size": 301247,
-          "ts": "2026-10-15T22:57:43.072Z",
-          "user": "Fang Jiang",
-          "cat": "customs"
-        }
-      ],
-      "materialCost": "10.00",
-      "freightCost": "10.00",
-      "poNo": "EQ-002-XXXX",
-      "shipping": "",
-      "eta": "2026-11-30"
     }
   ],
   "service": [],
