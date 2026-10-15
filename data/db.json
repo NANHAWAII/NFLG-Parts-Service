@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:09:39.489Z",
-    "updatedBy": "Fang Jiang",
+    "updated": "2026-10-15T22:46:34.988Z",
+    "updatedBy": "",
     "nextReqNo": 3,
     "sites": [
       "Palamanui",
@@ -192,7 +192,7 @@
       "model": "NFJ1175",
       "unit": "NFJ1175YEUCQZG120067",
       "urgency": "high",
-      "status": "requested",
+      "status": "processing",
       "items": [
         {
           "partId": "mv9xfurtg5v1",
@@ -406,6 +406,12 @@
           "ts": "2026-10-15T22:09:39.172Z",
           "user": "Fang Jiang",
           "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T22:46:34.532Z",
+          "user": "",
+          "from": "requested",
+          "to": "processing"
         }
       ],
       "files": [
