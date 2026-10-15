@@ -6,20 +6,22 @@
 <title>NFLG Parts Service</title>
 <style>
   :root{
-    --bg:#eef1f6; --panel:#ffffff; --line:#e2e7ee; --head:#2f3b52; --head-text:#e6ebf3; --text:#1d2330; --muted:#6b7380;
-    --accent:#1f5fbf; --accent-soft:#e7effc; --ok:#1e8e4f; --warn:#c77d00; --bad:#c6303e;
-    --chip:#eef1f5; --shadow:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+    --bg:#eef1f6; --panel:#ffffff; --line:#e3e8ef; --text:#172033; --muted:#64708a;
+    --head:#1e293b; --head-text:#dbe3ee;
+    --nav:#0f172a; --nav-text:#cbd5e1; --nav-muted:#7c8aa3; --nav-hover:rgba(255,255,255,.06); --nav-active:rgba(96,140,255,.18); --nav-line:rgba(255,255,255,.08);
+    --accent:#2563eb; --accent-soft:#e9f0fd; --ok:#16803c; --warn:#b26b00; --bad:#c62f3d;
+    --chip:#eef1f5; --shadow:0 1px 2px rgba(15,23,42,.05), 0 4px 14px rgba(15,23,42,.06);
     --radius:10px; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#0f1319; --panel:#171c24; --line:#2a313c; --head:#232c3a; --head-text:#cfd6e2; --text:#e8ebf0; --muted:#9aa3b2;
-      --accent:#6ea0ef; --accent-soft:#1d2a40; --chip:#222a35; --shadow:none;
+      --bg:#0f1319; --panel:#171c24; --line:#2a313c; --head:#232c3a; --head-text:#cfd6e2; --nav:#0b0f15; --nav-text:#c3cad6; --nav-muted:#7a8496; --nav-hover:rgba(255,255,255,.05); --nav-active:rgba(110,160,239,.16); --nav-line:rgba(255,255,255,.07); --text:#e8ebf0; --muted:#9aa3b2;
+      --accent:#4f8df5; --accent-soft:#1d2a40; --chip:#222a35; --shadow:none;
     }
   }
   :root[data-theme="dark"]{
-    --bg:#0f1319; --panel:#171c24; --line:#2a313c; --head:#232c3a; --head-text:#cfd6e2; --text:#e8ebf0; --muted:#9aa3b2;
-    --accent:#6ea0ef; --accent-soft:#1d2a40; --chip:#222a35; --shadow:none;
+    --bg:#0f1319; --panel:#171c24; --line:#2a313c; --head:#232c3a; --head-text:#cfd6e2; --nav:#0b0f15; --nav-text:#c3cad6; --nav-muted:#7a8496; --nav-hover:rgba(255,255,255,.05); --nav-active:rgba(110,160,239,.16); --nav-line:rgba(255,255,255,.07); --text:#e8ebf0; --muted:#9aa3b2;
+    --accent:#4f8df5; --accent-soft:#1d2a40; --chip:#222a35; --shadow:none;
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
@@ -28,16 +30,19 @@
   a{color:var(--accent)}
   button,input,select,textarea{font:inherit;color:inherit}
   .app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
-  nav{background:var(--panel);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
-  .brand{font-weight:700;font-size:19px;padding:4px 12px 22px;line-height:1.25;letter-spacing:-.01em}
-  .brand small{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:3px}
+  nav{background:var(--nav);color:var(--nav-text);border-right:0;padding:22px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
+  .brand{color:#fff;font-weight:700;font-size:19px;padding:4px 12px 22px;line-height:1.25;letter-spacing:-.01em}
+  .brand small{display:block;font-weight:400;color:var(--nav-muted);font-size:13px;margin-top:3px}
   nav button{background:none;border:0;text-align:left;padding:11px 12px;border-radius:9px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:15px}
-  nav button:hover{background:var(--chip)}
-  nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
-  nav .count{font-size:11px;background:var(--chip);color:var(--muted);padding:1px 7px;border-radius:999px}
+  nav button{color:var(--nav-text)}
+  nav button:hover{background:var(--nav-hover);color:#fff}
+  nav button.active{background:var(--nav-active);color:#fff;font-weight:600;box-shadow:inset 3px 0 0 #6b9bff}
+  nav .count{font-size:11px;background:rgba(255,255,255,.1);color:var(--nav-text);padding:1px 7px;border-radius:999px}
   nav .spacer{flex:1}
-  .status{font-size:12.5px;color:var(--muted);padding:12px 12px 4px;border-top:1px solid var(--line);line-height:1.5}
-  .status b{color:var(--text)}
+  .status{font-size:12.5px;color:var(--nav-muted);padding:12px 12px 4px;border-top:1px solid var(--nav-line);line-height:1.5}
+  .status b{color:var(--nav-text)}
+  nav #lang{background:transparent;color:var(--nav-text);border:1px solid var(--nav-line);box-shadow:none}
+  nav #lang:hover{border-color:#6b9bff;color:#fff}
   .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:6px;vertical-align:middle}
   .dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.bad{background:var(--bad)}
   main{padding:28px 28px 80px;width:100%;max-width:2200px;min-width:0}
@@ -49,6 +54,8 @@
   .btn.danger{color:var(--bad)}
   .btn.sm{padding:5px 10px;font-size:13px;font-weight:400}
   .btn:disabled{opacity:.5;cursor:default}
+  .btn.primary:disabled{opacity:1;background:var(--panel);color:var(--ok);border-color:var(--line)}
+  .btn.primary:not(:disabled):hover{filter:brightness(1.08)}
   input[type=text],input[type=number],input[type=date],input[type=password],select,textarea{
     border:1px solid var(--line);background:var(--panel);padding:9px 12px;border-radius:9px;width:100%}
   input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
@@ -198,6 +205,8 @@
   .dochead .dt{font-size:18px;font-weight:700}.dochead .dt span{font-weight:400;color:var(--muted);font-size:15px;margin-left:6px}
   .dochead .ds{font-size:13px;color:var(--muted);margin-top:2px}
   .doctab td{padding:9px 14px;vertical-align:middle}
+  .doctab td:first-child a{color:var(--text);text-decoration:none;font-weight:500}
+  .doctab td:first-child a:hover{color:var(--accent);text-decoration:underline}
   .doctab tr.grp td{background:var(--bg);font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:7px 14px}
   .doctab tr:hover td{background:var(--accent-soft)} .doctab tr.grp:hover td{background:var(--bg)}
   .doctab .dm{color:var(--muted);font-size:13px;white-space:nowrap}
@@ -265,7 +274,7 @@
   .grid>*{min-width:0}
   @media (max-width: 900px){
     .app{grid-template-columns:1fr;grid-template-rows:auto 1fr}
-    nav{position:sticky;top:0;z-index:30;height:auto;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:2px;padding:8px 10px;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
+    nav{position:sticky;top:0;z-index:30;height:auto;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:2px;padding:8px 10px;border-right:0;border-bottom:0;overflow-x:auto}
     .brand{padding:0 10px 0 4px;font-size:15px;white-space:nowrap}.brand small{display:none}
     nav button{padding:8px 10px;font-size:14px;white-space:nowrap;gap:6px}
     nav #lang{margin:0 0 0 auto!important;padding:6px 10px}
@@ -369,7 +378,7 @@
     <button data-view="docs">文档库 Documents <span class="count" id="c-docs"></span></button>
     <button data-view="settings">设置 Settings</button>
     <div class="spacer"></div>
-    <button id="lang" style="justify-content:center;border:1px solid var(--line);margin-bottom:6px">EN</button>
+    <button id="lang" style="justify-content:center;margin-bottom:6px">EN</button>
     <div class="status" id="status"></div>
   </nav>
   <main>
