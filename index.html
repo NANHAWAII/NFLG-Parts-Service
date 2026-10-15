@@ -165,6 +165,13 @@
   .items input{padding:6px 10px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
   .items table{table-layout:fixed}
   .items .addline{margin:6px 0 0 6px}
+  /* items: one soft panel, no row lines — rows are separated by spacing only */
+  .items{background:var(--bg);border-radius:10px;padding:6px 8px 10px}
+  .items td{border:0}
+  .items th{background:transparent!important;border:0;padding:6px 6px 2px;font-size:11.5px}
+  .items tr:hover td{background:none!important}
+  .items input{background:var(--panel)}
+  .items .imeta{min-height:15px}
   .pncell{position:relative}
   .pn-dd{display:none;position:absolute;left:6px;top:calc(100% - 2px);z-index:20;min-width:460px;max-height:320px;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:9px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
   .pn-opt{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:7px 10px;cursor:pointer;font-size:13px}
@@ -233,7 +240,9 @@
   @media (max-width: 600px){
     .items table,.items tbody{display:block}
     .items tr:first-child{display:none}
-    .items tr{display:grid;grid-template-columns:1fr 64px 38px;gap:6px;padding:8px 0;border-bottom:1px solid var(--line)}
+    .items tr{display:grid;grid-template-columns:1fr 64px 38px;gap:6px;padding:8px 0;border-bottom:1px dashed var(--line)}
+    .items tr:last-child{border-bottom:0}
+    .items .imeta.empty{display:none}
     .items td{padding:0!important;border:0}
     .items .addline{margin-left:0}
     .items td.pncell{grid-column:1;grid-row:1}
@@ -1017,7 +1026,7 @@ function exportRequestPDF(id){
   const imgs=[...el.querySelectorAll('img')].filter(i=>!i.complete);
   Promise.all(imgs.map(i=>new Promise(ok=>{ i.onload=i.onerror=ok; setTimeout(ok,4000); }))).then(()=>setTimeout(()=>window.print(),50));
 }
-function itemMeta(i){ const model=$('#r-model')?.value; if(!i.fig) return '<div class="imeta">&nbsp;</div>'; const lk=i.page?manualLink(model,i.page):'';
+function itemMeta(i){ const model=$('#r-model')?.value; if(!i.fig) return '<div class="imeta empty">&nbsp;</div>'; const lk=i.page?manualLink(model,i.page):'';
   return `<div class="imeta">手册图 ${esc(i.fig)}${i.item?' 项 '+esc(i.item):''}${i.page?(lk?` · <a href="${esc(lk)}" target="_blank" title="Open manual page">p.${esc(i.page)}</a>`:` · p.${esc(i.page)}`):''}</div>`; }
 function renderItems(){
   $('#items').innerHTML = L(`<table><tr><th style="width:170px">零件号 Part No.</th><th>名称 / 描述</th><th style="width:84px">数量</th><th style="width:48px"></th></tr>
