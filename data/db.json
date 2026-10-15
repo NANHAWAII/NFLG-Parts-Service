@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:09:08.027Z",
+    "updated": "2026-10-15T22:09:18.111Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 3,
     "sites": [
@@ -383,9 +383,25 @@
           "ts": "2026-10-15T22:09:07.734Z",
           "user": "Fang Jiang",
           "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T22:09:17.796Z",
+          "user": "Fang Jiang",
+          "kind": "files",
+          "n": 1
         }
       ],
-      "files": [],
+      "files": [
+        {
+          "path": "attachments/NFLG-0001/1792102155703-ONEYSHAGCN223500_Customs Docs.pdf",
+          "sha": "64b62b77a8bb1ebbbd8fce3cf786bd0bdfbbb153",
+          "name": "ONEYSHAGCN223500_Customs Docs.pdf",
+          "size": 301247,
+          "ts": "2026-10-15T22:09:17.796Z",
+          "user": "Fang Jiang",
+          "cat": "quote"
+        }
+      ],
       "materialCost": "15.00",
       "freightCost": "200.00"
     }
