@@ -608,7 +608,7 @@ function renderDocs(){
   if(!m) return tabs+`<div class="panel"><div class="empty">先添加一个机型（例如 NFJ1175），再上传该机型的手册、图纸和选型文件。</div></div>`;
   let list=(db.docs||[]).filter(d=>d.model===m.code).filter(matches);
   const groups = DOC_CATS.map(([k,v])=>[k,v,list.filter(d=>(d.category||'other')===k)]).filter(g=>g[2].length);
-  const alt=LANG==='zh'?m.nameEn:m.nameZh;
+  const alt=LANG==='zh'?m.nameEn:'';
   const head = `<div class="dochead"><div><div class="dt">${esc(m.code)} <span>${esc(mname(m))}</span></div>
       <div class="ds">${[alt?esc(alt):'', m.engine?`发动机 ${esc(m.engine)}`:'', m.notes?esc(m.notes):''].filter(Boolean).join(' · ')}</div></div>
       <div style="display:flex;gap:8px"><button class="btn sm" onclick="editModel('${esc(m.code)}')">编辑机型</button><button class="btn sm primary" onclick="editDoc(null,'${esc(m.code)}')">＋ 添加文档 / 上传</button></div></div>`;
