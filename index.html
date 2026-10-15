@@ -126,6 +126,7 @@
     <button data-view="docs">文档库 Documents <span class="count" id="c-docs"></span></button>
     <button data-view="settings">设置 Settings</button>
     <div class="spacer"></div>
+    <button id="lang" style="justify-content:center;border:1px solid var(--line);margin-bottom:6px">EN</button>
     <div class="status" id="status"></div>
   </nav>
   <main>
@@ -156,7 +157,21 @@ const CURRENCIES = ['USD','CNY'];
 const DOC_CATS = [['operation','操作手册 Operation'],['maintenance','维护手册 Maintenance'],['parts','配件手册 Spare Parts'],['spec','技术参数 Specification'],
   ['electrical','电气图 Electrical'],['hydraulic','液压图 Hydraulic'],['control','控制系统 Control System'],['engine','发动机 Engine'],
   ['selection','选型/报价 Selection & Quote'],['photo','照片/视频 Photos'],['other','其他 Other']];
-const MAX_UPLOAD_MB = 50;   // GitHub hard limit is 100 MB per file; keep headroom for base64 + API timeouts
+const MAX_UPLOAD_MB = 50;
+/* ==== i18n table ==== */
+const I18N=[["把链接发给同事，点开一次就配好了：以后打开本站直接提申请、传照片，不用 token、不用点保存。链接里带着仓库写权限，只在公司内部发；建议为此单独建一个 token（Contents: Read &amp; write），需要时在 GitHub 上撤销即可。", "把链接发给同事，点开一次就配好了：以后打开本站直接提申请、传照片，不用 token、不用点保存。链接里带着仓库写权限，只在公司内部发；建议为此单独建一个 token（Contents: Read &amp; write），需要时在 GitHub 上撤销即可。", "Send this link to colleagues; opening it once sets them up: they can submit requests and photos without a token or a Save button. The link carries write access to the repository, so share it internally only. Best to create a separate token for it (Contents: Read &amp; write) that you can revoke on GitHub if needed."], ["填好后点「提交」即可，采购部会向南方路机询价、下单并跟踪物流，进度在本页查看。零件号不清楚的话，在下方「查手册」里按名称搜，点「添加」自动带入。", "填好后点「提交」即可，采购部会向南方路机询价、下单并跟踪物流，进度在本页查看。零件号不清楚的话，在下方「查手册」里按名称搜，点「添加」自动带入。", "Fill in the form and click Submit. Procurement gets the quote from NFLG, places the order and tracks shipping; progress shows on this page. Not sure of the part number? Search the parts manual below by name and click Add."], ["提示：Pages 站点上的文件任何拿到链接的人都能打开（仓库私有也一样）。只给内部看的报价、合同类文件请用 OneDrive 链接。", "提示：Pages 站点上的文件任何拿到链接的人都能打开（仓库私有也一样）。只给内部看的报价、合同类文件请用 OneDrive 链接。", "Note: anyone with the URL can open files on the site (even if the repository is private). Keep quotes, contracts and other internal-only files on OneDrive and link them."], ["MB 的文件可直接上传到仓库；更大的文件（如 200 MB 的操作手册）请填 OneDrive / SharePoint 链接。", "MB 的文件可直接上传到仓库；更大的文件（如 200 MB 的操作手册）请填 OneDrive / SharePoint 链接。", "MB upload straight into the repository; larger ones (e.g. a 200 MB operation manual) go on OneDrive / SharePoint — paste the link."], ["NFLG Parts Service<small>南方路机配件服务 · Nan, Inc. 内部</small>", "NFLG Parts Service<small>南方路机配件服务 · Nan, Inc. 内部</small>", "NFLG Parts Service<small>Nan, Inc. internal · 南方路机 parts</small>"], ["保存过新版本。\\n\\n确定 = 用你的版本覆盖（对方的修改会丢失）\\n取消 = 先放弃保存，点「重新加载」后再改", "保存过新版本。\\n\\n确定 = 用你的版本覆盖（对方的修改会丢失）\\n取消 = 先放弃保存，点「重新加载」后再改", "saved a newer version.\\n\\nOK = overwrite with your version (their changes are lost)\\nCancel = do not save; click Reload and redo your edits"], ["外部链接（OneDrive / SharePoint / 厂家网盘 — 大文件、敏感文件用这个）", "外部链接（OneDrive / SharePoint / 厂家网盘 — 大文件、敏感文件用这个）", "External link (OneDrive / SharePoint / supplier share — for large or sensitive files)"], ["权限的 fine-grained token，token 只存在你这台电脑的浏览器里。", "权限的 fine-grained token，token 只存在你这台电脑的浏览器里。", "on this repository. The token stays in this browser only."], ["输入零件号、英文或中文名，如 jaw plate / 颚板 / 1100024929", "输入零件号、英文或中文名，如 jaw plate / 颚板 / 1100024929", "Type a part number or name, e.g. jaw plate / 颚板 / 1100024929"], ["还没有手册索引（用 tools/build_manual_index.py 生成）", "还没有手册索引（用 tools/build_manual_index.py 生成）", ": no manual index yet (generate with tools/build_manual_index.py)"], ["发现上次未保存的本地修改，要恢复吗？\\n（取消 = 丢弃本地修改，使用仓库版本）", "发现上次未保存的本地修改，要恢复吗？\\n（取消 = 丢弃本地修改，使用仓库版本）", "Unsaved local changes from last time were found. Restore them?\\n(Cancel = discard them and use the repository version)"], ["上传照片需要通过团队链接打开本页（或配置 token）。本次先不带照片提交。", "上传照片需要通过团队链接打开本页（或配置 token）。本次先不带照片提交。", "Photo upload needs this page opened via the team link (or a token). Submitting without photos this time."], ["先添加一个机型（例如 NFJ1175），再上传该机型的手册、图纸和选型文件。", "先添加一个机型（例如 NFJ1175），再上传该机型的手册、图纸和选型文件。", "Add a model first (e.g. NFJ1175), then upload its manuals, drawings and selection files."], ["上传文件需要先在「设置」里配置 GitHub token；或者改用外部链接。", "上传文件需要先在「设置」里配置 GitHub token；或者改用外部链接。", "Uploading needs a GitHub token in Settings — or use an external link."], ["搜索 Search… (图号 / 名称 / 设备 / 申请人)", "搜索… (图号 / 名称 / 设备 / 申请人)", "Search… (part no. / name / equipment / requester)"], ["例如 NFJ1175 / NFS550 / NFI1111RS", "例如 NFJ1175 / NFS550 / NFI1111RS", "e.g. NFJ1175 / NFS550 / NFI1111RS"], ["。浏览只需打开 Pages 链接；要编辑/保存需要一个有该仓库", "。浏览只需打开 Pages 链接；要编辑/保存需要一个有该仓库", ". Viewing needs nothing; editing needs a fine-grained token with"], ["概览页公告 Notice（显示在 Dashboard 顶部）", "概览页公告（显示在概览顶部）", "Notice (shown at the top of the Dashboard)"], ["例如 NFJ1175 Spare Parts Manual", "例如 NFJ1175 Spare Parts Manual", "e.g. NFJ1175 Spare Parts Manual"], ["采购部 Procurement — 询价/下单/库存/价格", "采购部 — 询价/下单/库存/价格", "Procurement — quotes, orders, stock, prices"], ["先填好 Owner / Repo / Token 并保存", "先填好 Owner / Repo / Token 并保存", "Fill in Owner / Repo / Token and save first"], ["已记录在本机，需要通过团队链接打开本页才能提交到服务器", "已记录在本机，需要通过团队链接打开本页才能提交到服务器", "Saved on this device only — open the page via the team link to submit to the server"], ["CSV 需要至少有 PartNo 列（列名同导出格式）", "CSV 需要至少有 PartNo 列（列名同导出格式）", "CSV needs at least a PartNo column (same headers as the export)"], ["DHL 1234567890 / 海运 Matson", "DHL 1234567890 / 海运 Matson", "DHL 1234567890 / Matson ocean"], ["更多：价格 / 交期 / 库位 / 重量 / 备注", "更多：价格 / 交期 / 库位 / 重量 / 备注", "More: price / lead time / location / weight / notes"], ["查手册 Find in parts manual", "查手册", "Find in parts manual"], ["申请人 Requester — 只提诉求、看进度", "申请人 — 只提诉求、看进度", "Requester — submit requests, track progress"], ["请先在「设置」里填写 GitHub token", "请先在「设置」里填写 GitHub token", "Enter a GitHub token in Settings first"], ["选型/报价 Selection & Quote", "选型/报价", "Selection & quote"], ["新配件申请 New Parts Request", "新配件申请", "New Parts Request"], ["采购部 Procurement</small>", "采购部</small>", "Procurement</small>"], ["用料 Parts used（保存时自动扣库存）", "用料（保存时自动扣库存）", "Parts used (stock is deducted on save)"], ["你的名字 Your name（记录在申请单上）", "你的名字（记录在申请单上）", "Your name (shown on requests)"], ["团队链接 Team link（给同事提申请用）", "团队链接（给同事提申请用）", "Team link (for colleagues to submit requests)"], ["南方路机图号 NFLG Part No. *", "南方路机图号 *", "NFLG Part No. *"], ["更多：小时数 / 年份 / 联系人 / 备注", "更多：小时数 / 年份 / 联系人 / 备注", "More: hours / year / contact / notes"], ["有未保存的修改，重新加载会丢弃它们。继续？", "有未保存的修改，重新加载会丢弃它们。继续？", "You have unsaved changes; reloading discards them. Continue?"], ["还没有文档。点「添加文档 / 上传」：≤ ", "还没有文档。点「添加文档 / 上传」：≤ ", "has no documents yet. Click \"Add document / upload\": files ≤ "], ["采购部邮箱（申请人提交后可一键发邮件通知）", "采购部邮箱（申请人提交后可一键发邮件通知）", "Procurement email (requesters can notify with one click)"], ["未配置 GitHub token（只读）", "未配置 GitHub token（只读）", "No GitHub token (read-only)"], ["没有配件，点「新配件」或「导入 CSV」", "没有配件，点「新配件」或「导入 CSV」", "No parts yet — click \"New part\" or \"Import CSV\""], ["MB，请放 OneDrive 后填链接。", "MB，请放 OneDrive 后填链接。", "MB — put it on OneDrive and paste the link."], ["GitHub 连接 Connection", "GitHub 连接", "GitHub connection"], ["配件申请 Parts Requests", "配件申请", "Parts Requests"], ["未关闭申请 Open requests", "未关闭申请", "Open requests"], ["停机设备 Equipment down", "停机设备", "Equipment down"], ["最近维修 Recent service", "最近维修", "Recent service"], ["控制系统 Control System", "控制系统", "Control system"], ["照片 Photos（损坏部位、铭牌等）", "照片（损坏部位、铭牌等）", "Photos (damaged part, nameplate, …)"], ["＋ 新设备 New equipment", "＋ 新设备", "＋ New equipment"], ["配件目录 Parts Catalog", "配件目录", "Parts Catalog"], ["技术参数 Specification", "技术参数", "Specification"], ["还没有申请。点「新申请」提交第一条。", "还没有申请。点「新申请」提交第一条。", "No requests yet. Click \"New request\" to submit the first one."], ["没找到，可以直接在上面手填名称和描述", "没找到，可以直接在上面手填名称和描述", "Nothing found — just type the name and description above"], ["运输方式 / 单号 Tracking", "运输方式 / 单号", "Shipping / tracking"], ["链接需以 http(s):// 开头", "链接需以 http(s):// 开头", "Link must start with http(s)://"], ["库存低于安全线 Low stock", "库存低于安全线", "Low stock"], ["＋ 新申请 New request", "＋ 新申请", "＋ New request"], ["例如：动颚板磨损严重，出料粒径偏大", "例如：动颚板磨损严重，出料粒径偏大", "e.g. swing jaw plate badly worn, product size too large"], ["英文名称 English name", "英文名称", "English name"], ["＋ 新维修记录 New entry", "＋ 新维修记录", "＋ New entry"], ["停机时间 Downtime (h)", "停机时间 (h)", "Downtime (h)"], ["请选择要上传的文件，或改选其他来源", "请选择要上传的文件，或改选其他来源", "Choose a file to upload, or pick another source"], ["站点 Sites &amp; 公告", "站点 &amp; 公告", "Sites &amp; notice"], ["维修记录 Service Log", "维修记录", "Service Log"], ["撤销 Undo (Ctrl+Z)", "撤销 (Ctrl+Z)", "Undo (Ctrl+Z)"], ["重做 Redo (Ctrl+Y)", "重做 (Ctrl+Y)", "Redo (Ctrl+Y)"], ["库存 Stock on hand", "库存", "Stock on hand"], ["维护手册 Maintenance", "维护手册", "Maintenance manual"], ["配件手册 Spare Parts", "配件手册", "Spare parts manual"], ["用途 / 故障原因 Reason", "用途 / 故障原因", "Reason / failure"], ["备注 / 替代件 / 易损件周期", "备注 / 替代件 / 易损件周期", "Notes / alternatives / wear interval"], ["申请人 Requester *", "申请人 *", "Requester *"], ["最近单价 Last price", "最近单价", "Last price"], ["交期 Lead time（天）", "交期（天）", "Lead time (days)"], ["重量 kg / 尺寸（海运用）", "重量 kg / 尺寸（海运用）", "Weight kg / dimensions (for ocean freight)"], ["型号 Model code *", "型号 *", "Model code *"], ["MB，Pages 直接可打开）", "MB，Pages 直接可打开）", "MB, opens directly on the site)"], ["暂无文件（先建记录，之后再补）", "暂无文件（先建记录，之后再补）", "No file yet (create the record, attach later)"], ["\\n仓库里的文件也会一起删除。", "\\n仓库里的文件也会一起删除。", "\\nThe file in the repository will be deleted too."], ["设备台账 Equipment", "设备台账", "Equipment"], ["库存预警 Low stock", "库存预警", "Low stock"], ["安全库存 Min stock", "安全库存", "Min stock"], ["操作手册 Operation", "操作手册", "Operation manual"], ["电气图 Electrical", "电气图", "Electrical diagram"], ["的零配件手册还没上传到文档库", "的零配件手册还没上传到文档库", ": spare parts manual not in Documents yet"], ["＋ 新配件 New part", "＋ 新配件", "＋ New part"], ["编号/别名 Unit no.", "编号/别名", "Unit no."], ["工时 Labor hours", "工时", "Labor hours"], ["处理过程 Work done", "处理过程", "Work done"], ["不是本系统的 db.json", "不是本系统的 db.json", "Not a db.json from this app"], ["配件申请 Requests", "配件申请", "Requests"], ["文档库 Documents", "文档库", "Documents"], ["已保存到 GitHub ✓", "已保存到 GitHub ✓", "Saved to GitHub ✓"], ["申请进度 Pipeline", "申请进度", "Pipeline"], ["已申请 Requested", "已申请", "Requested"], ["液压图 Hydraulic", "液压图", "Hydraulic diagram"], ["提交后打开邮件通知采购部（", "提交后打开邮件通知采购部（", "After submitting, open an email to Procurement ("], ["用料 Parts used", "用料", "Parts used"], ["文件已上传，正在保存记录…", "文件已上传，正在保存记录…", "File uploaded, saving record…"], ["下载 db.json 备份", "下载 db.json 备份", "Download db.json backup"], ["概览 Dashboard", "概览", "Dashboard"], ["零件号 Part No.", "零件号", "Part No."], ["已到货 Received", "已到货", "Received"], ["照片/视频 Photos", "照片/视频", "Photos / video"], ["设备 Equipment", "设备", "Equipment"], ["需要日期 Need by", "需要日期", "Need by"], ["名称或描述（手填也可以）", "名称或描述（手填也可以）", "Name or description (free text OK)"], ["报价 Quote（总价）", "报价（总价）", "Quote (total)"], ["处理 Work done", "处理", "Work done"], ["故障现象 Issue *", "故障现象 *", "Issue *"], ["— 机型 Model —", "— 机型 —", "— model —"], ["设置 Settings", "设置", "Settings"], ["紧急申请 Urgent", "紧急申请", "Urgent"], ["图号 Part No.", "图号", "Part No."], ["适用机型 Models", "适用机型", "Models"], ["询价中 Quoting", "询价中", "Quoting"], ["已下单 Ordered", "已下单", "Ordered"], ["紧急度 Urgency", "紧急度", "Urgency"], ["你的名字（下次自动填）", "你的名字（下次自动填）", "Your name (remembered next time)"], ["库位 Location", "库位", "Location"], ["＋ 添加文档 / 上传", "＋ 添加文档 / 上传", "＋ Add document / upload"], ["文档 Document", "文档", "Document"], [" 台设备，先移走再删除", " 台设备，先移走再删除", " units — move them first"], ["分类 Category", "分类", "Category"], ["文件来源 Source", "文件来源", "Source"], ["数据保存在同一个仓库的", "数据保存在同一个仓库的", "Data lives in this repository at"], ["\\n权限 push: ", "\\n权限 push: ", "\\npush permission: "], ["配件目录 Parts", "配件目录", "Parts"], ["保存到 GitHub", "保存到 GitHub", "Save to GitHub"], ["适用机型（逗号分隔）", "适用机型（逗号分隔）", "Models (comma-separated)"], ["在途 Shipped", "在途", "Shipped"], ["备用 Standby", "备用", "Standby"], ["退役 Retired", "退役", "Retired"], ["发动机 Engine", "发动机", "Engine"], ["配件 Items *", "配件 *", "Items *"], ["机型 Model *", "机型 *", "Model *"], ["条，请输入更具体的词", "条，请输入更具体的词", " more — type a more specific term"], ["序列号 Serial", "序列号", "Serial"], ["运行小时 Hours", "运行小时", "Hours"], ["NFLG 服务联系人", "NFLG 服务联系人", "NFLG service contact"], ["是否已反馈 NFLG", "是否已反馈 NFLG", "Reported to NFLG?"], ["标题 Title *", "标题 *", "Title *"], ["版本 Version", "版本", "Version"], ["站点列表（逗号分隔）", "站点列表（逗号分隔）", "Sites (comma-separated)"], ["，保存时会自动创建", "，保存时会自动创建", " yet; it will be created on first save"], ["故障 / 工作内容", "故障 / 工作内容", "Issue / work done"], ["关闭 Closed", "关闭", "Closed"], ["正常 Normal", "正常", "Normal"], ["紧急 Urgent", "紧急", "Urgent"], ["在用 Active", "在用", "Active"], ["看板 Kanban", "看板", "Kanban"], ["状态 Status", "状态", "Status"], ["OEM / 原厂号", "OEM / 原厂号", "OEM / manufacturer no."], ["图号和中文名称必填", "图号和名称必填", "Part number and a name are required"], ["出厂年份 Year", "出厂年份", "Year"], ["是 – 已反馈厂家", "是 – 已反馈厂家", "Yes – reported"], ["设备和故障现象必填", "设备和故障现象必填", "Equipment and issue are required"], ["删除仓库文件失败：", "删除仓库文件失败：", "Could not delete repository file: "], ["\\n仍然删除记录？", "\\n仍然删除记录？", "\\nDelete the record anyway?"], ["从 JSON 恢复", "从 JSON 恢复", "Restore from JSON"], ["— 工地/站点 —", "— 工地/站点 —", "— site —"], ["（使用本地数据）", "（使用本地数据）", " (using local data)"], [" 项</div>", " 项</div>", " items</div>"], ["全部状态 All", "全部状态", "All statuses"], ["其他 Other", "其他", "Other"], ["配件 Items", "配件", "Items"], ["预计到货 ETA", "预计到货", "ETA"], ["机型 Model", "机型", "Model"], ["可不填，按名称搜", "可不填，按名称搜", "optional — search by name"], ["至少添加一项配件", "至少添加一项配件", "Add at least one item"], ["导入完成：新增 ", "导入完成：新增 ", "Import done: added "], ["机型 Model", "机型", "Model"], ["故障 Issue", "故障", "Issue"], ["技工 / 负责人", "技工 / 负责人", "Technician"], ["是 – 保修索赔", "是 – 保修索赔", "Yes – warranty claim"], ["仓库 Pages", "仓库", "Repository"], ["上传到仓库（≤ ", "上传到仓库（≤ ", "Upload to repository (≤ "], ["清除 token", "清除 token", "Clear token"], ["已恢复，记得保存", "已恢复，记得保存", "Restored — remember to save"], ["— 选择设备 —", "— 选择设备 —", "— equipment —"], ["有未保存的修改", "有未保存的修改", "Unsaved changes"], ["没有低库存配件", "没有低库存配件", "No parts below minimum stock"], ["还没有维修记录", "还没有维修记录", "No service entries yet"], ["加急 High", "加急", "High"], ["停机 Down", "停机", "Down"], ["站点 Site", "站点", "Site"], ["名称 / 描述", "名称 / 描述", "Name / description"], ["照片上传失败：", "照片上传失败：", "Photo upload failed: "], ["名称 Name", "名称", "Name"], ["单位 Unit", "单位", "Unit"], ["设备小时表读数", "设备小时表读数", "Hour meter reading"], ["版本 / 日期", "版本 / 日期", "Version / date"], ["链接 Link", "链接", "Link"], ["履带颚式破碎机", "履带颚式破碎机", "Tracked jaw crusher"], ["机型和标题必填", "机型和标题必填", "Model and title are required"], ["角色 Role", "角色", "Role"], ["已保存连接设置", "已保存连接设置", "Connection saved"], ["生成并复制链接", "生成并复制链接", "Generate & copy link"], ["已复制到剪贴板", "已复制到剪贴板", "Copied to clipboard"], ["数据 Data", "数据", "Data"], ["切换深色/浅色", "切换深色/浅色", "Toggle dark / light"], ["⟳ 重新加载", "⟳ 重新加载", "⟳ Reload"], ["仓库里还没有", "仓库里还没有", "Repository has no"], ["导出 CSV", "导出 CSV", "Export CSV"], ["导入 CSV", "导入 CSV", "Import CSV"], ["单号 No.", "单号", "No."], ["＋ 添加一行", "＋ 添加一行", "＋ Add line"], ["· 装机数 ", "· 装机数 ", "· qty on machine "], ["\\n申请人：", "\\n申请人：", "\\nRequester: "], ["中文名称 *", "中文名称", "Chinese name 中文"], ["图号已存在：", "图号已存在：", "Part number already exists: "], ["CSV 为空", "CSV 为空", "CSV is empty"], ["编辑维修记录", "编辑维修记录", "Edit service entry"], ["＋ 添加用料", "＋ 添加用料", "＋ Add part used"], ["＋ 添加机型", "＋ 添加机型", "＋ Add model"], ["暂无在册设备", "暂无在册设备", "No units registered"], ["该型号已存在", "该型号已存在", "That model already exists"], ["该机型还有 ", "该机型还有 ", "This model still has "], ["保存连接设置", "保存连接设置", "Save connection"], ["保存失败：", "保存失败：", "Save failed: "], ["加载失败：", "加载失败：", "Load failed: "], ["你加载之后", "你加载之后", "after you loaded"], ["最后保存 ", "最后保存 ", "Last saved "], ["当前用户 ", "当前用户 ", "User "], ["查看/编辑", "查看/编辑", "View / edit"], ["零配件手册", "零配件手册", "spare parts manual"], ["请填申请人", "请填申请人", "Please enter the requester"], ["上传照片 ", "上传照片 ", "Uploading photo "], ["需要日期：", "需要日期：", "Need by: "], ["\\n原因：", "\\n原因：", "\\nReason: "], ["配件申请 ", "配件申请 ", "Parts request "], ["确定删除？", "确定删除？", "Delete?"], ["只看低库存", "只看低库存", "Low stock only"], ["交期(天)", "交期(天)", "Lead (days)"], ["编号/别名", "编号/别名", "Unit no."], ["还没有设备", "还没有设备", "No equipment yet"], ["停机(h)", "停机(h)", "Downtime (h)"], ["新维修记录", "新维修记录", "New service entry"], ["在册设备 ", "在册设备 ", "Units: "], ["上传/链接", "上传/链接", "Upload / link"], [" 个文档、", " 个文档、", " documents and "], ["上传中… ", "上传中… ", "Uploading… "], ["上传失败：", "上传失败：", "Upload failed: "], ["连接成功：", "连接成功：", "Connected: "], ["连接失败：", "连接失败：", "Connection failed: "], ["点左边生成", "点左边生成", "click Generate"], ["↶ 撤销", "↶ 撤销", "↶ Undo"], ["保存中…", "保存中…", "Saving…"], ["查看全部", "查看全部", "View all"], ["适用机型", "适用机型", "Models"], ["安全库存", "安全库存", "Min stock"], ["申请补货", "申请补货", "Reorder"], ["最近维修", "最近维修", "Last service"], ["设备 *", "设备 *", "Equipment *"], ["手册图 ", "手册图 ", "Manual fig. "], ["申请日期", "申请日期", "Request date"], ["进度记录", "进度记录", "History"], ["提交申请", "提交申请", "Submit request"], ["紧急度：", "紧急度：", "Urgency: "], ["【紧急】", "【紧急】", "[URGENT]"], ["最近价格", "最近价格", "Last price"], ["编辑配件", "编辑配件", "Edit part"], ["中文名称", "中文名称", "Chinese name"], ["报价日期", "报价日期", "Quote date"], ["，更新 ", "，更新 ", ", updated "], ["开放申请", "开放申请", "Open requests"], ["编辑设备", "编辑设备", "Edit equipment"], ["机型必填", "机型必填", "Model is required"], ["添加机型", "添加机型", "Add model"], ["编辑机型", "编辑机型", "Edit model"], ["删除机型", "删除机型", "Delete model"], ["发动机 ", "发动机 ", "Engine "], ["型号必填", "型号必填", "Model code is required"], ["添加文档", "添加文档", "Add document"], ["编辑文档", "编辑文档", "Edit document"], ["测试连接", "测试连接", "Test connection"], ["(库存 ", "(库存 ", "(stock "], ["注意：", "注意：", "Note: "], ["其他人", "其他人", "someone else"], ["已同步", "已同步", "In sync"], ["采购部", "采购部", "Procurement"], ["申请人", "申请人", "Requester"], ["…共 ", "…共 ", "… "], ["紧急度", "紧急度", "Urgency"], ["申请 ", "申请 ", "Request "], ["打开 ", "打开 ", "Open "], ["还有 ", "还有 ", ""], ["新配件", "新配件", "New part"], ["小时数", "小时数", "Hours"], ["记维修", "记维修", "Log service"], ["新设备", "新设备", "New equipment"], ["上传人", "上传人", "Uploaded by"], ["未上传", "未上传", "Not uploaded"], ["当前 ", "当前 ", "current: "], ["文件 ", "文件 ", "File "], ["超过 ", "超过 ", "exceeds "], ["删除「", "删除「", "Delete \""], ["已应用", "已应用", "Applied"], ["在途", "在途", "On order"], ["位置", "位置", "Location"], ["日期", "日期", "Date"], ["状态", "状态", "Status"], ["站点", "站点", "Site"], ["设备", "设备", "Equipment"], ["编辑", "编辑", "Edit"], ["删除", "删除", "Delete"], ["数量", "数量", "Qty"], ["项 ", "项 ", "item "], ["添加", "添加", "Add"], ["备注", "备注", "Notes"], ["取消", "取消", "Cancel"], ["保存", "保存", "Save"], ["创建", "创建", "Created"], ["修改", "修改", "Edited"], ["名称", "名称", "Name"], ["单位", "单位", "Unit"], ["库存", "库存", "Stock"], ["库位", "库位", "Location"], ["申请", "申请", "Request"], ["币种", "币种", "Currency"], ["年份", "年份", "Year"], ["技工", "技工", "Technician"], ["工时", "工时", "Hours"], ["来源", "来源", "Source"], ["大小", "大小", "Size"], ["打开", "打开", "Open"], ["」？", "」？", "\"?"], ["应用", "应用", "Apply"], ["图", "图", "Fig. "], ["否", "否", "No"]];
+/* ==== /i18n table ==== */
+let LANG = localStorage.getItem('nflg.lang') || (navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en');
+const I18N_RE = () => new RegExp(I18N.map(x=>x[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
+const I18N_MAP = {}; let i18nRe=null;
+function L(s){ if(s==null) return s; s=String(s); if(!i18nRe){ for(const [k,zh,en] of I18N) I18N_MAP[k]=[zh,en]; i18nRe=I18N_RE(); } const i=LANG==='zh'?0:1;
+  return s.split(/(\uE000[^\uE001]*\uE001)/).map((seg,n)=> n%2 ? seg.slice(1,-1) : seg.replace(i18nRe,m=>I18N_MAP[m][i])).join(''); }
+const unesc = s => String(s??'').replace(/[\uE000\uE001]/g,'');
+function setLang(l){ LANG=l; localStorage.setItem('nflg.lang',l); document.documentElement.lang=l==='zh'?'zh-CN':'en'; applyStaticL(); render(); }
+let NAV_SRC=null;
+function applyStaticL(){ const nav=document.querySelector('nav'); if(!NAV_SRC) NAV_SRC=nav.innerHTML; nav.innerHTML=L(NAV_SRC); document.querySelectorAll('nav button[data-view]').forEach(b=>b.onclick=()=>{ view=b.dataset.view; render(); }); $('#lang').onclick=()=>setLang(LANG==='zh'?'en':'zh'); $('#lang').textContent=LANG==='zh'?'EN':'中文';
+  const q=$('#q'); q.placeholder=L(q.dataset.ph||(q.dataset.ph=q.placeholder)); for(const id of ['undo','redo','reload','save']){ const b=$('#'+id); b.dataset.src=b.dataset.src||b.innerHTML; b.dataset.t=b.dataset.t||b.title; b.innerHTML=L(b.dataset.src); b.title=L(b.dataset.t); } }
+const _alert=window.alert, _confirm=window.confirm; window.alert=m=>_alert(unesc(L(m))); window.confirm=m=>_confirm(unesc(L(m)));   // GitHub hard limit is 100 MB per file; keep headroom for base64 + API timeouts
 
 /* ============ state ============ */
 let db = emptyDb();
@@ -179,15 +194,17 @@ function emptyDb(){ return {meta:{version:1,updated:null,updatedBy:null,nextReqN
 const $ = s => document.querySelector(s);
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const today = () => new Date().toISOString().slice(0,10);
-const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc = s => '\uE000'+String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))+'\uE001';
 const lbl = (list,k) => (list.find(x=>x[0]===k)||[k,k])[1];
 const fmtMoney = (n,c) => n==null||n===''?'':(c||'USD')+' '+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
 const eqName = id => { const e=db.equipment.find(x=>x.id===id); return e? `${e.model}${e.nickname?' · '+e.nickname:''}` : ''; };
 const partById = id => db.parts.find(p=>p.id===id);
+const pname = p => { const a=LANG==='zh'?[p.nameZh,p.nameEn]:[p.nameEn||p.nameZh,p.nameEn?p.nameZh:'']; return esc(a[0])+(a[1]?`<br><small style="color:var(--muted)">${esc(a[1])}</small>`:''); };
+const pnameTxt = p => LANG==='zh' ? (p.nameZh||p.nameEn||'') : (p.nameEn||p.nameZh||'');
 
 /* ============ persistence ============ */
-function setStatus(html){ $('#status').innerHTML = html; }
-function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2600); }
+function setStatus(html){ $('#status').innerHTML = L(html); }
+function toast(msg){ const t=$('#toast'); t.textContent=L(msg); t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2600); }
 function markDirty(){ dirty=true; localStorage.setItem('nflg.draft', JSON.stringify(db)); updateStatus(); }
 function updateStatus(){
   const conn = gh.token ? `<span class="dot ok"></span>GitHub: <b>${esc(gh.owner)}/${esc(gh.repo)}</b>` : `<span class="dot warn"></span>未配置 GitHub token（只读）`;
@@ -231,7 +248,7 @@ async function load(){
 
 async function save(force){
   if (!gh.token){ toast('请先在「设置」里填写 GitHub token'); return; }
-  $('#save').disabled=true; $('#save').textContent='保存中…';
+  $('#save').disabled=true; $('#save').textContent=L('保存中…');
   try {
     // conflict check: has someone else saved since we loaded?
     const r = await fetch(apiUrl()+'?ref='+encodeURIComponent(gh.branch||'main'), {headers:ghHeaders(), cache:'no-store'});
@@ -239,8 +256,8 @@ async function save(force){
     if (r.ok){ const j=await r.json(); currentSha=j.sha;
       if (!force && remoteSha && currentSha!==remoteSha){
         const remote=JSON.parse(b64dec(j.content));
-        if (!confirm(`注意：${remote.meta?.updatedBy||'其他人'} 在 ${remote.meta?.updated||'你加载之后'} 保存过新版本。\n\n确定 = 用你的版本覆盖（对方的修改会丢失）\n取消 = 先放弃保存，点「重新加载」后再改`)) {
-          $('#save').textContent='保存到 GitHub'; updateStatus(); return; }
+        if (!confirm(`注意：${remote.meta?.updatedBy?esc(remote.meta.updatedBy):'其他人'} 在 ${remote.meta?.updated?esc(remote.meta.updated):'你加载之后'} 保存过新版本。\n\n确定 = 用你的版本覆盖（对方的修改会丢失）\n取消 = 先放弃保存，点「重新加载」后再改`)) {
+          $('#save').textContent=L('保存到 GitHub'); updateStatus(); return; }
       }
     }
     db.meta.updated = new Date().toISOString(); db.meta.updatedBy = me();
@@ -251,7 +268,7 @@ async function save(force){
     const j = await p.json(); remoteSha=j.content.sha; dirty=false; localStorage.removeItem('nflg.draft');
     toast('已保存到 GitHub ✓');
   } catch(e){ alert('保存失败：'+e.message); }
-  $('#save').textContent='保存到 GitHub'; updateStatus();
+  $('#save').textContent=L('保存到 GitHub'); updateStatus();
 }
 
 /* ============ helpers ============ */
@@ -267,8 +284,8 @@ function csv(rows, name){
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['\ufeff'+s],{type:'text/csv'})); a.download=name; a.click();
 }
 function opts(list, cur, blank){ return (blank?`<option value="">${blank}</option>`:'')+list.map(([k,v])=>`<option value="${k}" ${k===cur?'selected':''}>${v}</option>`).join(''); }
-function eqOpts(cur){ return opts(db.equipment.map(e=>[e.id, `${e.model} ${e.serial?'#'+e.serial:''} ${e.nickname?'· '+e.nickname:''} (${e.site||''})`]), cur, '— 选择设备 —'); }
-function siteOpts(cur){ const s=db.meta.sites||[]; return opts(s.map(x=>[x,x]), cur, '— 工地/站点 —'); }
+function eqOpts(cur){ return opts(db.equipment.map(e=>[e.id, esc(`${e.model} ${e.serial?'#'+e.serial:''} ${e.nickname?'· '+e.nickname:''} (${e.site||''})`)]), cur, '— 选择设备 —'); }
+function siteOpts(cur){ const s=db.meta.sites||[]; return opts(s.map(x=>[esc(x),esc(x)]), cur, '— 工地/站点 —'); }
 
 /* ============ render ============ */
 function render(){
@@ -279,8 +296,8 @@ function render(){
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
   const v=$('#view');
   const fn={dash:renderDash,requests:renderRequests,parts:renderParts,equipment:renderEquipment,service:renderService,docs:renderDocs,settings:renderSettings}[view];
-  $('#title').textContent = {dash:'概览 Dashboard',requests:'配件申请 Parts Requests',parts:'配件目录 Parts Catalog',equipment:'设备台账 Equipment',service:'维修记录 Service Log',docs:'文档库 Documents',settings:'设置 Settings'}[view];
-  v.innerHTML = fn();
+  $('#title').textContent = L({dash:'概览 Dashboard',requests:'配件申请 Parts Requests',parts:'配件目录 Parts Catalog',equipment:'设备台账 Equipment',service:'维修记录 Service Log',docs:'文档库 Documents',settings:'设置 Settings'}[view]);
+  v.innerHTML = L(fn());
   v.querySelectorAll('th[data-sort]').forEach(h=>h.onclick=()=>{ const k=h.dataset.sort; const st=sort[view]; sort[view] = st&&st[0]===k ? [k,-st[1]] : [k,1]; render(); });
   bindPipeline();
   updateStatus();
@@ -305,7 +322,7 @@ function renderDash(){
     <div style="padding:12px">${pipelineHtml(open)}</div></div>
   <div class="panel"><h2>库存预警 Low stock</h2>
     ${low.length? `<table><tr><th>图号 Part No.</th><th>名称</th><th>适用机型</th><th class="num">库存</th><th class="num">安全库存</th><th class="num">在途</th><th>位置</th><th></th></tr>
-      ${low.map(p=>`<tr><td class="mono">${esc(p.partNo)}</td><td>${esc(p.nameZh)}<br><small style="color:var(--muted)">${esc(p.nameEn)}</small></td><td>${esc((p.models||[]).join(', '))}</td><td class="num"><span class="chip low">${stockOf(p)}</span></td><td class="num">${esc(p.minStock)}</td><td class="num">${onOrderQty(p.id)||''}</td><td>${esc(p.location)}</td><td class="row-actions"><button onclick="newRequestFor('${p.id}')">申请补货</button></td></tr>`).join('')}</table>`
+      ${low.map(p=>`<tr><td class="mono">${esc(p.partNo)}</td><td>${pname(p)}</td><td>${esc((p.models||[]).join(', '))}</td><td class="num"><span class="chip low">${stockOf(p)}</span></td><td class="num">${esc(p.minStock)}</td><td class="num">${onOrderQty(p.id)||''}</td><td>${esc(p.location)}</td><td class="row-actions"><button onclick="newRequestFor('${p.id}')">申请补货</button></td></tr>`).join('')}</table>`
       : `<div class="empty">没有低库存配件</div>`}
   </div>
   <div class="panel"><h2>最近维修 Recent service</h2>
@@ -319,7 +336,7 @@ function pipelineHtml(list){
   return `<div class="pipe">${STATUSES.map(([k,v])=>{ const items=list.filter(r=>r.status===k);
     return `<div class="col" data-status="${k}"><h3>${v}<span>${items.length}</span></h3>${items.map(r=>`
       <div class="rcard" draggable="${isProc()}" data-id="${r.id}" onclick="editRequest('${r.id}')">
-        <b>${esc(r.no)} ${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency).split(' ')[0]}</span>`:''}</b>
+        <b>${esc(r.no)} ${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:''}</b>
         ${(r.items||[]).slice(0,3).map(i=>`<div>${esc(i.partNo||'')} ${esc(i.name||'')} ×${esc(i.qty)}</div>`).join('')}${(r.items||[]).length>3?`<div class="meta">…共 ${r.items.length} 项</div>`:''}
         <div class="meta">${esc(r.site||'')} · ${esc(eqName(r.equipmentId))}<br>${esc(r.requester||'')} · ${esc(r.date||'')}${r.eta?` · ETA ${esc(r.eta)}`:''}</div>
       </div>`).join('')}</div>`; }).join('')}</div>`;
@@ -374,7 +391,7 @@ function renderParts(){
       <button class="btn" onclick="importPartsCsv()">导入 CSV</button>
       <button class="btn" onclick="exportParts()">导出 CSV</button></div>
     <div class="panel">${list.length? `<table><tr>${th('partNo','图号 Part No.')}${th('nameZh','名称 Name')}<th>适用机型 Models</th>${th('unit','单位')}${th('stock','库存','num')}${th('minStock','安全库存','num')}<th class="num">在途</th>${th('lastPrice','最近价格','num')}${th('leadTimeDays','交期(天)','num')}${th('location','库位')}<th></th></tr>
-      ${list.map(p=>`<tr><td class="mono"><a href="#" onclick="editPart('${p.id}');return false">${esc(p.partNo)}</a>${p.oemNo?`<br><small style="color:var(--muted)">OEM ${esc(p.oemNo)}</small>`:''}</td><td>${esc(p.nameZh)}<br><small style="color:var(--muted)">${esc(p.nameEn)}</small></td><td>${esc((p.models||[]).join(', '))}</td><td>${esc(p.unit)}</td>
+      ${list.map(p=>`<tr><td class="mono"><a href="#" onclick="editPart('${p.id}');return false">${esc(p.partNo)}</a>${p.oemNo?`<br><small style="color:var(--muted)">OEM ${esc(p.oemNo)}</small>`:''}</td><td>${pname(p)}</td><td>${esc((p.models||[]).join(', '))}</td><td>${esc(p.unit)}</td>
         <td class="num">${isLow(p)?`<span class="chip low">${stockOf(p)}</span>`:stockOf(p)}</td><td class="num">${esc(p.minStock)}</td><td class="num">${onOrderQty(p.id)||''}</td><td class="num">${fmtMoney(p.lastPrice,p.currency)}${p.lastPriceDate?`<br><small style="color:var(--muted)">${esc(p.lastPriceDate)}</small>`:''}</td><td class="num">${esc(p.leadTimeDays)}</td><td>${esc(p.location)}</td>
         <td class="row-actions"><button onclick="newRequestFor('${p.id}')">申请</button><button onclick="editPart('${p.id}')">编辑</button><button class="del" onclick="del('parts','${p.id}')">删除</button></td></tr>`).join('')}</table>` : `<div class="empty">没有配件，点「新配件」或「导入 CSV」</div>`}</div>`;
 }
@@ -418,7 +435,7 @@ function renderService(){
 
 /* ============ documents ============ */
 const models = () => db.meta.models || (db.meta.models=[]);
-const modelOpts = cur => opts(models().map(m=>[m.code, m.code+(m.nameZh?' · '+m.nameZh:'')]), cur, '— 机型 Model —');
+const modelOpts = cur => opts(models().map(m=>[esc(m.code), esc(m.code+(m.nameZh?' · '+m.nameZh:''))]), cur, '— 机型 Model —');
 const fmtSize = b => !b ? '' : b>1048576 ? (b/1048576).toFixed(1)+' MB' : Math.max(1,Math.round(b/1024))+' KB';
 const docHref = d => d.path ? d.path.split('/').map(encodeURIComponent).join('/') : (d.url||'');
 function curModel(){ const m=sessionStorage.getItem('f.model'); return models().some(x=>x.code===m) ? m : (models()[0]?.code||''); }
@@ -450,7 +467,7 @@ function editModel(code){
     ${field('m-code','型号 Model code *',inp('m-code',m.code,'text','placeholder="NFJ1175 / NFS550 / NFI1111RS"'))}
     ${field('m-engine','发动机 Engine',inp('m-engine',m.engine,'text','placeholder="Cat C9.3B"'))}
     ${field('m-zh','中文名称',inp('m-zh',m.nameZh,'text','placeholder="履带颚式破碎机"'))}
-    ${field('m-en','English name',inp('m-en',m.nameEn,'text','placeholder="Tracked jaw crusher"'))}
+    ${field('m-en','英文名称 English name',inp('m-en',m.nameEn,'text','placeholder="Tracked jaw crusher"'))}
     <div class="full">${field('m-notes','备注',`<textarea id="m-notes">${esc(m.notes||'')}</textarea>`)}</div>
   </div><div class="actions">${code?`<button class="btn danger" onclick="delModel('${esc(code)}')">删除机型</button><span style="flex:1"></span>`:''}<button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="saveModel('${esc(code||'')}')">保存</button></div>`);
 }
@@ -464,7 +481,7 @@ function saveModel(code){
 function delModel(code){
   const n=(db.docs||[]).filter(d=>d.model===code).length, u=db.equipment.filter(e=>e.model===code).length;
   if(n||u) return alert(`该机型还有 ${n} 个文档、${u} 台设备，先移走再删除`);
-  if(!confirm('删除机型 '+code+'？')) return; snapshot(); db.meta.models=models().filter(x=>x.code!==code); markDirty(); closeModal(); render();
+  if(!confirm('删除机型 '+esc(code)+'？')) return; snapshot(); db.meta.models=models().filter(x=>x.code!==code); markDirty(); closeModal(); render();
 }
 
 let docFile=null;
@@ -502,7 +519,7 @@ async function saveDoc(id){
   if(src==='upload'&&docFile){
     if(!gh.token) return alert('上传文件需要先在「设置」里配置 GitHub token；或者改用外部链接。');
     if(docFile.size>MAX_UPLOAD_MB*1048576) return alert(`文件 ${fmtSize(docFile.size)} 超过 ${MAX_UPLOAD_MB} MB，请放 OneDrive 后填链接。`);
-    const btn=$('#d-save'); btn.disabled=true; btn.textContent='上传中… '+fmtSize(docFile.size);
+    const btn=$('#d-save'); btn.disabled=true; btn.textContent=L('上传中… ')+fmtSize(docFile.size);
     try { uploaded = await uploadToRepo(`docs/${v('model')}/${docFile.name.replace(/[\\/:*?"<>|]/g,'_')}`, docFile); }
     catch(e){ btn.disabled=false; btn.textContent='保存'; return alert('上传失败：'+e.message); }
     if(existing?.path && existing.path!==uploaded.path) deleteFromRepo(existing.path, existing.sha).catch(()=>{});
@@ -517,7 +534,7 @@ async function saveDoc(id){
 }
 async function delDoc(id){
   const d=db.docs.find(x=>x.id===id); if(!d) return;
-  if(!confirm(`删除「${d.title}」？${d.path?'\n仓库里的文件也会一起删除。':''}`)) return;
+  if(!confirm(`删除「${esc(d.title)}」？${d.path?'\n仓库里的文件也会一起删除。':''}`)) return;
   if(d.path){ try{ await deleteFromRepo(d.path,d.sha); }catch(e){ if(!confirm('删除仓库文件失败：'+e.message+'\n仍然删除记录？')) return; } }
   snapshot(); db.docs=db.docs.filter(x=>x.id!==id); markDirty(); render(); if(d.path) await save(false);
 }
@@ -575,7 +592,7 @@ function downloadJson(){ const a=document.createElement('a'); a.href=URL.createO
 function uploadJson(){ const inp=document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange=async()=>{ try{ const j=JSON.parse(await inp.files[0].text()); if(!j.parts||!j.requests) throw new Error('不是本系统的 db.json'); snapshot(); db=Object.assign(emptyDb(),j); markDirty(); render(); toast('已恢复，记得保存'); }catch(e){alert(e.message);} }; inp.click(); }
 
 /* ============ modals ============ */
-function openModal(html){ $('#modal').innerHTML=html; $('#overlay').classList.add('open'); const f=$('#modal').querySelector('input,select,textarea'); if(f) f.focus(); }
+function openModal(html){ $('#modal').innerHTML=L(html); $('#overlay').classList.add('open'); const f=$('#modal').querySelector('input,select,textarea'); if(f) f.focus(); }
 function closeModal(){ $('#overlay').classList.remove('open'); }
 $('#overlay').onclick=e=>{ if(e.target.id==='overlay') closeModal(); };
 const field=(id,label,inner)=>`<div><label class="f" for="${id}">${label}</label>${inner}</div>`;
@@ -614,7 +631,7 @@ function editPart(id){
     ${field('p-no','南方路机图号 NFLG Part No. *',inp('p-no',p.partNo))}
     ${field('p-oem','OEM / 原厂号',inp('p-oem',p.oemNo))}
     ${field('p-zh','中文名称 *',inp('p-zh',p.nameZh))}
-    ${field('p-en','English name',inp('p-en',p.nameEn))}
+    ${field('p-en','英文名称 English name',inp('p-en',p.nameEn))}
     ${field('p-models','适用机型（逗号分隔）',inp('p-models',(p.models||[]).join(', '),'text','placeholder="NFS350, GLB4000"'))}
     ${field('p-unit','单位 Unit',inp('p-unit',p.unit))}
     ${field('p-stock','库存 Stock on hand',inp('p-stock',p.stock,'number'))}
@@ -631,8 +648,8 @@ function editPart(id){
   </div><div class="actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="savePart('${id||''}')">保存</button></div>`);
 }
 function savePart(id){
-  const v=k=>$('#p-'+k).value.trim(); if(!v('no')||!v('zh')) return alert('图号和中文名称必填');
-  const dup=db.parts.find(x=>x.partNo===v('no')&&x.id!==id); if(dup) return alert('图号已存在：'+dup.nameZh);
+  const v=k=>$('#p-'+k).value.trim(); if(!v('no')||(!v('zh')&&!v('en'))) return alert('图号和中文名称必填');
+  const dup=db.parts.find(x=>x.partNo===v('no')&&x.id!==id); if(dup) return alert('图号已存在：'+esc(dup.nameZh));
   snapshot(); const p = id? partById(id) : (db.parts.push({id:uid()}), db.parts.at(-1));
   const num=k=>v(k)===''?'':Number(v(k));
   Object.assign(p,{partNo:v('no'),oemNo:v('oem'),nameZh:v('zh'),nameEn:v('en'),models:v('models').split(/[,，;]/).map(s=>s.trim()).filter(Boolean),unit:v('unit'),stock:num('stock'),minStock:num('min'),lastPrice:num('price'),currency:v('cur'),lastPriceDate:v('pdate'),leadTimeDays:num('lead'),location:v('loc'),weight:v('weight'),notes:v('notes')});
@@ -654,7 +671,7 @@ function editRequest(id, partId){
   const r = id? db.requests.find(x=>x.id===id) : {date:today(),status:'requested',urgency:'normal',requester:me(),items:[],photos:[]};
   if(!id) r.requester=me();
   draftItems = JSON.parse(JSON.stringify(r.items||[])); draftPhotos=[];
-  if(partId){ const p=partById(partId); if(p) draftItems.push({partId:p.id,partNo:p.partNo,name:p.nameZh,qty:Math.max(1,(Number(p.minStock)||0)*2-stockOf(p))}); }
+  if(partId){ const p=partById(partId); if(p) draftItems.push({partId:p.id,partNo:p.partNo,name:pnameTxt(p),qty:Math.max(1,(Number(p.minStock)||0)*2-stockOf(p))}); }
   if(!draftItems.length) draftItems.push({partId:'',partNo:'',name:'',qty:1});
   const proc=isProc();
   const statusHtml = proc ? `<select id="r-status">${opts(STATUSES,r.status)}</select>` : `<div style="padding:7px 0"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.eta?` <span class="chip">ETA ${esc(r.eta)}</span>`:''}</div>`;
@@ -689,22 +706,22 @@ function editRequest(id, partId){
 }
 function syncFromEq(){ const e=db.equipment.find(x=>x.id===$('#r-eq').value); if(!e) return; if(e.site) $('#r-site').value=e.site; if(e.model){ $('#r-model').value=e.model; manualSearch(); } }
 function renderItems(){
-  const dl = `<datalist id="parts-dl">${db.parts.map(p=>`<option value="${esc(p.partNo)}">${esc(p.nameZh)} ${esc(p.nameEn)} (库存 ${stockOf(p)})</option>`).join('')}</datalist>`;
-  $('#items').innerHTML = dl+`<table><tr><th style="width:30%">零件号 Part No.</th><th>名称 / 描述</th><th style="width:70px">数量</th><th style="width:40px"></th></tr>
+  const dl = `<datalist id="parts-dl">${db.parts.map(p=>`<option value="${esc(p.partNo)}">${esc(pnameTxt(p))} (库存 ${stockOf(p)})</option>`).join('')}</datalist>`;
+  $('#items').innerHTML = L(dl+`<table><tr><th style="width:30%">零件号 Part No.</th><th>名称 / 描述</th><th style="width:70px">数量</th><th style="width:40px"></th></tr>
     ${draftItems.map((i,n)=>`<tr><td><input list="parts-dl" value="${esc(i.partNo)}" oninput="itemNo(${n},this.value)" placeholder="可不填，按名称搜"></td><td><input value="${esc(i.name)}" oninput="draftItems[${n}].name=this.value" placeholder="名称或描述（手填也可以）">${i.fig?`<small style="color:var(--muted)">手册图 ${esc(i.fig)}${i.item?' 项 '+esc(i.item):''}${i.page?` · <a href="${esc(manualLink($('#r-model')?.value,i.page))}" target="_blank">p.${esc(i.page)}</a>`:''}</small>`:''}</td><td><input type="number" min="1" value="${esc(i.qty)}" oninput="draftItems[${n}].qty=Number(this.value)"></td><td><button class="btn sm" onclick="draftItems.splice(${n},1);renderItems()">✕</button></td></tr>`).join('')}
-    </table><button class="btn sm" style="margin-top:6px" onclick="draftItems.push({partId:'',partNo:'',name:'',qty:1});renderItems()">＋ 添加一行</button>`;
+    </table><button class="btn sm" style="margin-top:6px" onclick="draftItems.push({partId:'',partNo:'',name:'',qty:1});renderItems()">＋ 添加一行</button>`);
 }
-function itemNo(n,val){ const i=draftItems[n]; i.partNo=val; const p=db.parts.find(x=>x.partNo===val); if(p){ i.partId=p.id; i.name=p.nameZh; renderItems(); const rows=$('#items').querySelectorAll('tr'); rows[n+1]?.querySelectorAll('input')[1]?.focus(); } else i.partId=''; }
+function itemNo(n,val){ const i=draftItems[n]; i.partNo=val; const p=db.parts.find(x=>x.partNo===val); if(p){ i.partId=p.id; i.name=pnameTxt(p); renderItems(); const rows=$('#items').querySelectorAll('tr'); rows[n+1]?.querySelectorAll('input')[1]?.focus(); } else i.partId=''; }
 async function manualSearch(){
   const model=$('#r-model')?.value, box=$('#manual-results'), lk=$('#manual-link'); if(!box) return;
-  const doc=partsManualDoc(model); lk.innerHTML = doc? `· <a href="${esc(docHref(doc))}" target="_blank">打开 ${esc(model)} 零配件手册</a>` : (model?`· <span style="color:var(--muted)">${esc(model)} 的零配件手册还没上传到文档库</span>`:'');
+  const doc=partsManualDoc(model); lk.innerHTML = L(doc? `· <a href="${esc(docHref(doc))}" target="_blank">打开 ${esc(model)} 零配件手册</a>` : (model?`· <span style="color:var(--muted)">${esc(model)} 的零配件手册还没上传到文档库</span>`:''));
   const q=($('#r-search')?.value||'').trim().toLowerCase(); if(!model||q.length<2){ box.innerHTML=''; return; }
-  const idx=await loadManualIndex(model); if(!idx){ box.innerHTML=`<div class="empty" style="padding:8px">${esc(model)} 还没有手册索引（用 tools/build_manual_index.py 生成）</div>`; return; }
+  const idx=await loadManualIndex(model); if(!idx){ box.innerHTML=L(`<div class="empty" style="padding:8px">${esc(model)} 还没有手册索引（用 tools/build_manual_index.py 生成）</div>`); return; }
   const terms=q.split(/\s+/); const hits=idx.parts.filter(p=>{ const s=(p.pn+' '+p.en+' '+p.zh).toLowerCase(); return terms.every(t=>s.includes(t)); });
   const figName=f=>(idx.figures.find(x=>x.fig===f)||{}).name||'';
-  box.innerHTML = hits.length? `<table style="font-size:12px">${hits.slice(0,25).map(p=>`<tr><td class="mono">${esc(p.pn)}</td><td>${esc(p.en)}<br><span style="color:var(--muted)">${esc(p.zh)}</span></td><td style="color:var(--muted)">图 ${esc(p.fig)} ${esc(figName(p.fig))}<br>项 ${esc(p.item)} · 装机数 ${esc(p.qty)}</td><td class="row-actions">${doc?`<a href="${esc(manualLink(model,p.page))}" target="_blank">p.${esc(p.page)}</a> `:''}<button onclick='addFromManual(${JSON.stringify(p).replace(/'/g,"&#39;")})'>添加</button></td></tr>`).join('')}</table>${hits.length>25?`<small style="color:var(--muted)">还有 ${hits.length-25} 条，请输入更具体的词</small>`:''}` : `<small style="color:var(--muted)">没找到，可以直接在上面手填名称和描述</small>`;
+  box.innerHTML = L(hits.length? `<table style="font-size:12px">${hits.slice(0,25).map(p=>`<tr><td class="mono">${esc(p.pn)}</td><td>${esc(p.en)}<br><span style="color:var(--muted)">${esc(p.zh)}</span></td><td style="color:var(--muted)">图 ${esc(p.fig)} ${esc(figName(p.fig))}<br>项 ${esc(p.item)} · 装机数 ${esc(p.qty)}</td><td class="row-actions">${doc?`<a href="${esc(manualLink(model,p.page))}" target="_blank">p.${esc(p.page)}</a> `:''}<button onclick='addFromManual(${JSON.stringify(p).replace(/'/g,"&#39;")})'>添加</button></td></tr>`).join('')}</table>${hits.length>25?`<small style="color:var(--muted)">还有 ${hits.length-25} 条，请输入更具体的词</small>`:''}` : `<small style="color:var(--muted)">没找到，可以直接在上面手填名称和描述</small>`);
 }
-function addFromManual(p){ const cat=db.parts.find(x=>x.partNo===p.pn); const blank=draftItems.findIndex(i=>!i.partNo&&!i.name); const it={partId:cat?cat.id:'',partNo:p.pn,name:(p.zh||'')+(p.en?' '+p.en:''),qty:1,fig:p.fig,item:p.item,page:p.page};
+function addFromManual(p){ const cat=db.parts.find(x=>x.partNo===p.pn); const blank=draftItems.findIndex(i=>!i.partNo&&!i.name); const it={partId:cat?cat.id:'',partNo:p.pn,name:LANG==='zh'?(p.zh||p.en):(p.en||p.zh),qty:1,fig:p.fig,item:p.item,page:p.page};
   if(blank>=0) draftItems[blank]=it; else draftItems.push(it); renderItems(); $('#r-search').value=''; $('#manual-results').innerHTML=''; }
 function compressImage(file){ return new Promise(res=>{ const img=new Image(); img.onload=()=>{ const s=Math.min(1,1400/Math.max(img.width,img.height)); const c=document.createElement('canvas'); c.width=Math.round(img.width*s); c.height=Math.round(img.height*s); c.getContext('2d').drawImage(img,0,0,c.width,c.height); c.toBlob(b=>res(b),'image/jpeg',.82); }; img.onerror=()=>res(file); img.src=URL.createObjectURL(file); }); }
 async function saveRequest(id){
@@ -713,7 +730,7 @@ async function saveRequest(id){
   const btn=$('#r-save'); btn.disabled=true;
   let photos=[];
   if(draftPhotos.length){ if(!gh.token){ alert('上传照片需要通过团队链接打开本页（或配置 token）。本次先不带照片提交。'); }
-    else for(const [k,f] of draftPhotos.entries()){ btn.textContent=`上传照片 ${k+1}/${draftPhotos.length}…`; try{ const blob=await compressImage(f); const path=`attachments/${(id? db.requests.find(x=>x.id===id).no : 'PR-'+String(db.meta.nextReqNo||1).padStart(4,'0'))}/${Date.now()}-${k}.jpg`; const up=await uploadToRepo(path,blob); photos.push({path:up.path,sha:up.sha,name:f.name}); }catch(e){ alert('照片上传失败：'+e.message); } } }
+    else for(const [k,f] of draftPhotos.entries()){ btn.textContent=L(`上传照片 ${k+1}/${draftPhotos.length}…`); try{ const blob=await compressImage(f); const path=`attachments/${(id? db.requests.find(x=>x.id===id).no : 'PR-'+String(db.meta.nextReqNo||1).padStart(4,'0'))}/${Date.now()}-${k}.jpg`; const up=await uploadToRepo(path,blob); photos.push({path:up.path,sha:up.sha,name:f.name}); }catch(e){ alert('照片上传失败：'+e.message); } } }
   snapshot(); let r; const isNew=!id;
   if(id) r=db.requests.find(x=>x.id===id); else { const n=db.meta.nextReqNo||1; db.meta.nextReqNo=n+1; r={id:uid(),no:'PR-'+String(n).padStart(4,'0'),date:today(),status:'requested',history:[{ts:new Date().toISOString(),user:me(),action:'创建'}]}; db.requests.push(r); }
   const prev=r.status;
@@ -722,13 +739,13 @@ async function saveRequest(id){
   if(prev&&prev!==r.status){ (r.history=r.history||[]).push({ts:new Date().toISOString(),user:me(),action:`${lbl(STATUSES,prev)} → ${lbl(STATUSES,r.status)}`});
     if(r.status==='received'&&!r.receivedApplied){ for(const i of items){ const p=partById(i.partId); if(p) p.stock=stockOf(p)+i.qty; } r.receivedApplied=true; r.receivedDate=today(); } }
   else if(!isNew){ (r.history=r.history||[]).push({ts:new Date().toISOString(),user:me(),action:'修改'}); }
-  for(const i of items){ if(!i.partId&&i.partNo){ const p={id:uid(),partNo:i.partNo,nameZh:i.name,nameEn:'',models:v('model')?[v('model')]:[],unit:'pc',stock:0,minStock:'',currency:'USD'}; db.parts.push(p); i.partId=p.id; } }
+  for(const i of items){ if(!i.partId&&i.partNo){ const p={id:uid(),partNo:i.partNo,nameZh:/[\u4e00-\u9fff]/.test(i.name)?i.name:'',nameEn:/[\u4e00-\u9fff]/.test(i.name)?'':i.name,models:v('model')?[v('model')]:[],unit:'pc',stock:0,minStock:'',currency:'USD'}; db.parts.push(p); i.partId=p.id; } }
   const wantMail=!!$('#r-mail')?.checked;
   markDirty(); closeModal(); render();
   if(!isProc()||photos.length){ if(gh.token){ await save(false); } else toast('已记录在本机，需要通过团队链接打开本页才能提交到服务器'); }
   if(isNew&&!isProc()&&db.meta.procurementEmail&&wantMail) {
-    const body=`${r.no} ${r.site||''} ${eqName(r.equipmentId)||r.model||''}\n申请人：${r.requester}  紧急度：${lbl(URGENCY,r.urgency)}  需要日期：${r.needBy||'-'}\n${items.map(i=>`- ${i.partNo||''} ${i.name||''} ×${i.qty}`).join('\n')}\n原因：${r.reason||''}\n\n${location.href.split('#')[0]}`;
-    location.href=`mailto:${db.meta.procurementEmail}?subject=${encodeURIComponent('配件申请 '+r.no+' '+(r.urgency==='urgent'?'【紧急】':''))}&body=${encodeURIComponent(body)}`; }
+    const body=L(`${r.no} ${r.site||''} ${eqName(r.equipmentId)||r.model||''}\n申请人：${r.requester}  紧急度：${lbl(URGENCY,r.urgency)}  需要日期：${r.needBy||'-'}\n${items.map(i=>`- ${i.partNo||''} ${i.name||''} ×${i.qty}`).join('\n')}\n原因：${r.reason||''}\n\n${location.href.split('#')[0]}`);
+    location.href=`mailto:${db.meta.procurementEmail}?subject=${encodeURIComponent(L('配件申请 '+r.no+' '+(r.urgency==='urgent'?'【紧急】':'')))}&body=${encodeURIComponent(body)}`; }
 }
 
 /* --- service --- */
@@ -754,9 +771,9 @@ function editService(id, eqId){
   renderUsed();
 }
 function renderUsed(){
-  const dl=`<datalist id="used-dl">${db.parts.map(p=>`<option value="${esc(p.partNo)}">${esc(p.nameZh)} (库存 ${stockOf(p)})</option>`).join('')}</datalist>`;
-  $('#used').innerHTML = dl+`<table>${draftUsed.map((i,n)=>`<tr><td><input list="used-dl" value="${esc(i.partNo)}" oninput="const p=db.parts.find(x=>x.partNo===this.value);draftUsed[${n}].partNo=this.value;draftUsed[${n}].partId=p?p.id:''"></td><td style="width:90px"><input type="number" min="1" value="${esc(i.qty)}" oninput="draftUsed[${n}].qty=Number(this.value)"></td><td style="width:40px"><button class="btn sm" onclick="draftUsed.splice(${n},1);renderUsed()">✕</button></td></tr>`).join('')}</table>
-    <button class="btn sm" style="margin-top:6px" onclick="draftUsed.push({partId:'',partNo:'',qty:1});renderUsed()">＋ 添加用料</button>`;
+  const dl=`<datalist id="used-dl">${db.parts.map(p=>`<option value="${esc(p.partNo)}">${esc(pnameTxt(p))} (库存 ${stockOf(p)})</option>`).join('')}</datalist>`;
+  $('#used').innerHTML = L(dl+`<table>${draftUsed.map((i,n)=>`<tr><td><input list="used-dl" value="${esc(i.partNo)}" oninput="const p=db.parts.find(x=>x.partNo===this.value);draftUsed[${n}].partNo=this.value;draftUsed[${n}].partId=p?p.id:''"></td><td style="width:90px"><input type="number" min="1" value="${esc(i.qty)}" oninput="draftUsed[${n}].qty=Number(this.value)"></td><td style="width:40px"><button class="btn sm" onclick="draftUsed.splice(${n},1);renderUsed()">✕</button></td></tr>`).join('')}</table>
+    <button class="btn sm" style="margin-top:6px" onclick="draftUsed.push({partId:'',partNo:'',qty:1});renderUsed()">＋ 添加用料</button>`);
 }
 function saveService(id){
   const v=k=>$('#s-'+k).value.trim(); if(!v('eq')||!v('issue')) return alert('设备和故障现象必填');
@@ -772,7 +789,7 @@ function saveService(id){
 }
 
 /* ============ wiring ============ */
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{ view=b.dataset.view; render(); });
+applyStaticL();
 $('#q').oninput=()=>render();
 $('#undo').onclick=undo; $('#redo').onclick=redo;
 $('#save').onclick=()=>save(false);
