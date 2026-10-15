@@ -1,9 +1,9 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T20:27:03.503Z",
+    "updated": "2026-10-15T20:28:10.119Z",
     "updatedBy": "Fang Jiang",
-    "nextReqNo": 2,
+    "nextReqNo": 3,
     "sites": [
       "Palamanui",
       "Waikoloa",
@@ -109,6 +109,19 @@
       "partNo": "2100110406",
       "nameZh": "",
       "nameEn": "RETAINING WASHER",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mv9zqokj8izb",
+      "partNo": "1100025244",
+      "nameZh": "",
+      "nameEn": "SPLIT FLANG",
       "models": [
         "NFJ1175"
       ],
@@ -237,6 +250,38 @@
           "kind": "edited"
         }
       ]
+    },
+    {
+      "id": "mv9zqokj3sda",
+      "no": "NFLG-0002",
+      "date": "2026-10-15",
+      "status": "requested",
+      "history": [
+        {
+          "ts": "2026-10-15T20:28:09.571Z",
+          "user": "Fang Jiang",
+          "kind": "created"
+        }
+      ],
+      "requester": "Fang Jiang",
+      "unit": "NFJ1175YEUCQZG120067",
+      "model": "NFJ1175",
+      "urgency": "normal",
+      "items": [
+        {
+          "partId": "mv9zqokj8izb",
+          "partNo": "1100025244",
+          "name": "SPLIT FLANG",
+          "qty": 1,
+          "fig": "01-01",
+          "item": "1",
+          "page": 11
+        }
+      ],
+      "reason": "",
+      "needBy": "",
+      "notes": "",
+      "photos": []
     }
   ],
   "service": [],
