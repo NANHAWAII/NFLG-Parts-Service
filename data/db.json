@@ -1,9 +1,17 @@
 {
   "meta": {
     "version": 1,
-    "updated": null,
-    "updatedBy": null,
+    "updated": "2026-10-15T19:23:45.616Z",
+    "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
+    "sites": [
+      "Palamanui",
+      "Waikoloa",
+      "Shipman",
+      "Honolulu Yard",
+      "Guam"
+    ],
+    "notice": "",
     "models": [
       {
         "code": "NFJ1175",
@@ -29,7 +37,86 @@
     ]
   },
   "equipment": [],
-  "parts": [],
+  "parts": [
+    {
+      "id": "mv9xfurtg5v1",
+      "partNo": "1100070787",
+      "nameZh": "",
+      "nameEn": "HEX BOLT",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mv9xfurtfsj6",
+      "partNo": "2100051935",
+      "nameZh": "",
+      "nameEn": "BEARING SPACER DRIVE SIDE",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mv9xfurtjena",
+      "partNo": "2100051940",
+      "nameZh": "",
+      "nameEn": "OIL FLINGER",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mv9xfurtq53f",
+      "partNo": "1100031990",
+      "nameZh": "",
+      "nameEn": "WASHER",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mv9xfurtpczu",
+      "partNo": "1100070785",
+      "nameZh": "",
+      "nameEn": "HEX BOLT",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mv9xfurtcx72",
+      "partNo": "2100110406",
+      "nameZh": "",
+      "nameEn": "RETAINING WASHER",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    }
+  ],
   "requests": [
     {
       "id": "rq0001",
@@ -42,7 +129,7 @@
       "status": "requested",
       "items": [
         {
-          "partId": "",
+          "partId": "mv9xfurtg5v1",
           "partNo": "1100070787",
           "name": "HEX BOLT",
           "qty": 1,
@@ -51,7 +138,7 @@
           "page": 11
         },
         {
-          "partId": "",
+          "partId": "mv9xfurtfsj6",
           "partNo": "2100051935",
           "name": "BEARING SPACER DRIVE SIDE",
           "qty": 1,
@@ -60,7 +147,7 @@
           "page": 99
         },
         {
-          "partId": "",
+          "partId": "mv9xfurtjena",
           "partNo": "2100051940",
           "name": "OIL FLINGER",
           "qty": 1,
@@ -69,7 +156,7 @@
           "page": 99
         },
         {
-          "partId": "",
+          "partId": "mv9xfurtq53f",
           "partNo": "1100031990",
           "name": "WASHER",
           "qty": 1,
@@ -78,13 +165,13 @@
           "page": 99
         },
         {
-          "partId": "",
+          "partId": "mv9xfurtpczu",
           "partNo": "1100070785",
           "name": "HEX BOLT",
           "qty": 1
         },
         {
-          "partId": "",
+          "partId": "mv9xfurtcx72",
           "partNo": "2100110406",
           "name": "RETAINING WASHER",
           "qty": 1,
@@ -106,6 +193,11 @@
           "ts": "2026-10-15T19:00:00Z",
           "user": "Fang Jiang",
           "kind": "created"
+        },
+        {
+          "ts": "2026-10-15T19:23:45.161Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
         }
       ]
     }
