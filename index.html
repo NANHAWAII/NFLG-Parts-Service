@@ -143,6 +143,10 @@
   .rqfoot>*{min-width:0}
   .prochead{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   .prochead>*{min-width:0}
+  .prochead .span2{grid-column:span 2}
+  .money{position:relative}
+  .money span{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+  .money input{padding-left:24px!important;text-align:left}
   .rqfoot textarea{min-height:44px;height:44px}
   .photobtn{display:flex;align-items:center;justify-content:center;gap:6px;height:44px;cursor:pointer;width:100%}
   .photolist{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
@@ -241,6 +245,7 @@
     .rqhead .unit{grid-column:1/-1}
     .rqfoot{grid-template-columns:1fr}
     .prochead{grid-template-columns:1fr 1fr;gap:10px}
+    .prochead .span2{grid-column:1/-1}
     label.f{font-size:12.5px;margin-bottom:3px}
     input[type=text],input[type=number],input[type=date],input[type=password],select,textarea{padding:8px 10px}
     .sec-act{position:sticky;bottom:0;z-index:4;background:inherit;margin:4px -12px -14px;padding:10px 12px;border-top:1px solid var(--line);border-radius:0 0 12px 12px}
@@ -858,6 +863,10 @@ async function leaveRequest(){
   if(!ok) return;   // validation failed → stay open so nothing is lost
   closeModal(); toast(L('已保存'));
 }
+// US-dollar amount: "$" shown in front, value stored as plain number text like 1,250.00
+const moneyClean = v => String(v??'').replace(/^\s*(USD|US\$|\$)\s*/i,'').trim();
+const moneyFmt = v => { const t=moneyClean(v); const n=Number(t.replace(/,/g,'')); return t&&isFinite(n) ? n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : t; };
+const moneyInp = (id,val,ph) => `<div class="money"><span>$</span><input type="text" inputmode="decimal" id="${id}" value="${esc(moneyFmt(val))}" placeholder="${ph}" onblur="this.value=moneyFmt(this.value)"></div>`;
 const field=(id,label,inner)=>`<div><label class="f" for="${id}">${label}</label>${inner}</div>`;
 const inp=(id,val,type='text',extra='')=>`<input type="${type}" id="${id}" value="${esc(val??'')}" ${extra}>`;
 function del(coll,id){ if(!confirm('确定删除？')) return; snapshot(); db[coll]=db[coll].filter(x=>x.id!==id); markDirty(); render(); }
@@ -997,10 +1006,10 @@ function editRequest(id, partId){
       ${field('r-date','申请日期',inp('r-date',r.date,'date'))}
       ${field('r-po','PO#',inp('r-po',r.poNo))}
       ${field('r-eta','预计到货 ETA',inp('r-eta',r.eta,'date'))}
-      ${field('r-mcost','材料费 Material cost',inp('r-mcost',r.materialCost??r.quoteTotal??'','text','placeholder="USD 1,250"'))}
-      ${field('r-fcost','运费 Freight cost',inp('r-fcost',r.freightCost,'text','placeholder="USD 300"'))}
+      ${field('r-mcost','材料费 Material cost',moneyInp('r-mcost',r.materialCost??r.quoteTotal??'','1,250.00'))}
+      ${field('r-fcost','运费 Freight cost',moneyInp('r-fcost',r.freightCost,'300.00'))}
+      <div class="span2">${field('r-ship','运输方式 / 单号 Tracking',inp('r-ship',r.shipping,'text','placeholder="DHL 1234567890 / 海运 Matson"'))}</div>
       </div>
-      <div class="full">${field('r-ship','运输方式 / 单号 Tracking',inp('r-ship',r.shipping,'text','placeholder="DHL 1234567890 / 海运 Matson"'))}</div>
       <div class="full"><label class="f">附件 Attachments（报价单、发票、装箱单、提单…）</label>
         <div class="files">${(r.files||[]).map((f,k)=>`<div class="frow"><a href="${esc(docHref(f))}" target="_blank" rel="noopener">📄 ${esc(f.name)}</a><span class="fmeta">${fmtSize(f.size)} · ${esc(f.user||'')} · ${esc((f.ts||'').slice(0,10))}</span><button class="btn sm danger" onclick="removeProcFile('${id}',${k})">删除</button></div>`).join('')}</div>
         <label class="btn sm" style="display:inline-block;margin-top:6px;cursor:pointer">＋ 上传附件<input type="file" multiple style="display:none" onchange="uploadProcFiles('${id}',this.files)"></label>
@@ -1114,7 +1123,7 @@ async function saveRequest(id, part){
   if(id) r=db.requests.find(x=>x.id===id); else { const n=db.meta.nextReqNo||1; db.meta.nextReqNo=n+1; r={id:uid(),no:'NFLG-'+String(n).padStart(4,'0'),date:today(),status:'requested',history:[{ts:new Date().toISOString(),user:me(),kind:'created'}]}; db.requests.push(r); }
   const prev=r.status;
   if(doReq) Object.assign(r,{requester:v('req'),unit:v('unit'),model:v('model'),urgency:v('urg'),items,reason:v('reason'),needBy:v('need'),notes:'',photos:[...(r.photos||[]),...photos]});
-  if(doProc) Object.assign(r,{status:v('status')||r.status,date:v('date')||r.date,materialCost:v('mcost'),freightCost:v('fcost'),poNo:v('po'),shipping:v('ship'),eta:v('eta')});
+  if(doProc) Object.assign(r,{status:v('status')||r.status,date:v('date')||r.date,materialCost:moneyFmt(v('mcost')),freightCost:moneyFmt(v('fcost')),poNo:v('po'),shipping:v('ship'),eta:v('eta')});
   if(prev&&prev!==r.status){ (r.history=r.history||[]).push({ts:new Date().toISOString(),user:me(),from:prev,to:r.status});
     if(r.status==='received'&&!r.receivedApplied){ for(const i of items){ const p=partById(i.partId); if(p) p.stock=stockOf(p)+i.qty; } r.receivedApplied=true; r.receivedDate=today(); } }
   else if(!isNew){ (r.history=r.history||[]).push({ts:new Date().toISOString(),user:me(),kind:'edited'}); }
