@@ -172,7 +172,7 @@ const gh = JSON.parse(localStorage.getItem('nflg.gh') || '{}');
   history.replaceState(null,'',location.pathname+location.search); })();
 const me = () => gh.user || '';
 const isProc = () => gh.role==='procurement';
-function ensureName(){ if(gh.user) return true; const n=prompt('请输入你的名字（显示在申请单上）'); if(!n||!n.trim()) return false; gh.user=n.trim(); localStorage.setItem('nflg.gh',JSON.stringify(gh)); updateStatus(); return true; }
+function rememberName(n){ if(n&&n!==gh.user){ gh.user=n; localStorage.setItem('nflg.gh',JSON.stringify(gh)); } }
 
 function emptyDb(){ return {meta:{version:1,updated:null,updatedBy:null,nextReqNo:1,sites:['Palamanui','Waikoloa','Shipman','Honolulu Yard','Guam'],notice:'',models:[]},
   equipment:[],parts:[],requests:[],service:[],docs:[]}; }
@@ -652,7 +652,7 @@ function manualLink(model,page){ const d=partsManualDoc(model); if(!d) return ''
 function newRequestFor(partId){ view='requests'; render(); editRequest(null, partId); }
 function editRequest(id, partId){
   const r = id? db.requests.find(x=>x.id===id) : {date:today(),status:'requested',urgency:'normal',requester:me(),items:[],photos:[]};
-  if(!id && !isProc() && !ensureName()) return; if(!id) r.requester=me();
+  if(!id) r.requester=me();
   draftItems = JSON.parse(JSON.stringify(r.items||[])); draftPhotos=[];
   if(partId){ const p=partById(partId); if(p) draftItems.push({partId:p.id,partNo:p.partNo,name:p.nameZh,qty:Math.max(1,(Number(p.minStock)||0)*2-stockOf(p))}); }
   if(!draftItems.length) draftItems.push({partId:'',partNo:'',name:'',qty:1});
@@ -661,7 +661,7 @@ function editRequest(id, partId){
   openModal(`<h2>${id?'申请 '+esc(r.no):'新配件申请 New Parts Request'}</h2>
     ${proc?'':`<div class="note">填好后点「提交」即可，采购部会向南方路机询价、下单并跟踪物流，进度在本页查看。零件号不清楚的话，在下方「查手册」里按名称搜，点「添加」自动带入。</div>`}
     <div class="grid">
-      ${field('r-req','申请人 Requester *',inp('r-req',r.requester))}
+      ${field('r-req','申请人 Requester *',inp('r-req',r.requester,'text','placeholder="你的名字（下次自动填）"'))}
       ${field('r-site','站点 Site',`<select id="r-site">${siteOpts(r.site)}</select>`)}
       ${field('r-eq','设备 Equipment',`<select id="r-eq" onchange="syncFromEq()">${eqOpts(r.equipmentId)}</select>`)}
       ${field('r-model','机型 Model',`<select id="r-model" onchange="manualSearch()">${modelOpts(r.model||db.equipment.find(e=>e.id===r.equipmentId)?.model||'')}</select>`)}
@@ -682,6 +682,7 @@ function editRequest(id, partId){
       ${field('r-eta','预计到货 ETA',inp('r-eta',r.eta,'date'))}`
       : `${field('r-status','状态 Status',statusHtml)}`}
       <div class="full">${field('r-notes','备注',`<textarea id="r-notes">${esc(r.notes||'')}</textarea>`)}</div>
+      ${!id&&!proc&&db.meta.procurementEmail?`<div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="r-mail" checked> 提交后打开邮件通知采购部（${esc(db.meta.procurementEmail)}）</label></div>`:''}
       ${r.history?.length?`<div class="full"><label class="f">进度记录</label><div class="hist">${r.history.slice().reverse().map(h=>`<div>${esc(h.ts.replace('T',' ').slice(0,16))} ${esc(h.user)} — ${esc(h.action)}</div>`).join('')}</div></div>`:''}
     </div><div class="actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" id="r-save" onclick="saveRequest('${id||''}')">${id?'保存':(proc?'保存':'提交申请')}</button></div>`);
   renderItems(); manualSearch();
@@ -707,8 +708,8 @@ function addFromManual(p){ const cat=db.parts.find(x=>x.partNo===p.pn); const bl
   if(blank>=0) draftItems[blank]=it; else draftItems.push(it); renderItems(); $('#r-search').value=''; $('#manual-results').innerHTML=''; }
 function compressImage(file){ return new Promise(res=>{ const img=new Image(); img.onload=()=>{ const s=Math.min(1,1400/Math.max(img.width,img.height)); const c=document.createElement('canvas'); c.width=Math.round(img.width*s); c.height=Math.round(img.height*s); c.getContext('2d').drawImage(img,0,0,c.width,c.height); c.toBlob(b=>res(b),'image/jpeg',.82); }; img.onerror=()=>res(file); img.src=URL.createObjectURL(file); }); }
 async function saveRequest(id){
-  const v=k=>$('#r-'+k)?.value.trim()??''; if(!v('req')) return alert('申请人必填');
-  const items=draftItems.filter(i=>i.partNo||i.name).map(i=>({...i,qty:Number(i.qty)||1})); if(!items.length) return alert('至少添加一项配件');
+  const v=k=>$('#r-'+k)?.value.trim()??''; if(!v('req')) return toast('请填申请人'); rememberName(v('req'));
+  const items=draftItems.filter(i=>i.partNo||i.name).map(i=>({...i,qty:Number(i.qty)||1})); if(!items.length) return toast('至少添加一项配件');
   const btn=$('#r-save'); btn.disabled=true;
   let photos=[];
   if(draftPhotos.length){ if(!gh.token){ alert('上传照片需要通过团队链接打开本页（或配置 token）。本次先不带照片提交。'); }
@@ -722,9 +723,10 @@ async function saveRequest(id){
     if(r.status==='received'&&!r.receivedApplied){ for(const i of items){ const p=partById(i.partId); if(p) p.stock=stockOf(p)+i.qty; } r.receivedApplied=true; r.receivedDate=today(); } }
   else if(!isNew){ (r.history=r.history||[]).push({ts:new Date().toISOString(),user:me(),action:'修改'}); }
   for(const i of items){ if(!i.partId&&i.partNo){ const p={id:uid(),partNo:i.partNo,nameZh:i.name,nameEn:'',models:v('model')?[v('model')]:[],unit:'pc',stock:0,minStock:'',currency:'USD'}; db.parts.push(p); i.partId=p.id; } }
+  const wantMail=!!$('#r-mail')?.checked;
   markDirty(); closeModal(); render();
   if(!isProc()||photos.length){ if(gh.token){ await save(false); } else toast('已记录在本机，需要通过团队链接打开本页才能提交到服务器'); }
-  if(isNew&&!isProc()&&db.meta.procurementEmail&&confirm('申请已提交。要顺便发邮件通知采购部吗？')) {
+  if(isNew&&!isProc()&&db.meta.procurementEmail&&wantMail) {
     const body=`${r.no} ${r.site||''} ${eqName(r.equipmentId)||r.model||''}\n申请人：${r.requester}  紧急度：${lbl(URGENCY,r.urgency)}  需要日期：${r.needBy||'-'}\n${items.map(i=>`- ${i.partNo||''} ${i.name||''} ×${i.qty}`).join('\n')}\n原因：${r.reason||''}\n\n${location.href.split('#')[0]}`;
     location.href=`mailto:${db.meta.procurementEmail}?subject=${encodeURIComponent('配件申请 '+r.no+' '+(r.urgency==='urgent'?'【紧急】':''))}&body=${encodeURIComponent(body)}`; }
 }
