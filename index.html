@@ -53,6 +53,10 @@
     border:1px solid var(--line);background:var(--panel);padding:9px 12px;border-radius:9px;width:100%}
   input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
   textarea{min-height:70px;resize:vertical}
+  input[type=file]{font-size:14px;max-width:100%}
+  input[type=file]::file-selector-button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:7px 14px;margin-right:10px;font:inherit;font-weight:500;cursor:pointer}
+  input[type=date]{-webkit-appearance:none;appearance:none;min-width:0;max-width:100%;display:block;text-align:left;min-height:42px}
+  input[type=date]::-webkit-date-and-time-value{text-align:left}
   .search{max-width:360px}
   .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
@@ -198,18 +202,35 @@
     .topbar .search{max-width:none;flex:1;min-width:0}
     input,select,textarea{font-size:16px!important}   /* stops iPhone zooming in when a field is tapped */
     .overlay{padding:0}
-    .modal{border-radius:0;min-height:100%;max-width:none;padding:18px 16px 28px}
-    .sec{padding:14px 12px}
+    .modal{border-radius:0;min-height:100%;max-width:none;padding:0 14px 0}
+    .modal h2.mtitle,.modal>h2{position:sticky;top:0;z-index:6;background:var(--panel);margin:0 -14px 12px;padding:12px 58px 12px 14px;border-bottom:1px solid var(--line);font-size:18px}
+    .mclose{position:fixed!important;top:8px!important;right:10px;z-index:7!important;float:none!important;margin:0!important}
+    .sec{padding:12px 12px 14px;margin-bottom:12px}
+    .sec-h{margin-bottom:10px}
+    .modal .grid{grid-template-columns:1fr 1fr;gap:10px 10px}
+    label.f{font-size:12.5px;margin-bottom:3px}
+    input[type=text],input[type=number],input[type=date],input[type=password],select,textarea{padding:8px 10px}
+    .sec-act{position:sticky;bottom:0;z-index:4;background:inherit;margin:4px -12px -14px;padding:10px 12px;border-top:1px solid var(--line);border-radius:0 0 12px 12px}
+    .sec.proc .sec-act{background:var(--accent-soft)}
+    .sec:not(.proc) .sec-act{background:var(--panel)}
+    .modal .actions{margin:12px 0 16px}
+    .modal .actions.stick{position:sticky;bottom:0;z-index:5;background:var(--panel);margin:12px -14px 0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+    .note{margin-bottom:12px;padding:8px 12px;font-size:13px}
     .docwrap{max-width:none}
     .dochead{flex-wrap:wrap}
   }
   @media (max-width: 600px){
     .items table,.items tbody{display:block}
     .items tr:first-child{display:none}
-    .items tr{display:grid;grid-template-columns:1fr 76px 40px;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+    .items tr{display:grid;grid-template-columns:1fr 64px 38px;gap:6px;padding:8px 0;border-bottom:1px solid var(--line)}
     .items td{padding:0!important;border:0}
-    .items td.pncell{grid-column:1/-1}
-    .items td:nth-child(2){grid-column:1/2}
+    .items td.pncell{grid-column:1;grid-row:1}
+    .items td:nth-child(2){grid-column:1/-1;grid-row:2}
+    .items td:nth-child(3){grid-column:2;grid-row:1}
+    .items td:nth-child(4){grid-column:3;grid-row:1}
+    .items input{padding:6px 10px!important}
+    .items .imeta{margin-top:2px}
+    .items td .btn.sm{width:38px;height:100%;padding:0}
     .pn-dd{min-width:0;left:0;right:0}
     .pn-opt{grid-template-columns:96px 1fr}.pn-fig{display:none}
     .doctab .dm{display:none}
@@ -217,7 +238,6 @@
     .rq-cards{grid-template-columns:1fr}
     .brand{display:none}
     nav .count{display:none}
-    .mclose{position:sticky;float:right;top:10px;z-index:5;margin:-4px -4px 0 0}
   }
   @media print{ nav,.topbar .btn,.row-actions,.filters{display:none!important} .app{display:block} main{padding:0} }
   .sec-h{cursor:pointer;user-select:none}
@@ -899,26 +919,26 @@ function editRequest(id, partId){
     <div class="sec${secOpen.req?'':' collapsed'}" data-k="req"><div class="sec-h" onclick="toggleSec(this)"><span class="n">1</span>申请信息 Request<small>申请人填写 · filled by requester</small><span class="sec-sum">${esc(r.model||'')} · ${(r.items||[]).length} ${(r.items||[]).length===1?'item':'items'}</span><span class="chev">▾</span></div><div class="grid">
       ${field('r-req','申请人 Requester *',inp('r-req',r.requester,'text','placeholder="你的名字（下次自动填）"'))}
       ${field('r-model','机型 Model *',`<select id="r-model" onchange="manualSearch()">${modelOpts(r.model||'')}</select>`)}
-      ${field('r-unit','设备编号 / 序列号 Unit no. / serial',inp('r-unit',r.unit,'text','placeholder="Crusher #1 / SN …"'))}
       ${field('r-urg','紧急度 Urgency',`<select id="r-urg">${opts(URGENCY,r.urgency)}</select>`)}
       ${field('r-need','需要日期 Need by',inp('r-need',r.needBy,'date'))}
+      <div class="full">${field('r-unit','设备编号 / 序列号 Unit no. / serial',inp('r-unit',r.unit,'text','placeholder="Crusher #1 / SN …"'))}</div>
       <div class="full"><label class="f">配件 Items *</label><div class="items" id="items"></div></div>
       <div class="full"><label class="f">查手册 Find in parts manual <span id="manual-link"></span></label>
         <input type="text" id="r-search" placeholder="输入零件号或名称，如 jaw plate / 1100024929" oninput="manualSearch()"><div id="manual-results" style="margin-top:6px"></div></div>
       <div class="full">${field('r-reason','用途 / 故障原因 Reason',inp('r-reason',r.reason,'text','placeholder="例如：动颚板磨损严重，出料粒径偏大"'))}</div>
       <div class="full"><label class="f">照片 Photos（损坏部位、铭牌等）</label><input type="file" id="r-photos" accept="image/*" multiple onchange="draftPhotos=[...this.files]">
         <div id="photo-list" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${(r.photos||[]).map((p,i)=>`<a href="${esc(docHref(p))}" target="_blank"><img src="${esc(docHref(p))}" style="height:64px;border-radius:6px;border:1px solid var(--line)"></a>`).join('')}</div></div>
-      <div class="full">${field('r-notes','备注',`<textarea id="r-notes">${esc(r.notes||'')}</textarea>`)}</div>
+      <div class="full">${field('r-notes','备注',`<textarea id="r-notes" rows="2">${esc(r.notes||'')}</textarea>`)}</div>
       ${!id&&db.meta.procurementEmail?`<div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="r-mail" checked> 提交后打开邮件通知采购部（${esc(db.meta.procurementEmail)}）</label></div>`:''}
       ${id?`<div class="full sec-act"><span class="hint">Enter ↵</span><button class="btn primary" id="r-save-req" onclick="saveRequest('${id}','req')">保存申请信息</button></div>`:''}
     </div></div>
     ${id?`<div class="sec proc${secOpen.proc?'':' collapsed'}" data-k="proc"><div class="sec-h" onclick="toggleSec(this)"><span class="n">2</span>采购与物流 Procurement &amp; shipping<small>采购部更新 · updated by procurement</small><span class="sec-sum"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.poNo?` PO ${esc(r.poNo)}`:''}${r.eta?` · ETA ${esc(r.eta)}`:''}</span><span class="chev">▾</span></div><div class="grid">
       ${field('r-status','状态 Status',statusHtml)}
       ${field('r-date','申请日期',inp('r-date',r.date,'date'))}
-      ${field('r-quote','报价 Quote（总价）',inp('r-quote',r.quoteTotal,'text','placeholder="USD 1,250 / CNY 8,600"'))}
       ${field('r-po','PO#',inp('r-po',r.poNo))}
-      ${field('r-ship','运输方式 / 单号 Tracking',inp('r-ship',r.shipping,'text','placeholder="DHL 1234567890 / 海运 Matson"'))}
       ${field('r-eta','预计到货 ETA',inp('r-eta',r.eta,'date'))}
+      <div class="full">${field('r-ship','运输方式 / 单号 Tracking',inp('r-ship',r.shipping,'text','placeholder="DHL 1234567890 / 海运 Matson"'))}</div>
+      <div class="full">${field('r-quote','报价 Quote（总价）',inp('r-quote',r.quoteTotal,'text','placeholder="USD 1,250 / CNY 8,600"'))}</div>
       <div class="full"><label class="f">附件 Attachments（报价单、发票、装箱单、提单…）</label>
         <div class="files">${(r.files||[]).map((f,k)=>`<div class="frow"><a href="${esc(docHref(f))}" target="_blank" rel="noopener">📄 ${esc(f.name)}</a><span class="fmeta">${fmtSize(f.size)} · ${esc(f.user||'')} · ${esc((f.ts||'').slice(0,10))}</span><button class="btn sm danger" onclick="removeProcFile('${id}',${k})">删除</button></div>`).join('')}</div>
         <label class="btn sm" style="display:inline-block;margin-top:6px;cursor:pointer">＋ 上传附件<input type="file" multiple style="display:none" onchange="uploadProcFiles('${id}',this.files)"></label>
@@ -928,7 +948,7 @@ function editRequest(id, partId){
     ${id&&r.history?.length?(()=>{ const hs=r.history.slice().reverse(), row=h=>`${esc(h.ts.replace('T',' ').slice(0,16))} ${esc(h.user)} — ${histText(h)}`;
       return `<div class="sec hsec${secOpen.hist?'':' collapsed'}" data-k="hist"><div class="sec-h" onclick="toggleSec(this)"><span class="n">3</span>进度记录 History<small>${hs.length}</small><span class="sec-sum">${row(hs[0])}</span><span class="chev">▾</span></div>
       <div class="grid"><div class="full"><div class="hist">${hs.map(h=>`<div>${row(h)}</div>`).join('')}</div></div></div></div>`; })():''}
-    <div class="actions">${id?`<button class="btn danger" style="margin-right:auto" onclick="closeModal();del('requests','${id}')">删除</button><button class="btn" onclick="closeModal()">关闭</button>`:`<button class="btn" onclick="closeModal()">取消</button><button class="btn primary" id="r-save" onclick="saveRequest('')">提交申请</button>`}</div>`);
+    <div class="actions${id?'':' stick'}">${id?`<button class="btn danger" style="margin-right:auto" onclick="closeModal();del('requests','${id}')">删除</button><button class="btn" onclick="closeModal()">关闭</button>`:`<button class="btn" onclick="closeModal()">取消</button><button class="btn primary" id="r-save" onclick="saveRequest('')">提交申请</button>`}</div>`);
   // Enter in a section's field saves that section (not in textareas, the manual search box or the items table)
   $('#modal').onkeydown=e=>{ if(e.key!=='Enter'||e.shiftKey||e.isComposing) return; const t=e.target; if(t.tagName==='TEXTAREA'||t.id==='r-search'||t.tagName==='BUTTON'||t.type==='file') return;
     const sec=t.closest('.sec'); if(!sec) return; e.preventDefault(); if(!id){ saveRequest(''); return; } (sec.classList.contains('proc')?$('#r-save-proc'):$('#r-save-req'))?.click(); };
