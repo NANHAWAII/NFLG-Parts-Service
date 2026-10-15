@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T20:38:42.274Z",
+    "updated": "2026-10-15T20:45:38.377Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 3,
     "sites": [
@@ -201,13 +201,7 @@
       "shipping": "",
       "eta": "",
       "notes": "",
-      "photos": [
-        {
-          "path": "attachments/NFLG-0001/1792096653950-0.jpg",
-          "sha": "8203bd030fc9ed8b7174afe0b1401e51d630110a",
-          "name": "709fad33-eebd-4fa2-847f-457663d12026.png"
-        }
-      ],
+      "photos": [],
       "history": [
         {
           "ts": "2026-10-15T19:00:00Z",
