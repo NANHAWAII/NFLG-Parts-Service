@@ -73,7 +73,7 @@ S = [
  ('已到货 Received', '已到货', 'Received'), ('关闭 Closed', '关闭', 'Closed'),
  ('正常 Normal', '正常', 'Normal'), ('加急 High', '加急', 'High'), ('紧急 Urgent', '紧急', 'Urgent'),
  ('在用 Active', '在用', 'Active'), ('停机 Down', '停机', 'Down'), ('备用 Standby', '备用', 'Standby'), ('退役 Retired', '退役', 'Retired'),
- ('全部状态 All', '全部状态', 'All statuses'),
+ ('全部状态 All', '状态', 'Status'),
  ('操作手册 Operation', '操作手册', 'Operation manual'), ('维护手册 Maintenance', '维护手册', 'Maintenance manual'), ('配件手册 Spare Parts', '配件手册', 'Spare parts manual'),
  ('技术参数 Specification', '技术参数', 'Specification'), ('电气图 Electrical', '电气图', 'Electrical diagram'), ('液压图 Hydraulic', '液压图', 'Hydraulic diagram'),
  ('控制系统 Control System', '控制系统', 'Control system'), ('发动机 Engine', '发动机', 'Engine'), ('选型/报价 Selection & Quote', '选型/报价', 'Selection & quote'),
