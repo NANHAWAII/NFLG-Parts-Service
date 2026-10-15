@@ -133,10 +133,12 @@
   /* modal */
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto;z-index:50}
   .overlay.open{display:flex}
-  .modal{background:var(--panel);border-radius:14px;width:100%;max-width:820px;padding:26px 30px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal{background:var(--panel);border-radius:14px;width:100%;max-width:900px;padding:26px 30px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
   .modal h2{margin:0 0 18px;font-size:21px}
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 18px}
   .grid .full{grid-column:1/-1}
+  .rqhead{display:grid;grid-template-columns:1fr .85fr 1.75fr .8fr 1.1fr;gap:12px}
+  .rqhead>*{min-width:0}
   .docwrap{max-width:1100px}
   .setwrap{max-width:860px}
   .setwrap .panel{margin-bottom:16px}
@@ -228,6 +230,8 @@
     .sec{padding:12px 12px 14px;margin-bottom:12px}
     .sec-h{margin-bottom:10px}
     .modal .grid{grid-template-columns:1fr 1fr;gap:10px 10px}
+    .rqhead{grid-template-columns:1fr 1fr;gap:10px}
+    .rqhead .unit{grid-column:1/-1}
     label.f{font-size:12.5px;margin-bottom:3px}
     input[type=text],input[type=number],input[type=date],input[type=password],select,textarea{padding:8px 10px}
     .sec-act{position:sticky;bottom:0;z-index:4;background:inherit;margin:4px -12px -14px;padding:10px 12px;border-top:1px solid var(--line);border-radius:0 0 12px 12px}
@@ -244,7 +248,7 @@
     .items tr:first-child{display:none}
     .items tr{display:grid;grid-template-columns:1fr 64px 38px;gap:6px;padding:8px 0;border-bottom:1px dashed var(--line)}
     .items tr:last-child{border-bottom:0}
-    .items .imeta.empty{display:none}
+    .items .imeta.blank{display:none}
     .items td{padding:0!important;border:0}
     .items .addline{margin-left:0}
     .items td.pncell{grid-column:1;grid-row:1}
@@ -679,7 +683,7 @@ function renderService(){
 /* ============ documents ============ */
 const models = () => db.meta.models || (db.meta.models=[]);
 const mname = m => LANG==='zh' ? (m.nameZh||m.nameEn||'') : (m.nameEn||m.nameZh||'');
-const modelOpts = cur => opts(models().map(m=>[m.code, esc(m.code+(mname(m)?' · '+mname(m):''))]), cur, '— 机型 Model —');
+const modelOpts = (cur,short) => opts(models().map(m=>[m.code, esc(m.code+(!short&&mname(m)?' · '+mname(m):''))]), cur, '— 机型 Model —');
 const fmtSize = b => !b ? '' : b>1048576 ? (b/1048576).toFixed(1)+' MB' : Math.max(1,Math.round(b/1024))+' KB';
 const rawHref = d => d.path&&gh.owner&&gh.repo ? `https://raw.githubusercontent.com/${gh.owner}/${gh.repo}/${gh.branch||'main'}/${d.path.split('/').map(encodeURIComponent).join('/')}` : docHref(d);
 const docHref = d => d.path ? d.path.split('/').map(encodeURIComponent).join('/') : (d.url||'');
@@ -961,11 +965,13 @@ function editRequest(id, partId){
     ${gh.token?'':`<div class="note warn">⚠ 这台浏览器还没连上 GitHub，提交的申请不会保存到服务器，刷新就会丢。请用采购部发的团队链接打开本站，或在 Settings 填 token。</div>`}
     ${id?'':`<div class="note">填好后点「提交」即可，采购部会向南方路机询价、下单并跟踪物流，进度在本页查看。零件号不清楚的话，在下方「查手册」里按名称搜，点「添加」自动带入。</div>`}
     <div class="sec${secOpen.req?'':' collapsed'}" data-k="req"><div class="sec-h" onclick="toggleSec(this)"><span class="n">1</span>申请信息 Request<small>申请人填写 · filled by requester</small><span class="sec-sum">${esc(r.model||'')} · ${(r.items||[]).length} ${(r.items||[]).length===1?'item':'items'}</span><span class="chev">▾</span></div><div class="grid">
+      <div class="full rqhead">
       ${field('r-req','申请人 Requester *',inp('r-req',r.requester,'text','placeholder="你的名字（下次自动填）"'))}
-      ${field('r-model','机型 Model *',`<select id="r-model" onchange="manualSearch()">${modelOpts(r.model||'')}</select>`)}
+      ${field('r-model','机型 Model *',`<select id="r-model" onchange="manualSearch()">${modelOpts(r.model||'',true)}</select>`)}
+      <div class="unit">${field('r-unit','设备编号 / 序列号 Unit no. / serial',inp('r-unit',r.unit,'text','placeholder="Crusher #1 / SN …"'))}</div>
       ${field('r-urg','紧急度 Urgency',`<select id="r-urg">${opts(URGENCY,r.urgency)}</select>`)}
       ${field('r-need','需要日期 Need by',inp('r-need',r.needBy,'date'))}
-      <div class="full">${field('r-unit','设备编号 / 序列号 Unit no. / serial',inp('r-unit',r.unit,'text','placeholder="Crusher #1 / SN …"'))}</div>
+      </div>
       <div class="full"><label class="f">配件 Items *</label><div class="items" id="items"></div></div>
       <div class="full"><label class="f">查手册 Find in parts manual <span id="manual-link"></span></label>
         <input type="text" id="r-search" placeholder="输入零件号或名称，如 jaw plate / 1100024929" oninput="manualSearch()"><div id="manual-results" style="margin-top:6px"></div></div>
@@ -1026,7 +1032,7 @@ function exportRequestPDF(id){
   const imgs=[...el.querySelectorAll('img')].filter(i=>!i.complete);
   Promise.all(imgs.map(i=>new Promise(ok=>{ i.onload=i.onerror=ok; setTimeout(ok,4000); }))).then(()=>setTimeout(()=>window.print(),50));
 }
-function itemMeta(i){ const model=$('#r-model')?.value; if(!i.fig) return '<div class="imeta empty">&nbsp;</div>'; const lk=i.page?manualLink(model,i.page):'';
+function itemMeta(i){ const model=$('#r-model')?.value; if(!i.fig) return '<div class="imeta blank">&nbsp;</div>'; const lk=i.page?manualLink(model,i.page):'';
   return `<div class="imeta">手册图 ${esc(i.fig)}${i.item?' 项 '+esc(i.item):''}${i.page?(lk?` · <a href="${esc(lk)}" target="_blank" title="Open manual page">p.${esc(i.page)}</a>`:` · p.${esc(i.page)}`):''}</div>`; }
 function renderItems(){
   $('#items').innerHTML = L(`<table><tr><th style="width:170px">零件号 Part No.</th><th>名称 / 描述</th><th style="width:84px">数量</th><th style="width:48px"></th></tr>
