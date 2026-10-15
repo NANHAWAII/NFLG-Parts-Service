@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T21:47:06.043Z",
+    "updated": "2026-10-15T21:56:53.965Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
     "sites": [
@@ -146,7 +146,7 @@
           "partId": "mv9xfurtg5v1",
           "partNo": "1100070787",
           "name": "HEX BOLT",
-          "qty": 1,
+          "qty": 2,
           "fig": "01-01",
           "item": "9",
           "page": 11
@@ -173,7 +173,7 @@
           "partId": "mv9xfurtq53f",
           "partNo": "1100031990",
           "name": "WASHER",
-          "qty": 1,
+          "qty": 2,
           "fig": "06-02-02",
           "item": "8",
           "page": 99
@@ -182,7 +182,7 @@
           "partId": "mv9xfurtpczu",
           "partNo": "1100070785",
           "name": "HEX BOLT",
-          "qty": 1
+          "qty": 2
         },
         {
           "partId": "mv9xfurtcx72",
@@ -306,6 +306,11 @@
           "user": "Fang Jiang",
           "from": "processing",
           "to": "requested"
+        },
+        {
+          "ts": "2026-10-15T21:56:53.439Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
         }
       ],
       "files": [],
