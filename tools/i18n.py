@@ -240,6 +240,8 @@ S = [
  ('不是本系统的 db.json', '不是本系统的 db.json', 'Not a db.json from this app'), ('已恢复，记得保存', '已恢复，记得保存', 'Restored — remember to save'),
  ('— 工地/站点 —', '— 工地/站点 —', '— site —'), ('— 机型 Model —', '— 机型 —', '— model —'), ('— 选择设备 —', '— 选择设备 —', '— equipment —'),
  ('(库存 ', '(库存 ', '(stock '),
+ ('导出 PDF', '导出 PDF', 'Export PDF'),
+ ('进度记录 History', '进度记录', 'History'),
 ]
 
 def build_js():
