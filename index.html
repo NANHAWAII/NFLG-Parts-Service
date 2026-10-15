@@ -141,6 +141,8 @@
   .rqhead>*{min-width:0}
   .rqfoot{display:grid;grid-template-columns:1fr 240px;gap:12px;align-items:start}
   .rqfoot>*{min-width:0}
+  .prochead{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .prochead>*{min-width:0}
   .rqfoot textarea{min-height:44px;height:44px}
   .photobtn{display:flex;align-items:center;justify-content:center;gap:6px;height:44px;cursor:pointer;width:100%}
   .photolist{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
@@ -238,6 +240,7 @@
     .rqhead{grid-template-columns:1fr 1fr;gap:10px}
     .rqhead .unit{grid-column:1/-1}
     .rqfoot{grid-template-columns:1fr}
+    .prochead{grid-template-columns:1fr 1fr;gap:10px}
     label.f{font-size:12.5px;margin-bottom:3px}
     input[type=text],input[type=number],input[type=date],input[type=password],select,textarea{padding:8px 10px}
     .sec-act{position:sticky;bottom:0;z-index:4;background:inherit;margin:4px -12px -14px;padding:10px 12px;border-top:1px solid var(--line);border-radius:0 0 12px 12px}
@@ -989,13 +992,15 @@ function editRequest(id, partId){
       ${id?`<div class="full sec-act"><button class="btn" style="margin-right:auto" onclick="exportRequestPDF('${id}')">⤓ 导出 PDF</button><span class="hint">Enter ↵</span><button class="btn primary" id="r-save-req" onclick="saveRequest('${id}','req')">保存申请信息</button></div>`:''}
     </div></div>
     ${id?`<div class="sec proc${secOpen.proc?'':' collapsed'}" data-k="proc"><div class="sec-h" onclick="toggleSec(this)"><span class="n">2</span>采购与物流 Procurement &amp; shipping<small>采购部更新 · updated by procurement</small><span class="sec-sum"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.poNo?` PO ${esc(r.poNo)}`:''}${r.eta?` · ETA ${esc(r.eta)}`:''}</span><span class="chev">▾</span></div><div class="grid">
+      <div class="full prochead">
       ${field('r-status','状态 Status',statusHtml)}
       ${field('r-date','申请日期',inp('r-date',r.date,'date'))}
       ${field('r-po','PO#',inp('r-po',r.poNo))}
       ${field('r-eta','预计到货 ETA',inp('r-eta',r.eta,'date'))}
-      <div class="full">${field('r-ship','运输方式 / 单号 Tracking',inp('r-ship',r.shipping,'text','placeholder="DHL 1234567890 / 海运 Matson"'))}</div>
       ${field('r-mcost','材料费 Material cost',inp('r-mcost',r.materialCost??r.quoteTotal??'','text','placeholder="USD 1,250"'))}
       ${field('r-fcost','运费 Freight cost',inp('r-fcost',r.freightCost,'text','placeholder="USD 300"'))}
+      </div>
+      <div class="full">${field('r-ship','运输方式 / 单号 Tracking',inp('r-ship',r.shipping,'text','placeholder="DHL 1234567890 / 海运 Matson"'))}</div>
       <div class="full"><label class="f">附件 Attachments（报价单、发票、装箱单、提单…）</label>
         <div class="files">${(r.files||[]).map((f,k)=>`<div class="frow"><a href="${esc(docHref(f))}" target="_blank" rel="noopener">📄 ${esc(f.name)}</a><span class="fmeta">${fmtSize(f.size)} · ${esc(f.user||'')} · ${esc((f.ts||'').slice(0,10))}</span><button class="btn sm danger" onclick="removeProcFile('${id}',${k})">删除</button></div>`).join('')}</div>
         <label class="btn sm" style="display:inline-block;margin-top:6px;cursor:pointer">＋ 上传附件<input type="file" multiple style="display:none" onchange="uploadProcFiles('${id}',this.files)"></label>
