@@ -84,6 +84,12 @@
   table.rq tr.grph th::after{content:'';display:block;height:3px;border-radius:2px;margin-top:7px;background:var(--accent)}
   table.rq tr.grph th:last-child::after{background:#3fa66b}
   table.rq tr.grph th:last-child{padding-left:16px}
+  table.rq tr.grph th.nohd::after{display:none}
+  /* request number: leads the whole row */
+  table.rq td.rqno{border-right:1px solid var(--line)}
+  table.rq td.rqno a{font-size:15.5px;font-weight:800;color:var(--text);text-decoration:none;letter-spacing:.01em;white-space:nowrap}
+  table.rq tr.rowlink:hover td.rqno a{color:var(--accent)}
+  table.rq td.rqno .sub{margin-top:4px}
   table.rq .sub{font-size:12.5px;color:var(--muted);margin-top:3px}
   table.rq .nm .iline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
   table.rq td.nm{max-width:0}
@@ -103,7 +109,7 @@
   @media (max-width:1600px){ table.rq th,table.rq td{padding-left:8px;padding-right:8px} table.rq td.g.gl .sub{max-width:90px} table.rq .rqr{min-width:70px} }
   table.rq .fill{width:auto;padding:0}
   table.rq td.g.gl .sub{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  @media (min-width:1700px){ table.rq td.g.gl .sub{max-width:200px} table.rq th,table.rq td{padding-left:12px;padding-right:12px} table.rq .gl{padding-left:16px!important} table.rq .pc{padding-left:20px} }
+  @media (min-width:1700px){ table.rq td.g.gl .sub{max-width:200px} table.rq th,table.rq td{padding-left:10px;padding-right:10px} table.rq .gl{padding-left:16px!important} table.rq .pc{padding-left:20px} }
   table.rq td.num.g{padding-right:16px}
   table.rq .qty{font-weight:700;font-size:15.5px;color:var(--text)}
   table.rq td.g .iline{height:30px;line-height:30px}
@@ -650,8 +656,8 @@ function renderRequests(){
         <div class="rqc-items">${(r.items||[]).map(i=>`<div class="rqc-it"><span class="mono">${esc(i.partNo||'—')}</span><span class="rqc-nm">${esc(i.name||'')}</span><b>× ${esc(i.qty)}</b></div>`).join('')}</div>
         ${(r.poNo||r.shipping||r.eta||(r.files||[]).length)?`<div class="rqc-proc">${r.poNo?`<span>PO ${esc(r.poNo)}</span>`:''}${r.shipping?`<span>🚚 ${trackLink(r.shipping)}</span>`:''}${r.eta?`<span>ETA ${esc(r.eta)}</span>`:''}${(r.files||[]).map(f=>`<a href="${esc(docHref(f))}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📄 ${esc(f.name)}</a>`).join('')}</div>`:''}
       </div>`).join('')}</div>`:''}
-    ${false ? '' : `<div class="panel rq-panel">${list.length? `<table class="rq"><colgroup><col style="width:6%"><col style="width:5%"><col style="width:6.5%"><col style="width:8%"><col style="width:8%"><col style="width:7%"><col style="width:14.5%"><col style="width:3.5%"><col style="width:5%"><col style="width:12%"><col style="width:4.5%"><col style="width:20%"></colgroup><tr class="grph"><th colspan="8" class="gr">申请与配件 Request &amp; parts</th><th colspan="4">采购与物流 Procurement</th></tr><tr>${th('no','单号 No.','c')}${th('urgency','紧急度','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="c">附件</th></tr>
-      ${list.map(r=>`<tr class="rowlink" onclick="editRequest('${r.id}',null,event.target.closest('.pz')?'proc':'')"><td class="c"><a class="mono" href="#" onclick="event.stopPropagation();editRequest('${r.id}',null,'');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c">${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:`<span class="sub">${lbl(URGENCY,'normal')}</span>`}</td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span></td>
+    ${false ? '' : `<div class="panel rq-panel">${list.length? `<table class="rq"><colgroup><col style="width:6%"><col style="width:5%"><col style="width:6%"><col style="width:8%"><col style="width:7.5%"><col style="width:7%"><col style="width:14.5%"><col style="width:3.5%"><col style="width:5%"><col style="width:12%"><col style="width:4.5%"><col style="width:21%"></colgroup><tr class="grph"><th class="nohd"></th><th colspan="7" class="gr">申请与配件 Request &amp; parts</th><th colspan="4">采购与物流 Procurement</th></tr><tr>${th('no','单号 No.','c')}${th('urgency','紧急度','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="c">附件</th></tr>
+      ${list.map(r=>`<tr class="rowlink" onclick="editRequest('${r.id}',null,event.target.closest('.pz')?'proc':'')"><td class="c rqno"><a href="#" onclick="event.stopPropagation();editRequest('${r.id}',null,'');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c">${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:`<span class="sub">${lbl(URGENCY,'normal')}</span>`}</td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span></td>
         <td class="rqr">${esc(r.requester)}</td>
         <td class="g gl c"><b>${esc(r.model||'')}</b>${r.unit?`<div class="sub" title="${esc(r.unit)}">${esc(r.unit)}</div>`:''}</td>
         <td class="g mono c">${(r.items||[]).map(i=>`<div class="iline">${esc(i.partNo||'—')}</div>`).join('')}</td>
