@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T21:36:24.032Z",
+    "updated": "2026-10-15T21:46:17.055Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
     "sites": [
@@ -289,9 +289,25 @@
           "ts": "2026-10-15T21:36:23.544Z",
           "user": "Fang Jiang",
           "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T21:46:16.765Z",
+          "user": "Fang Jiang",
+          "kind": "files",
+          "n": 1
         }
       ],
-      "files": [],
+      "files": [
+        {
+          "path": "attachments/NFLG-0001/1792100774212-ONEYTAOGF0288300_Cutoms Docs.pdf",
+          "sha": "dfd312f8377cd7f74a10adca109a8bac3863b37d",
+          "name": "ONEYTAOGF0288300_Cutoms Docs.pdf",
+          "size": 1177372,
+          "ts": "2026-10-15T21:46:16.765Z",
+          "user": "Fang Jiang",
+          "cat": "customs"
+        }
+      ],
       "materialCost": "0",
       "freightCost": ""
     }
