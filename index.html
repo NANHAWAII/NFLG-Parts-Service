@@ -429,7 +429,8 @@ function renderService(){
 
 /* ============ documents ============ */
 const models = () => db.meta.models || (db.meta.models=[]);
-const modelOpts = cur => opts(models().map(m=>[esc(m.code), esc(m.code+(m.nameZh?' · '+m.nameZh:''))]), cur, '— 机型 Model —');
+const mname = m => LANG==='zh' ? (m.nameZh||m.nameEn||'') : (m.nameEn||m.nameZh||'');
+const modelOpts = cur => opts(models().map(m=>[esc(m.code), esc(m.code+(mname(m)?' · '+mname(m):''))]), cur, '— 机型 Model —');
 const fmtSize = b => !b ? '' : b>1048576 ? (b/1048576).toFixed(1)+' MB' : Math.max(1,Math.round(b/1024))+' KB';
 const docHref = d => d.path ? d.path.split('/').map(encodeURIComponent).join('/') : (d.url||'');
 function curModel(){ const m=sessionStorage.getItem('f.model'); return models().some(x=>x.code===m) ? m : (models()[0]?.code||''); }
@@ -441,9 +442,9 @@ function renderDocs(){
   if(!m) return tabs+`<div class="panel"><div class="empty">先添加一个机型（例如 NFJ1175），再上传该机型的手册、图纸和选型文件。</div></div>`;
   let list=(db.docs||[]).filter(d=>d.model===m.code).filter(matches);
   const groups = DOC_CATS.map(([k,v])=>[k,v,list.filter(d=>(d.category||'other')===k)]).filter(g=>g[2].length);
-  const head = `<div class="panel"><h2>${esc(m.code)} ${esc(m.nameZh||'')} ${m.nameEn?`<span style="font-weight:400;color:var(--muted)">${esc(m.nameEn)}</span>`:''}
+  const head = `<div class="panel"><h2>${esc(m.code)} ${esc(mname(m))} ${(LANG==='zh'?m.nameEn:m.nameZh)?`<span style="font-weight:400;color:var(--muted)">${esc(LANG==='zh'?m.nameEn:m.nameZh)}</span>`:''}
       <span><button class="btn sm" onclick="editModel('${esc(m.code)}')">编辑机型</button> <button class="btn sm primary" onclick="editDoc(null,'${esc(m.code)}')">＋ 添加文档 / 上传</button></span></h2>
-    <div style="padding:10px 14px;font-size:13px;color:var(--muted)">${m.engine?`发动机 ${esc(m.engine)} · `:''}${m.nameEn&&LANG==='zh'?'':''}${m.notes?esc(m.notes):''}</div></div>`;
+    <div style="padding:10px 14px;font-size:13px;color:var(--muted)">${m.engine?`发动机 ${esc(m.engine)} · `:''}${m.notes?esc(m.notes):''}</div></div>`;
   const rows = groups.length ? groups.map(([k,v,ds])=>`<div class="panel"><h2>${v}<span class="count" style="font-size:11px;color:var(--muted)">${ds.length}</span></h2>
     <table style="table-layout:fixed"><tr><th style="width:34%">文档 Document</th><th style="width:13%">版本 / 日期</th><th style="width:9%">来源</th><th class="num" style="width:8%">大小</th><th style="width:9%">上传人</th><th>备注</th><th style="width:13%"></th></tr>
     ${ds.map(d=>{ const href=docHref(d); const src = d.path?'<span class="chip">仓库 Pages</span>':d.url?'<span class="chip">链接 Link</span>':'<span class="chip low">未上传</span>';
