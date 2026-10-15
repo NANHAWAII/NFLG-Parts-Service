@@ -384,12 +384,12 @@ function renderRequests(){
       ${isProc()?`<label><input type="checkbox" id="kanban" ${sessionStorage.getItem('f.kanban')==='1'?'checked':''} onchange="sessionStorage.setItem('f.kanban',this.checked?'1':'0');render()"> 看板 Kanban</label>`:''}
       <span style="flex:1"></span>
 </div>
-    ${isProc()&&sessionStorage.getItem('f.kanban')==='1' ? pipelineHtml(list) : `<div class="panel">${list.length? `<table><tr>${th('no','单号 No.')}${th('date','日期')}${th('status','状态')}${th('urgency','紧急度')}<th>零件号 Part No.</th><th>名称 / 描述</th><th class="num">数量</th>${th('model','机型 Model')}${th('requester','申请人')}${th('poNo','PO#')}${th('eta','ETA')}<th></th></tr>
+    ${isProc()&&sessionStorage.getItem('f.kanban')==='1' ? pipelineHtml(list) : `<div class="panel">${list.length? `<table><tr>${th('no','单号 No.')}${th('date','日期')}${th('status','状态')}${th('urgency','紧急度')}<th>零件号 Part No.</th><th>名称 / 描述</th><th class="num">数量</th>${th('model','机型 Model')}${th('requester','申请人')}${th('poNo','PO#')}${th('shipping','运输方式 / 单号 Tracking')}${th('eta','ETA')}<th></th></tr>
       ${list.map(r=>`<tr><td class="mono nw"><a href="#" onclick="editRequest('${r.id}');return false">${esc(r.no)}</a></td><td class="nw">${esc(r.date)}</td><td><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span></td><td>${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:''}</td>
         <td class="mono">${(r.items||[]).map(i=>`<div class="iline">${esc(i.partNo||'—')}</div>`).join('')}</td>
         <td>${(r.items||[]).map(i=>`<div class="iline">${esc(i.name||'')}</div>`).join('')}${(r.photos||[]).length?`<small style="color:var(--muted)">📷 ${r.photos.length}</small>`:''}</td>
         <td class="num">${(r.items||[]).map(i=>`<div class="iline">${esc(i.qty)}</div>`).join('')}</td>
-        <td class="nw">${esc(r.model||'')}${r.unit?`<br><small style="color:var(--muted)">${esc(r.unit)}</small>`:''}</td><td>${esc(r.requester)}</td><td class="mono nw">${esc(r.poNo)}</td><td class="nw">${esc(r.eta)}</td>
+        <td class="nw">${esc(r.model||'')}${r.unit?`<br><small style="color:var(--muted)">${esc(r.unit)}</small>`:''}</td><td>${esc(r.requester)}</td><td class="mono nw">${esc(r.poNo)}</td><td class="mono">${esc(r.shipping||'')}</td><td class="nw">${esc(r.eta)}</td>
         <td class="row-actions"><button onclick="editRequest('${r.id}')">${isProc()?'编辑':'查看/编辑'}</button>${isProc()||(r.status==='requested'&&r.requester===me())?`<button class="del" onclick="del('requests','${r.id}')">删除</button>`:''}</td></tr>`).join('')}</table>` : `<div class="empty"><div class="ico">⚙</div>还没有申请。点「新申请」提交第一条。</div>`}</div>`}`;
 }
 function exportRequests(){ csv([['No','Date','Status','Urgency','Model','Requester','PartNo','Part','Qty','PO','ETA','Notes'],
