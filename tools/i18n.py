@@ -69,7 +69,7 @@ S = [
  ('…共 ', '…共 ', '… '),
  (' 项</div>', ' 项</div>', ' items</div>'),
  # statuses etc
- ('已申请 Requested', '已申请', 'Requested'), ('询价中 Quoting', '询价中', 'Quoting'), ('已下单 Ordered', '已下单', 'Ordered'),
+ ('已申请 Requested', '已申请', 'Requested'), ('处理中 Processing', '处理中', 'Processing'), ('询价中 Quoting', '询价中', 'Quoting'), ('已下单 Ordered', '已下单', 'Ordered'),
  ('已到货 Received', '已到货', 'Received'), ('关闭 Closed', '关闭', 'Closed'),
  ('正常 Normal', '正常', 'Normal'), ('加急 High', '加急', 'High'), ('紧急 Urgent', '紧急', 'Urgent'),
  ('在用 Active', '在用', 'Active'), ('停机 Down', '停机', 'Down'), ('备用 Standby', '备用', 'Standby'), ('退役 Retired', '退役', 'Retired'),
