@@ -284,22 +284,6 @@
       "uploadedBy": "Fang",
       "notes": "",
       "uploadedAt": "2026-10-15T09:30:00Z"
-    },
-    {
-      "id": "dc10",
-      "model": "NFJ1175",
-      "category": "selection",
-      "title": "NFJ1175 Nan Selection",
-      "version": "",
-      "date": "",
-      "fileName": "NFJ1175_Nan Selection.xlsx",
-      "size": 40763,
-      "path": "docs/NFJ1175/NFJ1175_Nan Selection.xlsx",
-      "sha": "",
-      "url": "",
-      "uploadedBy": "Fang",
-      "notes": "",
-      "uploadedAt": "2026-10-15T09:30:00Z"
     }
   ]
 }
