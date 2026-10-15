@@ -4,13 +4,6 @@
     "updated": null,
     "updatedBy": null,
     "nextReqNo": 4,
-    "sites": [
-      "Palamanui",
-      "Waikoloa",
-      "Shipman",
-      "Honolulu Yard",
-      "Guam"
-    ],
     "notice": "Parts requests go through Procurement, which handles quotes and orders with NFLG. For urgent items mark the request Urgent and also phone Procurement. / 配件申请统一由采购部向南方路机询价下单；紧急件请标「紧急」并电话通知采购部。",
     "models": [
       {
@@ -44,18 +37,17 @@
       "no": "PR-0001",
       "date": "2026-10-01",
       "requester": "Sample requester",
-      "site": "Waikoloa",
       "urgency": "high",
       "status": "ordered",
       "items": [
         {
           "partId": "",
           "partNo": "NFJ1175-JAW-01",
-          "name": "颚板（动）",
+          "name": "Jaw plate, movable",
           "qty": 2
         }
       ],
-      "reason": "磨损更换",
+      "reason": "Worn, replacement",
       "needBy": "2026-11-15",
       "quoteTotal": "USD 3,700",
       "poNo": "PO-26-1042",
@@ -66,17 +58,19 @@
         {
           "ts": "2026-10-01T18:00:00Z",
           "user": "Sample requester",
-          "action": "创建"
+          "kind": "created"
         },
         {
           "ts": "2026-10-03T19:30:00Z",
           "user": "Fang",
-          "action": "已申请 Requested → 询价中 Quoting"
+          "from": "requested",
+          "to": "quoting"
         },
         {
           "ts": "2026-10-06T21:10:00Z",
           "user": "Fang",
-          "action": "询价中 Quoting → 已下单 Ordered"
+          "from": "quoting",
+          "to": "ordered"
         }
       ],
       "model": "NFJ1175",
@@ -87,29 +81,28 @@
       "no": "PR-0002",
       "date": "2026-10-10",
       "requester": "Sample requester",
-      "site": "Waikoloa",
       "urgency": "urgent",
       "status": "quoting",
       "items": [
         {
           "partId": "",
           "partNo": "NFJ1175-BRG-6320",
-          "name": "主轴轴承",
+          "name": "Main shaft bearing",
           "qty": 1
         }
       ],
-      "reason": "轴承异响",
+      "reason": "Bearing noise",
       "needBy": "2026-10-25",
       "quoteTotal": "",
       "poNo": "",
       "shipping": "",
       "eta": "",
-      "notes": "Sample data – 正在比较 NFLG 与本地 SKF 价格",
+      "notes": "Sample data – comparing NFLG vs local SKF price",
       "history": [
         {
           "ts": "2026-10-10T18:00:00Z",
           "user": "Sample requester",
-          "action": "创建"
+          "kind": "created"
         }
       ],
       "model": "NFJ1175",
@@ -120,18 +113,17 @@
       "no": "PR-0003",
       "date": "2026-10-12",
       "requester": "Sample requester",
-      "site": "Palamanui",
       "urgency": "normal",
       "status": "requested",
       "items": [
         {
           "partId": "",
           "partNo": "NFS550-BURNER-NOZ",
-          "name": "燃烧器喷嘴",
+          "name": "Burner nozzle",
           "qty": 2
         }
       ],
-      "reason": "备件",
+      "reason": "Spare",
       "needBy": "",
       "quoteTotal": "",
       "poNo": "",
@@ -142,7 +134,7 @@
         {
           "ts": "2026-10-12T18:00:00Z",
           "user": "Sample requester",
-          "action": "创建"
+          "kind": "created"
         }
       ],
       "model": "NFS550",

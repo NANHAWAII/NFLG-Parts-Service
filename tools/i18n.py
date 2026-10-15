@@ -228,7 +228,7 @@ S = [
  ('已复制到剪贴板', '已复制到剪贴板', 'Copied to clipboard'),
  ('采购部邮箱（申请人提交后可一键发邮件通知）', '采购部邮箱（申请人提交后可一键发邮件通知）', 'Procurement email (requesters can notify with one click)'),
  ('应用', '应用', 'Apply'), ('已应用', '已应用', 'Applied'),
- ('站点 Sites &amp; 公告', '站点 &amp; 公告', 'Sites &amp; notice'),
+ ('公告 Notice', '公告', 'Notice'),
  ('站点列表（逗号分隔）', '站点列表（逗号分隔）', 'Sites (comma-separated)'),
  ('概览页公告 Notice（显示在 Dashboard 顶部）', '概览页公告（显示在概览顶部）', 'Notice (shown at the top of the Dashboard)'),
  ('数据 Data', '数据', 'Data'), ('下载 db.json 备份', '下载 db.json 备份', 'Download db.json backup'), ('从 JSON 恢复', '从 JSON 恢复', 'Restore from JSON'),
