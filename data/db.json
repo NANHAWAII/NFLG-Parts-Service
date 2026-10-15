@@ -11,7 +11,7 @@
       "Honolulu Yard",
       "Guam"
     ],
-    "notice": "配件申请统一由采购部向南方路机询价/下单。紧急件请在申请里标「紧急」并同时电话通知采购部。",
+    "notice": "Parts requests go through Procurement, which handles quotes and orders with NFLG. For urgent items mark the request Urgent and also phone Procurement. / 配件申请统一由采购部向南方路机询价下单；紧急件请标「紧急」并电话通知采购部。",
     "models": [
       {
         "code": "NFJ1175",
@@ -40,26 +40,26 @@
     {
       "id": "eq01",
       "model": "NFJ1175",
-      "serial": "示例-001",
+      "serial": "SAMPLE-001",
       "nickname": "Crusher #1",
       "site": "Waikoloa",
       "status": "active",
       "hours": 3120,
       "year": 2024,
       "contact": "",
-      "notes": "示例数据 – 请替换为实际设备"
+      "notes": "Sample data – replace with real units / 示例数据"
     },
     {
       "id": "eq02",
       "model": "NFS550",
-      "serial": "示例-002",
+      "serial": "SAMPLE-002",
       "nickname": "Screen #1",
       "site": "Palamanui",
       "status": "standby",
       "hours": 870,
       "year": 2025,
       "contact": "",
-      "notes": "示例数据"
+      "notes": "Sample data – replace with real units / 示例数据"
     }
   ],
   "parts": [
@@ -81,7 +81,7 @@
       "leadTimeDays": 45,
       "location": "Honolulu Yard A-3",
       "weight": "",
-      "notes": "示例数据 – 易损件"
+      "notes": "Sample data – 易损件"
     },
     {
       "id": "pt02",
@@ -101,7 +101,7 @@
       "leadTimeDays": 45,
       "location": "Honolulu Yard A-3",
       "weight": "",
-      "notes": "示例数据"
+      "notes": "Sample data"
     },
     {
       "id": "pt03",
@@ -121,7 +121,7 @@
       "leadTimeDays": 30,
       "location": "",
       "weight": "",
-      "notes": "示例数据 – 可本地采购替代"
+      "notes": "Sample data – 可本地采购替代"
     },
     {
       "id": "pt04",
@@ -141,7 +141,7 @@
       "leadTimeDays": 25,
       "location": "Palamanui container",
       "weight": "",
-      "notes": "示例数据"
+      "notes": "Sample data"
     }
   ],
   "requests": [
@@ -149,7 +149,7 @@
       "id": "rq01",
       "no": "PR-0001",
       "date": "2026-10-01",
-      "requester": "示例申请人",
+      "requester": "Sample requester",
       "site": "Waikoloa",
       "equipmentId": "eq01",
       "urgency": "high",
@@ -168,11 +168,11 @@
       "poNo": "PO-26-1042",
       "shipping": "海运 Matson",
       "eta": "2026-11-20",
-      "notes": "示例数据",
+      "notes": "Sample data",
       "history": [
         {
           "ts": "2026-10-01T18:00:00Z",
-          "user": "示例申请人",
+          "user": "Sample requester",
           "action": "创建"
         },
         {
@@ -191,7 +191,7 @@
       "id": "rq02",
       "no": "PR-0002",
       "date": "2026-10-10",
-      "requester": "示例申请人",
+      "requester": "Sample requester",
       "site": "Waikoloa",
       "equipmentId": "eq01",
       "urgency": "urgent",
@@ -210,11 +210,11 @@
       "poNo": "",
       "shipping": "",
       "eta": "",
-      "notes": "示例数据 – 正在比较 NFLG 与本地 SKF 价格",
+      "notes": "Sample data – 正在比较 NFLG 与本地 SKF 价格",
       "history": [
         {
           "ts": "2026-10-10T18:00:00Z",
-          "user": "示例申请人",
+          "user": "Sample requester",
           "action": "创建"
         }
       ]
@@ -223,7 +223,7 @@
       "id": "rq03",
       "no": "PR-0003",
       "date": "2026-10-12",
-      "requester": "示例申请人",
+      "requester": "Sample requester",
       "site": "Palamanui",
       "equipmentId": "eq02",
       "urgency": "normal",
@@ -242,11 +242,11 @@
       "poNo": "",
       "shipping": "",
       "eta": "",
-      "notes": "示例数据",
+      "notes": "Sample data",
       "history": [
         {
           "ts": "2026-10-12T18:00:00Z",
-          "user": "示例申请人",
+          "user": "Sample requester",
           "action": "创建"
         }
       ]
@@ -258,7 +258,7 @@
       "date": "2026-09-28",
       "equipmentId": "eq01",
       "site": "Waikoloa",
-      "technician": "示例技工",
+      "technician": "Sample tech",
       "issue": "动颚板磨损，出料粒径偏大",
       "work": "测量颚板厚度，剩余约 20%，安排更换；调整排料口",
       "partsUsed": [],
@@ -266,7 +266,7 @@
       "downtimeHours": 2,
       "meter": 3120,
       "nflg": "",
-      "notes": "示例数据"
+      "notes": "Sample data"
     }
   ],
   "docs": [
@@ -283,7 +283,7 @@
       "sha": "",
       "url": "",
       "uploadedBy": "",
-      "notes": "243 MB，超过仓库上限 — 用 OneDrive 链接"
+      "notes": "243 MB – over repo limit, use OneDrive link"
     },
     {
       "id": "dc02",
@@ -418,7 +418,7 @@
       "sha": "",
       "url": "",
       "uploadedBy": "",
-      "notes": "选型表"
+      "notes": "Selection sheet"
     }
   ]
 }
