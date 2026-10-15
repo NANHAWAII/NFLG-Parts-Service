@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T20:28:10.119Z",
+    "updated": "2026-10-15T20:28:58.597Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 3,
     "sites": [
@@ -250,38 +250,6 @@
           "kind": "edited"
         }
       ]
-    },
-    {
-      "id": "mv9zqokj3sda",
-      "no": "NFLG-0002",
-      "date": "2026-10-15",
-      "status": "requested",
-      "history": [
-        {
-          "ts": "2026-10-15T20:28:09.571Z",
-          "user": "Fang Jiang",
-          "kind": "created"
-        }
-      ],
-      "requester": "Fang Jiang",
-      "unit": "NFJ1175YEUCQZG120067",
-      "model": "NFJ1175",
-      "urgency": "normal",
-      "items": [
-        {
-          "partId": "mv9zqokj8izb",
-          "partNo": "1100025244",
-          "name": "SPLIT FLANG",
-          "qty": 1,
-          "fig": "01-01",
-          "item": "1",
-          "page": 11
-        }
-      ],
-      "reason": "",
-      "needBy": "",
-      "notes": "",
-      "photos": []
     }
   ],
   "service": [],
