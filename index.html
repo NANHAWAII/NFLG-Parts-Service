@@ -788,8 +788,6 @@ function renderSettings(){
   <div class="panel"><h2>团队链接 Team link（给同事提申请用）</h2><div style="padding:14px">
     <div class="note">把链接发给同事，点开一次就配好了：以后打开本站直接提申请、传照片，不用 token、不用点保存。链接里带着仓库写权限，只在公司内部发；建议为此单独建一个 token（Contents: Read &amp; write），需要时在 GitHub 上撤销即可。</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn primary" onclick="teamLink()">生成并复制链接</button><input type="text" id="team-link" readonly placeholder="点左边生成" style="flex:1;min-width:280px"></div>
-    <label class="f" style="margin-top:12px">采购部邮箱（申请人提交后可一键发邮件通知）</label><input type="text" id="s-email" value="${esc(db.meta.procurementEmail||'')}" placeholder="fjiang@nanhawaii.com">
-    <div style="margin-top:8px"><button class="btn" onclick="snapshot();db.meta.procurementEmail=$('#s-email').value.trim();markDirty();toast('已应用')">应用</button></div>
   </div></div>
   <div class="panel"><h2>数据 Data</h2><div style="padding:14px;display:flex;gap:8px;flex-wrap:wrap">
     <button class="btn" onclick="downloadJson()">下载 db.json 备份</button>
@@ -929,7 +927,6 @@ function editRequest(id, partId){
       <div class="full"><label class="f">照片 Photos（损坏部位、铭牌等）</label><input type="file" id="r-photos" accept="image/*" multiple onchange="draftPhotos=[...this.files]">
         <div id="photo-list" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${(r.photos||[]).map((p,i)=>`<a href="${esc(docHref(p))}" target="_blank"><img src="${esc(docHref(p))}" style="height:64px;border-radius:6px;border:1px solid var(--line)"></a>`).join('')}</div></div>
       <div class="full">${field('r-notes','备注',`<textarea id="r-notes" rows="2">${esc(r.notes||'')}</textarea>`)}</div>
-      ${!id&&db.meta.procurementEmail?`<div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="r-mail" checked> 提交后打开邮件通知采购部（${esc(db.meta.procurementEmail)}）</label></div>`:''}
       ${id?`<div class="full sec-act"><span class="hint">Enter ↵</span><button class="btn primary" id="r-save-req" onclick="saveRequest('${id}','req')">保存申请信息</button></div>`:''}
     </div></div>
     ${id?`<div class="sec proc${secOpen.proc?'':' collapsed'}" data-k="proc"><div class="sec-h" onclick="toggleSec(this)"><span class="n">2</span>采购与物流 Procurement &amp; shipping<small>采购部更新 · updated by procurement</small><span class="sec-sum"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.poNo?` PO ${esc(r.poNo)}`:''}${r.eta?` · ETA ${esc(r.eta)}`:''}</span><span class="chev">▾</span></div><div class="grid">
@@ -1057,15 +1054,11 @@ async function saveRequest(id, part){
     if(r.status==='received'&&!r.receivedApplied){ for(const i of items){ const p=partById(i.partId); if(p) p.stock=stockOf(p)+i.qty; } r.receivedApplied=true; r.receivedDate=today(); } }
   else if(!isNew){ (r.history=r.history||[]).push({ts:new Date().toISOString(),user:me(),kind:'edited'}); }
   if(doReq) for(const i of items){ if(!i.partId&&i.partNo){ const p={id:uid(),partNo:i.partNo,nameZh:/[\u4e00-\u9fff]/.test(i.name)?i.name:'',nameEn:/[\u4e00-\u9fff]/.test(i.name)?'':i.name,models:v('model')?[v('model')]:[],unit:'pc',stock:0,minStock:'',currency:'USD'}; db.parts.push(p); i.partId=p.id; } }
-  const wantMail=!!$('#r-mail')?.checked;
   markDirty();
   if(part){ render(); if(gh.token) await save(false); else toast('已记录在本机，需要通过团队链接打开本页才能提交到服务器');
     editRequest(r.id); const b2=$('#r-save-'+part); if(b2){ b2.textContent=L('已保存 ✓'); setTimeout(()=>{ if(b2.isConnected) b2.textContent=btnTxt; },1600); } return; }
   closeModal(); render();
   if(gh.token){ await save(false); } else toast('已记录在本机，需要通过团队链接打开本页才能提交到服务器');
-  if(isNew&&db.meta.procurementEmail&&wantMail) {
-    const body=L(`${r.no} ${r.model||''} ${r.unit||''}\n申请人：${r.requester}  紧急度：${lbl(URGENCY,r.urgency)}  需要日期：${r.needBy||'-'}\n${items.map(i=>`- ${i.partNo||''} ${i.name||''} ×${i.qty}`).join('\n')}\n原因：${r.reason||''}\n\n${location.href.split('#')[0]}`);
-    location.href=`mailto:${db.meta.procurementEmail}?subject=${encodeURIComponent(L('配件申请 '+r.no+' '+(r.urgency==='urgent'?'【紧急】':'')))}&body=${encodeURIComponent(body)}`; }
 }
 
 /* --- service --- */
