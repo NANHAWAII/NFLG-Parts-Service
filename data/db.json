@@ -36,114 +36,8 @@
       }
     ]
   },
-  "equipment": [
-    {
-      "id": "eq01",
-      "model": "NFJ1175",
-      "serial": "SAMPLE-001",
-      "nickname": "Crusher #1",
-      "site": "Waikoloa",
-      "status": "active",
-      "hours": 3120,
-      "year": 2024,
-      "contact": "",
-      "notes": "Sample data – replace with real units / 示例数据"
-    },
-    {
-      "id": "eq02",
-      "model": "NFS550",
-      "serial": "SAMPLE-002",
-      "nickname": "Screen #1",
-      "site": "Palamanui",
-      "status": "standby",
-      "hours": 870,
-      "year": 2025,
-      "contact": "",
-      "notes": "Sample data – replace with real units / 示例数据"
-    }
-  ],
-  "parts": [
-    {
-      "id": "pt01",
-      "partNo": "NFJ1175-JAW-01",
-      "oemNo": "",
-      "nameZh": "颚板（动）",
-      "nameEn": "Jaw plate, movable",
-      "models": [
-        "NFJ1175"
-      ],
-      "unit": "pc",
-      "stock": 1,
-      "minStock": 2,
-      "lastPrice": 1850,
-      "currency": "USD",
-      "lastPriceDate": "2026-08-15",
-      "leadTimeDays": 45,
-      "location": "Honolulu Yard A-3",
-      "weight": "",
-      "notes": "Sample data – 易损件"
-    },
-    {
-      "id": "pt02",
-      "partNo": "NFJ1175-JAW-02",
-      "oemNo": "",
-      "nameZh": "颚板（定）",
-      "nameEn": "Jaw plate, fixed",
-      "models": [
-        "NFJ1175"
-      ],
-      "unit": "pc",
-      "stock": 2,
-      "minStock": 2,
-      "lastPrice": 1790,
-      "currency": "USD",
-      "lastPriceDate": "2026-08-15",
-      "leadTimeDays": 45,
-      "location": "Honolulu Yard A-3",
-      "weight": "",
-      "notes": "Sample data"
-    },
-    {
-      "id": "pt03",
-      "partNo": "NFJ1175-BRG-6320",
-      "oemNo": "SKF 6320",
-      "nameZh": "主轴轴承",
-      "nameEn": "Main shaft bearing",
-      "models": [
-        "NFJ1175"
-      ],
-      "unit": "pc",
-      "stock": 0,
-      "minStock": 1,
-      "lastPrice": 420,
-      "currency": "USD",
-      "lastPriceDate": "2026-06-02",
-      "leadTimeDays": 30,
-      "location": "",
-      "weight": "",
-      "notes": "Sample data – 可本地采购替代"
-    },
-    {
-      "id": "pt04",
-      "partNo": "NFS550-BURNER-NOZ",
-      "oemNo": "",
-      "nameZh": "燃烧器喷嘴",
-      "nameEn": "Burner nozzle",
-      "models": [
-        "NFS550"
-      ],
-      "unit": "pc",
-      "stock": 4,
-      "minStock": 2,
-      "lastPrice": 310,
-      "currency": "USD",
-      "lastPriceDate": "2026-07-20",
-      "leadTimeDays": 25,
-      "location": "Palamanui container",
-      "weight": "",
-      "notes": "Sample data"
-    }
-  ],
+  "equipment": [],
+  "parts": [],
   "requests": [
     {
       "id": "rq01",
@@ -151,12 +45,11 @@
       "date": "2026-10-01",
       "requester": "Sample requester",
       "site": "Waikoloa",
-      "equipmentId": "eq01",
       "urgency": "high",
       "status": "ordered",
       "items": [
         {
-          "partId": "pt01",
+          "partId": "",
           "partNo": "NFJ1175-JAW-01",
           "name": "颚板（动）",
           "qty": 2
@@ -185,7 +78,9 @@
           "user": "Fang",
           "action": "询价中 Quoting → 已下单 Ordered"
         }
-      ]
+      ],
+      "model": "NFJ1175",
+      "unit": "Crusher #1"
     },
     {
       "id": "rq02",
@@ -193,12 +88,11 @@
       "date": "2026-10-10",
       "requester": "Sample requester",
       "site": "Waikoloa",
-      "equipmentId": "eq01",
       "urgency": "urgent",
       "status": "quoting",
       "items": [
         {
-          "partId": "pt03",
+          "partId": "",
           "partNo": "NFJ1175-BRG-6320",
           "name": "主轴轴承",
           "qty": 1
@@ -217,7 +111,9 @@
           "user": "Sample requester",
           "action": "创建"
         }
-      ]
+      ],
+      "model": "NFJ1175",
+      "unit": "Crusher #1"
     },
     {
       "id": "rq03",
@@ -225,12 +121,11 @@
       "date": "2026-10-12",
       "requester": "Sample requester",
       "site": "Palamanui",
-      "equipmentId": "eq02",
       "urgency": "normal",
       "status": "requested",
       "items": [
         {
-          "partId": "pt04",
+          "partId": "",
           "partNo": "NFS550-BURNER-NOZ",
           "name": "燃烧器喷嘴",
           "qty": 2
@@ -249,26 +144,12 @@
           "user": "Sample requester",
           "action": "创建"
         }
-      ]
+      ],
+      "model": "NFS550",
+      "unit": "Screen #1"
     }
   ],
-  "service": [
-    {
-      "id": "sv01",
-      "date": "2026-09-28",
-      "equipmentId": "eq01",
-      "site": "Waikoloa",
-      "technician": "Sample tech",
-      "issue": "动颚板磨损，出料粒径偏大",
-      "work": "测量颚板厚度，剩余约 20%，安排更换；调整排料口",
-      "partsUsed": [],
-      "hours": 3,
-      "downtimeHours": 2,
-      "meter": 3120,
-      "nflg": "",
-      "notes": "Sample data"
-    }
-  ],
+  "service": [],
   "docs": [
     {
       "id": "dc01",
