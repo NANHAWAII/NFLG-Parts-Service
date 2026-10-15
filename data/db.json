@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:04:00.343Z",
+    "updated": "2026-10-15T22:06:43.932Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 3,
     "sites": [
@@ -250,7 +250,7 @@
       "needBy": "2026-10-30",
       "quoteTotal": "10",
       "poNo": "",
-      "shipping": "",
+      "shipping": "UPS 1Z9W52A30421753371",
       "eta": "",
       "notes": "",
       "photos": [],
@@ -366,6 +366,11 @@
         },
         {
           "ts": "2026-10-15T21:59:14.493Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T22:06:43.435Z",
           "user": "Fang Jiang",
           "kind": "edited"
         }
