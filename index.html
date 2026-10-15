@@ -164,6 +164,7 @@
   .items table td{padding:4px 6px}
   .items input{padding:6px 10px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
   .items table{table-layout:fixed}
+  .items .addline{margin:6px 0 0 6px}
   .pncell{position:relative}
   .pn-dd{display:none;position:absolute;left:6px;top:calc(100% - 2px);z-index:20;min-width:460px;max-height:320px;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:9px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
   .pn-opt{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:7px 10px;cursor:pointer;font-size:13px}
@@ -234,6 +235,7 @@
     .items tr:first-child{display:none}
     .items tr{display:grid;grid-template-columns:1fr 64px 38px;gap:6px;padding:8px 0;border-bottom:1px solid var(--line)}
     .items td{padding:0!important;border:0}
+    .items .addline{margin-left:0}
     .items td.pncell{grid-column:1;grid-row:1}
     .items td:nth-child(2){grid-column:1/-1;grid-row:2}
     .items td:nth-child(3){grid-column:2;grid-row:1}
@@ -1022,7 +1024,7 @@ function renderItems(){
     ${draftItems.map((i,n)=>`<tr><td class="pncell"><input id="pn-${n}" value="${esc(i.partNo)}" autocomplete="off" oninput="pnInput(${n},this)" onkeydown="pnKey(event,${n})" onfocus="pnInput(${n},this)" onblur="setTimeout(()=>pnHide(${n}),150)" placeholder="输入零件号，自动带出名称"><div class="pn-dd" id="pndd-${n}"></div></td>
       <td><input id="nm-${n}" value="${esc(i.name)}" oninput="draftItems[${n}].name=this.value" placeholder="名称或描述（手填也可以）"><span id="meta-${n}">${itemMeta(i)}</span></td>
       <td><input id="qt-${n}" type="number" min="1" value="${esc(i.qty)}" oninput="draftItems[${n}].qty=Number(this.value)"></td><td><button class="btn sm" onclick="draftItems.splice(${n},1);renderItems()">✕</button></td></tr>`).join('')}
-    </table><button class="btn sm" style="margin-top:6px" onclick="draftItems.push({partId:'',partNo:'',name:'',qty:1});renderItems()">＋ 添加一行</button>`);
+    </table><button class="btn sm addline" onclick="draftItems.push({partId:'',partNo:'',name:'',qty:1});renderItems()">＋ 添加一行</button>`);
 }
 // --- part-number autocomplete from the model's spare-parts manual index ---
 const pnState={};
