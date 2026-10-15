@@ -174,12 +174,13 @@
       "version": "V1.0",
       "date": "",
       "fileName": "NFJ1175 Maintenance V1.0.pdf",
-      "size": 3651584,
-      "path": "",
+      "size": 3651546,
+      "path": "docs/NFJ1175/NFJ1175 Maintenance V1.0.pdf",
       "sha": "",
       "url": "",
-      "uploadedBy": "",
-      "notes": ""
+      "uploadedBy": "Fang",
+      "notes": "",
+      "uploadedAt": "2026-10-15T09:30:00Z"
     },
     {
       "id": "dc03",
@@ -189,12 +190,13 @@
       "version": "",
       "date": "",
       "fileName": "NFJ1175 Spare Parts Manual.pdf",
-      "size": 42080256,
-      "path": "",
+      "size": 42079431,
+      "path": "docs/NFJ1175/NFJ1175 Spare Parts Manual.pdf",
       "sha": "",
       "url": "",
-      "uploadedBy": "",
-      "notes": ""
+      "uploadedBy": "Fang",
+      "notes": "",
+      "uploadedAt": "2026-10-15T09:30:00Z"
     },
     {
       "id": "dc04",
@@ -204,12 +206,13 @@
       "version": "",
       "date": "",
       "fileName": "NFJ1175 Technical Specification.pdf",
-      "size": 1692672,
-      "path": "",
+      "size": 1691921,
+      "path": "docs/NFJ1175/NFJ1175 Technical Specification.pdf",
       "sha": "",
       "url": "",
-      "uploadedBy": "",
-      "notes": ""
+      "uploadedBy": "Fang",
+      "notes": "",
+      "uploadedAt": "2026-10-15T09:30:00Z"
     },
     {
       "id": "dc05",
@@ -219,12 +222,13 @@
       "version": "EN 2022",
       "date": "",
       "fileName": "NFJ1175 Control System Manual_EN 2022.pdf",
-      "size": 3124224,
-      "path": "",
+      "size": 3124156,
+      "path": "docs/NFJ1175/NFJ1175 Control System Manual_EN 2022.pdf",
       "sha": "",
       "url": "",
-      "uploadedBy": "",
-      "notes": ""
+      "uploadedBy": "Fang",
+      "notes": "",
+      "uploadedAt": "2026-10-15T09:30:00Z"
     },
     {
       "id": "dc06",
@@ -233,13 +237,14 @@
       "title": "NFJ1175 Hydraulic Diagram",
       "version": "1001-NF",
       "date": "",
-      "fileName": "NFJ1175-1001-NF-Hydraulic Diagram.pdf",
-      "size": 112640,
-      "path": "",
+      "fileName": "NFJ1175-1001-NF-Hydrualic Diagram.pdf",
+      "size": 112254,
+      "path": "docs/NFJ1175/NFJ1175-1001-NF-Hydrualic Diagram.pdf",
       "sha": "",
       "url": "",
-      "uploadedBy": "",
-      "notes": ""
+      "uploadedBy": "Fang",
+      "notes": "",
+      "uploadedAt": "2026-10-15T09:30:00Z"
     },
     {
       "id": "dc07",
@@ -249,12 +254,13 @@
       "version": "C1.201",
       "date": "",
       "fileName": "NFJ1175C1.201_Electric Control Diagram.pdf",
-      "size": 5993472,
-      "path": "",
+      "size": 5993426,
+      "path": "docs/NFJ1175/NFJ1175C1.201_Electric Control Diagram.pdf",
       "sha": "",
       "url": "",
-      "uploadedBy": "",
-      "notes": ""
+      "uploadedBy": "Fang",
+      "notes": "",
+      "uploadedAt": "2026-10-15T09:30:00Z"
     },
     {
       "id": "dc08",
@@ -264,12 +270,13 @@
       "version": "M0081783EN-US",
       "date": "",
       "fileName": "C9.3B Engine Manual_M0081783EN-US.pdf",
-      "size": 3544064,
-      "path": "",
+      "size": 3544049,
+      "path": "docs/NFJ1175/C9.3B Engine Manual_M0081783EN-US.pdf",
       "sha": "",
       "url": "",
-      "uploadedBy": "",
-      "notes": ""
+      "uploadedBy": "Fang",
+      "notes": "",
+      "uploadedAt": "2026-10-15T09:30:00Z"
     },
     {
       "id": "dc09",
@@ -279,12 +286,13 @@
       "version": "M0092333EN-US",
       "date": "",
       "fileName": "C9.3B Engine Parts Manual_M0092333EN-US.pdf",
-      "size": 29942784,
-      "path": "",
+      "size": 29942416,
+      "path": "docs/NFJ1175/C9.3B Engine Parts Manual_M0092333EN-US.pdf",
       "sha": "",
       "url": "",
-      "uploadedBy": "",
-      "notes": ""
+      "uploadedBy": "Fang",
+      "notes": "",
+      "uploadedAt": "2026-10-15T09:30:00Z"
     },
     {
       "id": "dc10",
@@ -294,12 +302,13 @@
       "version": "",
       "date": "",
       "fileName": "NFJ1175_Nan Selection.xlsx",
-      "size": 40960,
-      "path": "",
+      "size": 40763,
+      "path": "docs/NFJ1175/NFJ1175_Nan Selection.xlsx",
       "sha": "",
       "url": "",
-      "uploadedBy": "",
-      "notes": "Selection sheet"
+      "uploadedBy": "Fang",
+      "notes": "",
+      "uploadedAt": "2026-10-15T09:30:00Z"
     }
   ]
 }

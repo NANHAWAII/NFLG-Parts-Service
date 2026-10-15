@@ -224,7 +224,7 @@ S = [
  ('团队链接 Team link（给同事提申请用）', '团队链接（给同事提申请用）', 'Team link (for colleagues to submit requests)'),
  ('把链接发给同事，点开一次就配好了：以后打开本站直接提申请、传照片，不用 token、不用点保存。链接里带着仓库写权限，只在公司内部发；建议为此单独建一个 token（Contents: Read &amp; write），需要时在 GitHub 上撤销即可。', '把链接发给同事，点开一次就配好了：以后打开本站直接提申请、传照片，不用 token、不用点保存。链接里带着仓库写权限，只在公司内部发；建议为此单独建一个 token（Contents: Read &amp; write），需要时在 GitHub 上撤销即可。', 'Send this link to colleagues; opening it once sets them up: they can submit requests and photos without a token or a Save button. The link carries write access to the repository, so share it internally only. Best to create a separate token for it (Contents: Read &amp; write) that you can revoke on GitHub if needed.'),
  ('生成并复制链接', '生成并复制链接', 'Generate & copy link'), ('点左边生成', '点左边生成', 'click Generate'),
- ('先填好 Owner / Repo / Token 并保存', '先填好 Owner / Repo / Token 并保存', 'Fill in Owner / Repo / Token and save first'),
+ ('请先填好 Owner / Repo / Token', '请先填好 Owner / Repo / Token', 'Fill in Owner / Repo / Token first'), ('先填好 Owner / Repo / Token 并保存', '先填好 Owner / Repo / Token 并保存', 'Fill in Owner / Repo / Token and save first'),
  ('已复制到剪贴板', '已复制到剪贴板', 'Copied to clipboard'),
  ('采购部邮箱（申请人提交后可一键发邮件通知）', '采购部邮箱（申请人提交后可一键发邮件通知）', 'Procurement email (requesters can notify with one click)'),
  ('应用', '应用', 'Apply'), ('已应用', '已应用', 'Applied'),
