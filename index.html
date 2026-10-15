@@ -431,10 +431,9 @@ function renderRequests(){
   return `<div class="filters">
       <button class="btn primary" onclick="editRequest()">＋ 新申请 New request</button>
       <select onchange="sessionStorage.setItem('f.status',this.value);render()">${opts([['','全部状态 All']].concat(STATUSES), st)}</select>
-      ${isProc()?`<label><input type="checkbox" id="kanban" ${sessionStorage.getItem('f.kanban')==='1'?'checked':''} onchange="sessionStorage.setItem('f.kanban',this.checked?'1':'0');render()"> 看板 Kanban</label>`:''}
       <span style="flex:1"></span>
 </div>
-    ${isProc()&&sessionStorage.getItem('f.kanban')==='1' ? pipelineHtml(list) : `<div class="panel">${list.length? `<table class="rq"><tr>${th('no','单号 No.','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="fill"></th></tr>
+    ${false ? '' : `<div class="panel">${list.length? `<table class="rq"><tr>${th('no','单号 No.','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="fill"></th></tr>
       ${list.map(r=>`<tr class="rowlink" onclick="editRequest('${r.id}')" title="Open"><td class="c"><a class="mono" href="#" onclick="event.stopPropagation();editRequest('${r.id}');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.urgency!=='normal'?`<div style="margin-top:5px"><span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span></div>`:''}</td>
         <td class="rqr">${esc(r.requester)}</td>
         <td class="g gl c"><b>${esc(r.model||'')}</b>${r.unit?`<div class="sub" title="${esc(r.unit)}">${esc(r.unit)}</div>`:''}</td>
