@@ -112,7 +112,9 @@
   table.rq td.g.gl{padding-top:11px}
   table.rq td{vertical-align:top}
   table.rq td:not(.g){padding-top:12px}
-  table.rq tr.rowlink:hover td{background:color-mix(in srgb,var(--accent-soft) 60%,var(--panel))}
+  /* only the Request & parts side opens the request; procurement cells hold their own links */
+  table.rq tr.rowlink:has(td:not(.pz):hover) td{background:color-mix(in srgb,var(--accent-soft) 60%,var(--panel))}
+  table.rq td.pz{cursor:default}
   .chip{display:inline-block;padding:2px 10px;border-radius:999px;font-size:13px;font-weight:500;background:var(--chip);white-space:nowrap}
   .chip.s-requested{background:#eceff3;color:#4b5563}
   .chip.s-processing,.chip.s-quoting{background:#fff4d6;color:#8a5a00}
@@ -647,13 +649,13 @@ function renderRequests(){
         ${(r.poNo||r.shipping||r.eta||(r.files||[]).length)?`<div class="rqc-proc">${r.poNo?`<span>PO ${esc(r.poNo)}</span>`:''}${r.shipping?`<span>🚚 ${trackLink(r.shipping)}</span>`:''}${r.eta?`<span>ETA ${esc(r.eta)}</span>`:''}${(r.files||[]).map(f=>`<a href="${esc(docHref(f))}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📄 ${esc(f.name)}</a>`).join('')}</div>`:''}
       </div>`).join('')}</div>`:''}
     ${false ? '' : `<div class="panel rq-panel">${list.length? `<table class="rq"><colgroup><col style="width:6.5%"><col style="width:5%"><col style="width:6.5%"><col style="width:8%"><col style="width:9%"><col style="width:7%"><col style="width:15%"><col style="width:4.5%"><col style="width:5%"><col style="width:12%"><col style="width:5%"><col style="width:16.5%"></colgroup><tr class="grph"><th colspan="8" class="gr">申请与配件 Request &amp; parts</th><th colspan="4">采购与物流 Procurement</th></tr><tr>${th('no','单号 No.','c')}${th('urgency','紧急度','c')}${th('status','状态','c')}${th('requester','申请人','rqr')}${th('model','机型 Model','g gl c')}<th class="g c">零件号 Part No.</th><th class="g nm">名称 / 描述</th><th class="g gr num c">数量</th>${th('poNo','PO#','c pc')}${th('shipping','物流单号 Tracking','trk')}${th('eta','ETA','c')}<th class="c">附件</th></tr>
-      ${list.map(r=>`<tr class="rowlink" onclick="editRequest('${r.id}')" title="Open"><td class="c"><a class="mono" href="#" onclick="event.stopPropagation();editRequest('${r.id}');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c">${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:`<span class="sub">${lbl(URGENCY,'normal')}</span>`}</td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span></td>
+      ${list.map(r=>`<tr class="rowlink" onclick="if(!event.target.closest('.pz'))editRequest('${r.id}')"><td class="c"><a class="mono" href="#" onclick="event.stopPropagation();editRequest('${r.id}');return false">${esc(r.no)}</a><div class="sub">${esc(r.date)}</div></td><td class="c">${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:`<span class="sub">${lbl(URGENCY,'normal')}</span>`}</td><td class="c"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span></td>
         <td class="rqr">${esc(r.requester)}</td>
         <td class="g gl c"><b>${esc(r.model||'')}</b>${r.unit?`<div class="sub" title="${esc(r.unit)}">${esc(r.unit)}</div>`:''}</td>
         <td class="g mono c">${(r.items||[]).map(i=>`<div class="iline">${esc(i.partNo||'—')}</div>`).join('')}</td>
         <td class="g nm">${(r.items||[]).map(i=>`<div class="iline" title="${esc(i.name||'')}">${esc(i.name||'')}</div>`).join('')}</td>
         <td class="g gr num c">${(r.items||[]).map(i=>`<div class="iline qty">× ${esc(i.qty)}</div>`).join('')}</td>
-        <td class="mono c pc">${esc(r.poNo)}</td><td class="mono trk">${trackLink(r.shipping)}</td><td class="c">${esc(r.eta)}</td><td class="fl">${(r.files||[]).map(f=>`<a href="${esc(docHref(f))}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${esc(f.name)}">${esc(f.name)}</a>`).join('')}</td>
+        <td class="mono c pc pz">${esc(r.poNo)}</td><td class="mono trk pz">${trackLink(r.shipping)}</td><td class="c pz">${esc(r.eta)}</td><td class="fl pz">${(r.files||[]).map(f=>`<a href="${esc(docHref(f))}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${esc(f.name)}">${esc(f.name)}</a>`).join('')}</td>
         </tr>`).join('')}</table>` : `<div class="empty"><div class="ico">⚙</div>还没有申请。点「新申请」提交第一条。</div>`}</div>`}`;
 }
 function exportRequests(){ csv([['No','Date','Status','Urgency','Model','Requester','PartNo','Part','Qty','PO','ETA','Notes'],
