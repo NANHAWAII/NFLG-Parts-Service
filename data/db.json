@@ -1,9 +1,9 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:03:47.383Z",
+    "updated": "2026-10-15T22:03:54.928Z",
     "updatedBy": "Fang Jiang",
-    "nextReqNo": 2,
+    "nextReqNo": 3,
     "sites": [
       "Palamanui",
       "Waikoloa",
@@ -158,6 +158,19 @@
     },
     {
       "id": "mva35cgd2m1g",
+      "partNo": "1100025151",
+      "nameZh": "",
+      "nameEn": "DESSICANT AIR BREATHER",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mva35tgyyklg",
       "partNo": "1100025151",
       "nameZh": "",
       "nameEn": "DESSICANT AIR BREATHER",
@@ -360,6 +373,38 @@
       "files": [],
       "materialCost": "0.00",
       "freightCost": ""
+    },
+    {
+      "id": "mva35tgyiok3",
+      "no": "NFLG-0002",
+      "date": "2026-10-15",
+      "status": "requested",
+      "history": [
+        {
+          "ts": "2026-10-15T22:03:54.610Z",
+          "user": "Fang Jiang",
+          "kind": "created"
+        }
+      ],
+      "requester": "Fang Jiang",
+      "unit": "NFJ1175YEUCQZG120067",
+      "model": "NFJ1175",
+      "urgency": "normal",
+      "items": [
+        {
+          "partId": "mva35tgyyklg",
+          "partNo": "1100025151",
+          "name": "DESSICANT AIR BREATHER",
+          "qty": 1,
+          "fig": "08-07",
+          "item": "3",
+          "page": 151
+        }
+      ],
+      "reason": "",
+      "needBy": "",
+      "notes": "",
+      "photos": []
     }
   ],
   "service": [],
