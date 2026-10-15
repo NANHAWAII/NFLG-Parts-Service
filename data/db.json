@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:57:43.381Z",
+    "updated": "2026-10-15T22:57:51.945Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 4,
     "sites": [
@@ -528,6 +528,11 @@
           "user": "Fang Jiang",
           "kind": "files",
           "n": 1
+        },
+        {
+          "ts": "2026-10-15T22:57:51.660Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
         }
       ],
       "requester": "Fang Jiang",
@@ -543,24 +548,6 @@
           "fig": "02-03",
           "item": "11",
           "page": 21
-        },
-        {
-          "partId": "mva52g08l13v",
-          "partNo": "1100028848",
-          "name": "HARDENED WASHER",
-          "qty": 1,
-          "fig": "02-01",
-          "item": "24",
-          "page": 15
-        },
-        {
-          "partId": "mva52g081pja",
-          "partNo": "1100025701",
-          "name": "TEST POINT",
-          "qty": 1,
-          "fig": "01-01",
-          "item": "3",
-          "page": 11
         }
       ],
       "reason": "",
