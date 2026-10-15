@@ -979,7 +979,7 @@ function exportRequestPDF(id){
   const proc=[kv(t('状态','Status'),half(lbl(STATUSES,r.status))),kv('PO#',r.poNo),kv(t('运输 / 单号','Shipping / tracking'),r.shipping),kv('ETA',r.eta)].join('');
   const html=`<div class="ph"><div><h1>${t('NFLG 配件申请','NFLG Parts Request')}</h1><div class="sub">NFLG Parts Service</div></div>
       <div><div class="no">${esc(r.no||'')}</div><div class="sub">${t('申请日期','Request date')}: ${esc(r.date||'')}</div></div></div>
-    <div class="kv">${kv(t('申请人','Requester'),r.requester)}${kv(t('机型','Model'),r.model+(m?' · '+mname(m):''))}${kv(t('设备编号 / 序列号','Unit no. / serial'),r.unit)}
+    <div class="kv">${kv(t('机型','Model'),r.model+(m?' · '+mname(m):''))}${kv(t('设备编号 / 序列号','Unit no. / serial'),r.unit)}
       ${kv(t('紧急度','Urgency'),half(lbl(URGENCY,r.urgency)))}${kv(t('需要日期','Need by'),r.needBy)}</div>
     <h3>${t('配件清单','Items')}</h3>
     <table><tr><th style="width:28px">#</th><th style="width:120px">${t('零件号','Part No.')}</th><th>${t('名称 / 描述','Name / description')}</th><th class="q">${t('数量','Qty')}</th><th style="width:150px">${t('手册位置','Manual ref.')}</th></tr>
@@ -988,7 +988,7 @@ function exportRequestPDF(id){
     ${r.notes?`<h3>${t('备注','Notes')}</h3><div class="txt">${esc(r.notes)}</div>`:''}
     ${proc?`<h3>${t('采购与物流','Procurement & shipping')}</h3><div class="kv">${proc}</div>`:''}
     ${(r.photos||[]).length?`<h3>${t('照片','Photos')}</h3><div class="photos">${r.photos.map(p=>`<img src="${esc(rawHref(p))}">`).join('')}</div>`:''}
-    <div class="foot">${t('导出时间','Exported')} ${new Date().toLocaleString()}${me()?' · '+esc(me()):''}</div>`;
+    <div class="foot">${t('导出时间','Exported')} ${new Date().toLocaleString()}</div>`;
   let el=$('#print-area'); if(!el){ el=document.createElement('div'); el.id='print-area'; document.body.appendChild(el); }
   el.innerHTML=html.replace(/[]/g,'');
   const title=document.title, done=()=>{ document.body.classList.remove('printing'); document.title=title; window.removeEventListener('afterprint',done); };
