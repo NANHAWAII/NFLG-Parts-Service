@@ -108,12 +108,12 @@
   table.rq .trk a:hover{text-decoration:underline}
   #trk-go{margin-left:8px;font-weight:500}   /* carrier and number may sit on two lines; the number itself never breaks */
   table.rq tr.rowlink{cursor:pointer}
-  /* header as three rounded bands (No. | Request & parts | Procurement); white spacer columns between them */
+  /* one continuous header band; small dividers inside it mark the three parts (No. | Request & parts | Procurement) */
   table.rq tr:first-child th{background:var(--bg);border-bottom:0}
-  table.rq th.sp,table.rq td.sp{background:var(--panel)!important;padding:0!important;border:0!important}
-  table.rq tr:first-child th:first-child,table.rq tr:first-child th.sp+th{border-radius:8px 0 0 8px}
-  table.rq tr:first-child th:last-child,table.rq tr:first-child th:has(+th.sp){border-radius:0 8px 8px 0}
-  table.rq tr:first-child th.rqnoh{border-radius:8px}
+  table.rq tr:first-child th:first-child{border-radius:8px 0 0 8px}
+  table.rq tr:first-child th:last-child{border-radius:0 8px 8px 0}
+  table.rq th.sp,table.rq td.sp{padding:0!important;position:relative}
+  table.rq th.sp::after{content:'';position:absolute;left:50%;top:50%;width:1px;height:18px;transform:translateY(-50%);background:color-mix(in srgb,var(--muted) 45%,transparent)}
   table.rq{border-collapse:separate;border-spacing:0}
   .panel.rq-panel{padding:6px 6px 2px}
   table.rq td{border-bottom:1px solid var(--line)}
