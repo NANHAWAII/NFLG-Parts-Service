@@ -1,9 +1,9 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T23:04:43.390Z",
-    "updatedBy": "Fang Jiang",
-    "nextReqNo": 4,
+    "updated": "2026-10-15T23:05:07.263Z",
+    "updatedBy": "Micah Brandt",
+    "nextReqNo": 5,
     "sites": [
       "Palamanui",
       "Waikoloa",
@@ -210,6 +210,19 @@
     },
     {
       "id": "mva52g081pja",
+      "partNo": "1100025701",
+      "nameZh": "",
+      "nameEn": "TEST POINT",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mva5cj2kig2s",
       "partNo": "1100025701",
       "nameZh": "",
       "nameEn": "TEST POINT",
@@ -515,6 +528,38 @@
       ],
       "materialCost": "58.00",
       "freightCost": "200.00"
+    },
+    {
+      "id": "mva5cj2kmz56",
+      "no": "NFLG-0004",
+      "date": "2026-10-15",
+      "status": "requested",
+      "history": [
+        {
+          "ts": "2026-10-15T23:05:06.956Z",
+          "user": "Micah Brandt",
+          "kind": "created"
+        }
+      ],
+      "requester": "Micah Brandt",
+      "unit": "NFJ1175YEUCQZG120067",
+      "model": "NFJ1175",
+      "urgency": "normal",
+      "items": [
+        {
+          "partId": "mva5cj2kig2s",
+          "partNo": "1100025701",
+          "name": "TEST POINT",
+          "qty": 2,
+          "fig": "01-01",
+          "item": "3",
+          "page": 11
+        }
+      ],
+      "reason": "",
+      "needBy": "",
+      "notes": "",
+      "photos": []
     }
   ],
   "service": [],
