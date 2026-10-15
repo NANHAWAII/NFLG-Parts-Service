@@ -1,9 +1,9 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:01:44.441Z",
+    "updated": "2026-10-15T22:02:48.380Z",
     "updatedBy": "Fang Jiang",
-    "nextReqNo": 3,
+    "nextReqNo": 4,
     "sites": [
       "Palamanui",
       "Waikoloa",
@@ -135,6 +135,19 @@
       "partNo": "1100064561",
       "nameZh": "",
       "nameEn": "BOLT",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": "",
+      "currency": "USD"
+    },
+    {
+      "id": "mva34e4znsir",
+      "partNo": "1100025200",
+      "nameZh": "",
+      "nameEn": "PRESSURE GAUGE- 0-160 BAR",
       "models": [
         "NFJ1175"
       ],
@@ -360,6 +373,38 @@
           "fig": "01-01",
           "item": "2",
           "page": 11
+        }
+      ],
+      "reason": "",
+      "needBy": "",
+      "notes": "",
+      "photos": []
+    },
+    {
+      "id": "mva34e4zyg6t",
+      "no": "NFLG-0003",
+      "date": "2026-10-15",
+      "status": "requested",
+      "history": [
+        {
+          "ts": "2026-10-15T22:02:48.083Z",
+          "user": "Fang Jiang",
+          "kind": "created"
+        }
+      ],
+      "requester": "Fang Jiang",
+      "unit": "NFJ1175YEUCQZG120067",
+      "model": "NFJ1175",
+      "urgency": "normal",
+      "items": [
+        {
+          "partId": "mva34e4znsir",
+          "partNo": "1100025200",
+          "name": "PRESSURE GAUGE- 0-160 BAR",
+          "qty": 1,
+          "fig": "08-02",
+          "item": "4",
+          "page": 121
         }
       ],
       "reason": "",
