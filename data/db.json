@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T19:55:59.095Z",
+    "updated": "2026-10-15T19:56:37.481Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
     "sites": [
@@ -126,7 +126,7 @@
       "model": "NFJ1175",
       "unit": "NFJ1175YEUCQZG120067",
       "urgency": "high",
-      "status": "requested",
+      "status": "quoting",
       "items": [
         {
           "partId": "mv9xfurtg5v1",
@@ -223,6 +223,12 @@
           "ts": "2026-10-15T19:55:58.562Z",
           "user": "Fang Jiang",
           "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T19:56:36.996Z",
+          "user": "Fang Jiang",
+          "from": "requested",
+          "to": "quoting"
         }
       ]
     }
