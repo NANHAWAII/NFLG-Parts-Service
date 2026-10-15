@@ -6,19 +6,19 @@
 <title>NFLG Parts Service</title>
 <style>
   :root{
-    --bg:#f4f5f7; --panel:#ffffff; --line:#e3e6ea; --text:#1d2330; --muted:#6b7380;
+    --bg:#eef1f6; --panel:#ffffff; --line:#e2e7ee; --head:#2f3b52; --head-text:#e6ebf3; --text:#1d2330; --muted:#6b7380;
     --accent:#1f5fbf; --accent-soft:#e7effc; --ok:#1e8e4f; --warn:#c77d00; --bad:#c6303e;
     --chip:#eef1f5; --shadow:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
     --radius:10px; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#0f1319; --panel:#171c24; --line:#2a313c; --text:#e8ebf0; --muted:#9aa3b2;
+      --bg:#0f1319; --panel:#171c24; --line:#2a313c; --head:#232c3a; --head-text:#cfd6e2; --text:#e8ebf0; --muted:#9aa3b2;
       --accent:#6ea0ef; --accent-soft:#1d2a40; --chip:#222a35; --shadow:none;
     }
   }
   :root[data-theme="dark"]{
-    --bg:#0f1319; --panel:#171c24; --line:#2a313c; --text:#e8ebf0; --muted:#9aa3b2;
+    --bg:#0f1319; --panel:#171c24; --line:#2a313c; --head:#232c3a; --head-text:#cfd6e2; --text:#e8ebf0; --muted:#9aa3b2;
     --accent:#6ea0ef; --accent-soft:#1d2a40; --chip:#222a35; --shadow:none;
   }
   *{box-sizing:border-box}
@@ -109,12 +109,11 @@
   #trk-go{margin-left:8px;font-weight:500}   /* carrier and number may sit on two lines; the number itself never breaks */
   table.rq tr.rowlink{cursor:pointer}
   /* one continuous header band; small dividers inside it mark the three parts (No. | Request & parts | Procurement) */
-  table.rq tr:first-child th{background:var(--bg)}
-  table.rq tr:first-child th{border-bottom:1px solid var(--line)}
+  table.rq tr:first-child th{background:var(--head);color:var(--head-text);border-bottom:0}
   table.rq tr:first-child th:first-child,table.rq td:first-child{padding-left:16px}
   table.rq tr:first-child th:last-child,table.rq td:last-child{padding-right:16px}
   table.rq th.sp,table.rq td.sp{padding:0!important;position:relative}
-  table.rq th.sp::after{content:'';position:absolute;left:50%;top:50%;width:1px;height:18px;transform:translateY(-50%);background:color-mix(in srgb,var(--muted) 45%,transparent)}
+  table.rq th.sp::after{content:'';position:absolute;left:50%;top:50%;width:1px;height:18px;transform:translateY(-50%);background:color-mix(in srgb,var(--head-text) 35%,transparent)}
   table.rq{border-collapse:separate;border-spacing:0}
   .panel.rq-panel{padding:0;overflow-x:auto}
   table.rq td{border-bottom:1px solid var(--line)}
