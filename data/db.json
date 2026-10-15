@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T22:08:38.207Z",
+    "updated": "2026-10-15T22:09:08.027Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 3,
     "sites": [
@@ -251,7 +251,7 @@
       "quoteTotal": "10",
       "poNo": "EQ-002-XXXX",
       "shipping": "UPS 1Z9W52A30421753371",
-      "eta": "",
+      "eta": "2026-10-22",
       "notes": "",
       "photos": [],
       "history": [
@@ -378,11 +378,16 @@
           "ts": "2026-10-15T22:08:37.858Z",
           "user": "Fang Jiang",
           "kind": "edited"
+        },
+        {
+          "ts": "2026-10-15T22:09:07.734Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
         }
       ],
       "files": [],
-      "materialCost": "0.00",
-      "freightCost": ""
+      "materialCost": "15.00",
+      "freightCost": "200.00"
     }
   ],
   "service": [],
