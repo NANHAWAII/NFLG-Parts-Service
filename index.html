@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NFLG Parts Service</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --line:#e3e6ea; --text:#1d2330; --muted:#6b7380;
+    --accent:#1f5fbf; --accent-soft:#e7effc; --ok:#1e8e4f; --warn:#c77d00; --bad:#c6303e;
+    --chip:#eef1f5; --shadow:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+    --radius:10px; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1319; --panel:#171c24; --line:#2a313c; --text:#e8ebf0; --muted:#9aa3b2;
+      --accent:#6ea0ef; --accent-soft:#1d2a40; --chip:#222a35; --shadow:none;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1319; --panel:#171c24; --line:#2a313c; --text:#e8ebf0; --muted:#9aa3b2;
+    --accent:#6ea0ef; --accent-soft:#1d2a40; --chip:#222a35; --shadow:none;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--text);font:14px/1.5 "Segoe UI","PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif}
+  a{color:var(--accent)}
+  button,input,select,textarea{font:inherit;color:inherit}
+  .app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+  nav{background:var(--panel);border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
+  .brand{font-weight:700;font-size:16px;padding:6px 10px 14px;line-height:1.25}
+  .brand small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+  nav button{background:none;border:0;text-align:left;padding:9px 10px;border-radius:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+  nav button:hover{background:var(--chip)}
+  nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+  nav .count{font-size:11px;background:var(--chip);color:var(--muted);padding:1px 7px;border-radius:999px}
+  nav .spacer{flex:1}
+  .status{font-size:12px;color:var(--muted);padding:8px 10px;border-top:1px solid var(--line);line-height:1.4}
+  .status b{color:var(--text)}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:6px;vertical-align:middle}
+  .dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.bad{background:var(--bad)}
+  main{padding:20px 24px 60px;max-width:1500px}
+  .topbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  .topbar h1{font-size:20px;margin:0;flex:1}
+  .btn{border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:8px;cursor:pointer;box-shadow:var(--shadow);white-space:nowrap}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn.danger{color:var(--bad)}
+  .btn.sm{padding:4px 9px;font-size:12px}
+  .btn:disabled{opacity:.5;cursor:default}
+  input[type=text],input[type=number],input[type=date],input[type=password],select,textarea{
+    border:1px solid var(--line);background:var(--panel);padding:7px 10px;border-radius:8px;width:100%}
+  textarea{min-height:70px;resize:vertical}
+  .search{max-width:320px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+  .card .k{font-size:12px;color:var(--muted)} .card .v{font-size:26px;font-weight:700;margin-top:2px} .card .v.bad{color:var(--bad)} .card .v.warn{color:var(--warn)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:18px}
+  .panel h2{font-size:14px;margin:0;padding:10px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{font-weight:600;color:var(--muted);font-size:12px;background:var(--bg);position:sticky;top:0;cursor:pointer;user-select:none}
+  tr:hover td{background:var(--accent-soft)}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .mono{font-family:var(--mono);font-size:12px}
+  .chip{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;background:var(--chip);white-space:nowrap}
+  .chip.s-requested{background:#eceff3;color:#4b5563}
+  .chip.s-quoting{background:#fff4d6;color:#8a5a00}
+  .chip.s-ordered{background:#e3ecff;color:#1f4fbf}
+  .chip.s-shipped{background:#e6f4ff;color:#0b6aa2}
+  .chip.s-received{background:#e1f5e8;color:#1e7a46}
+  .chip.s-closed{background:#efefef;color:#777}
+  .chip.u-urgent{background:#fde4e6;color:#b4232f} .chip.u-high{background:#fff0d9;color:#9a5b00}
+  .chip.low{background:#fde4e6;color:#b4232f}
+  .empty{padding:28px;text-align:center;color:var(--muted)}
+  .row-actions{white-space:nowrap}
+  .row-actions button{background:none;border:0;color:var(--accent);cursor:pointer;padding:0 4px}
+  .row-actions button.del{color:var(--bad)}
+  /* pipeline */
+  .pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+  .pipe .col{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:8px;min-height:120px}
+  .pipe .col h3{font-size:12px;margin:0 0 8px;color:var(--muted);display:flex;justify-content:space-between}
+  .pipe .col.over{outline:2px dashed var(--accent)}
+  .rcard{border:1px solid var(--line);border-radius:8px;padding:8px;margin-bottom:8px;background:var(--bg);cursor:grab;font-size:12px}
+  .rcard b{display:block;font-size:13px}
+  .rcard .meta{color:var(--muted)}
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto;z-index:50}
+  .overlay.open{display:flex}
+  .modal{background:var(--panel);border-radius:12px;width:100%;max-width:760px;padding:20px 22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal h2{margin:0 0 14px;font-size:17px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 14px}
+  .grid .full{grid-column:1/-1}
+  label.f{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
+  .modal .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+  .note{background:var(--accent-soft);border-radius:8px;padding:8px 12px;font-size:12px;margin-bottom:12px}
+  .items table td{padding:4px 6px}
+  .items input{padding:4px 8px}
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:99}
+  .toast.show{opacity:1}
+  .hist{font-size:12px;color:var(--muted);max-height:120px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .filters select,.filters input{width:auto}
+  @media (max-width: 900px){
+    .app{grid-template-columns:1fr}
+    nav{position:static;height:auto;flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--line)}
+    .brand{width:100%}
+    nav .spacer,.status{display:none}
+    .pipe{grid-template-columns:1fr 1fr}
+    .grid{grid-template-columns:1fr}
+    main{padding:14px 16px}
+    table{font-size:12px}
+  }
+  @media print{ nav,.topbar .btn,.row-actions,.filters{display:none!important} .app{display:block} main{padding:0} }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav>
+    <div class="brand">NFLG Parts Service<small>南方路机配件服务 · Nan, Inc. 内部</small></div>
+    <button data-view="requests">配件申请 Requests <span class="count" id="c-requests"></span></button>
+    <button data-view="dash" class="active">概览 Dashboard</button>
+    <button data-view="parts">配件目录 Parts <span class="count" id="c-parts"></span></button>
+    <button data-view="equipment">设备台账 Equipment <span class="count" id="c-equipment"></span></button>
+    <button data-view="service">维修记录 Service Log <span class="count" id="c-service"></span></button>
+    <button data-view="docs">文档库 Documents <span class="count" id="c-docs"></span></button>
+    <button data-view="settings">设置 Settings</button>
+    <div class="spacer"></div>
+    <div class="status" id="status"></div>
+  </nav>
+  <main>
+    <div class="topbar">
+      <h1 id="title">概览</h1>
+      <input type="text" id="q" class="search" placeholder="搜索 Search… (图号 / 名称 / 设备 / 申请人)">
+      <button class="btn" id="undo" title="撤销 Undo (Ctrl+Z)">↶ 撤销</button>
+      <button class="btn" id="redo" title="重做 Redo (Ctrl+Y)">↷</button>
+      <button class="btn" id="reload">⟳ 重新加载</button>
+      <button class="btn primary" id="save">保存到 GitHub</button>
+    </div>
+    <div id="view"></div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ constants ============ */
+const DATA_PATH = 'data/db.json';
+const STATUSES = [
+  ['requested','已申请 Requested'],['quoting','询价中 Quoting'],['ordered','已下单 Ordered'],
+  ['shipped','在途 Shipped'],['received','已到货 Received'],['closed','关闭 Closed']];
+const URGENCY = [['normal','正常 Normal'],['high','加急 High'],['urgent','紧急 Urgent']];
+const EQ_STATUS = [['active','在用 Active'],['down','停机 Down'],['standby','备用 Standby'],['retired','退役 Retired']];
+const CURRENCIES = ['USD','CNY'];
+const DOC_CATS = [['operation','操作手册 Operation'],['maintenance','维护手册 Maintenance'],['parts','配件手册 Spare Parts'],['spec','技术参数 Specification'],
+  ['electrical','电气图 Electrical'],['hydraulic','液压图 Hydraulic'],['control','控制系统 Control System'],['engine','发动机 Engine'],
+  ['selection','选型/报价 Selection & Quote'],['photo','照片/视频 Photos'],['other','其他 Other']];
+const MAX_UPLOAD_MB = 50;   // GitHub hard limit is 100 MB per file; keep headroom for base64 + API timeouts
+
+/* ============ state ============ */
+let db = emptyDb();
+let view = 'dash';
+let sort = {};
+let dirty = false;
+let remoteSha = null;        // sha of data/db.json at last load/save
+const undoStack = [], redoStack = [];
+const gh = JSON.parse(localStorage.getItem('nflg.gh') || '{}');
+// Team link: index.html#t=<base64 json {owner,repo,branch,token}> — opened once by a colleague, stores the connection and clears the hash
+(function(){ const m=location.hash.match(/#t=([A-Za-z0-9+/=_-]+)/); if(!m) return;
+  try{ const t=JSON.parse(atob(m[1].replace(/-/g,'+').replace(/_/g,'/'))); Object.assign(gh,{owner:t.owner,repo:t.repo,branch:t.branch||'main',token:t.token,role:gh.role||'requester'}); localStorage.setItem('nflg.gh',JSON.stringify(gh)); }catch(e){}
+  history.replaceState(null,'',location.pathname+location.search); })();
+const me = () => gh.user || '';
+const isProc = () => gh.role==='procurement';
+function ensureName(){ if(gh.user) return true; const n=prompt('请输入你的名字（显示在申请单上）'); if(!n||!n.trim()) return false; gh.user=n.trim(); localStorage.setItem('nflg.gh',JSON.stringify(gh)); updateStatus(); return true; }
+
+function emptyDb(){ return {meta:{version:1,updated:null,updatedBy:null,nextReqNo:1,sites:['Palamanui','Waikoloa','Shipman','Honolulu Yard','Guam'],notice:'',models:[]},
+  equipment:[],parts:[],requests:[],service:[],docs:[]}; }
+const $ = s => document.querySelector(s);
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const today = () => new Date().toISOString().slice(0,10);
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const lbl = (list,k) => (list.find(x=>x[0]===k)||[k,k])[1];
+const fmtMoney = (n,c) => n==null||n===''?'':(c||'USD')+' '+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const eqName = id => { const e=db.equipment.find(x=>x.id===id); return e? `${e.model}${e.nickname?' · '+e.nickname:''}` : ''; };
+const partById = id => db.parts.find(p=>p.id===id);
+
+/* ============ persistence ============ */
+function setStatus(html){ $('#status').innerHTML = html; }
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2600); }
+function markDirty(){ dirty=true; localStorage.setItem('nflg.draft', JSON.stringify(db)); updateStatus(); }
+function updateStatus(){
+  const conn = gh.token ? `<span class="dot ok"></span>GitHub: <b>${esc(gh.owner)}/${esc(gh.repo)}</b>` : `<span class="dot warn"></span>未配置 GitHub token（只读）`;
+  const d = dirty ? `<br><span class="dot bad"></span><b>有未保存的修改</b>` : `<br><span class="dot ok"></span>已同步`;
+  const upd = db.meta.updated ? `<br>最后保存 ${esc(db.meta.updated.replace('T',' ').slice(0,16))} ${esc(db.meta.updatedBy||'')}` : '';
+  setStatus(conn+d+upd+(me()?`<br>当前用户 ${esc(me())} · ${isProc()?'采购部':'申请人'}`:''));
+  $('#save').disabled = !dirty || !gh.token;
+  $('#undo').disabled = !undoStack.length; $('#redo').disabled = !redoStack.length;
+  for (const k of ['requests','parts','equipment','service','docs']) $('#c-'+k).textContent = (db[k]||[]).length;
+}
+function snapshot(){ undoStack.push(JSON.stringify(db)); if(undoStack.length>40) undoStack.shift(); redoStack.length=0; }
+function undo(){ if(!undoStack.length) return; redoStack.push(JSON.stringify(db)); db=JSON.parse(undoStack.pop()); markDirty(); render(); }
+function redo(){ if(!redoStack.length) return; undoStack.push(JSON.stringify(db)); db=JSON.parse(redoStack.pop()); markDirty(); render(); }
+
+const apiUrl = () => `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${DATA_PATH}`;
+const ghHeaders = () => ({Authorization:'Bearer '+gh.token, Accept:'application/vnd.github+json'});
+const b64enc = s => btoa(unescape(encodeURIComponent(s)));
+const b64dec = s => decodeURIComponent(escape(atob(s.replace(/\n/g,''))));
+
+async function load(){
+  // Draft left over from a crashed/unsaved session
+  const draft = localStorage.getItem('nflg.draft');
+  try {
+    let remote=null;
+    if (gh.token && gh.owner && gh.repo){
+      const r = await fetch(apiUrl()+'?ref='+encodeURIComponent(gh.branch||'main'), {headers:ghHeaders(), cache:'no-store'});
+      if (r.status===404){ remote=emptyDb(); remoteSha=null; toast('仓库里还没有 '+DATA_PATH+'，保存时会自动创建'); }
+      else if (!r.ok) throw new Error('GitHub '+r.status);
+      else { const j=await r.json(); remoteSha=j.sha; remote=JSON.parse(b64dec(j.content)); }
+    } else {
+      const r = await fetch(DATA_PATH+'?t='+Date.now(), {cache:'no-store'});
+      if (r.ok) remote = await r.json(); else remote = emptyDb();
+    }
+    db = Object.assign(emptyDb(), remote); db.meta = Object.assign(emptyDb().meta, remote.meta||{});
+  } catch(e){ console.warn(e); toast('加载失败：'+e.message+'（使用本地数据）'); if(!draft) db=emptyDb(); }
+  if (draft && confirm('发现上次未保存的本地修改，要恢复吗？\n（取消 = 丢弃本地修改，使用仓库版本）')) { db=JSON.parse(draft); dirty=true; }
+  else { localStorage.removeItem('nflg.draft'); dirty=false; }
+  if(!isProc()) view='requests';
+  updateStatus(); render();
+}
+
+async function save(force){
+  if (!gh.token){ toast('请先在「设置」里填写 GitHub token'); return; }
+  $('#save').disabled=true; $('#save').textContent='保存中…';
+  try {
+    // conflict check: has someone else saved since we loaded?
+    const r = await fetch(apiUrl()+'?ref='+encodeURIComponent(gh.branch||'main'), {headers:ghHeaders(), cache:'no-store'});
+    let currentSha=null;
+    if (r.ok){ const j=await r.json(); currentSha=j.sha;
+      if (!force && remoteSha && currentSha!==remoteSha){
+        const remote=JSON.parse(b64dec(j.content));
+        if (!confirm(`注意：${remote.meta?.updatedBy||'其他人'} 在 ${remote.meta?.updated||'你加载之后'} 保存过新版本。\n\n确定 = 用你的版本覆盖（对方的修改会丢失）\n取消 = 先放弃保存，点「重新加载」后再改`)) {
+          $('#save').textContent='保存到 GitHub'; updateStatus(); return; }
+      }
+    }
+    db.meta.updated = new Date().toISOString(); db.meta.updatedBy = me();
+    const body = {message:`update db.json (${me()||'web'}) ${db.meta.updated.slice(0,16)}`, content:b64enc(JSON.stringify(db,null,2)), branch:gh.branch||'main'};
+    if (currentSha) body.sha=currentSha;
+    const p = await fetch(apiUrl(), {method:'PUT', headers:{...ghHeaders(),'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    if (!p.ok){ const t=await p.text(); throw new Error(p.status+' '+t.slice(0,200)); }
+    const j = await p.json(); remoteSha=j.content.sha; dirty=false; localStorage.removeItem('nflg.draft');
+    toast('已保存到 GitHub ✓');
+  } catch(e){ alert('保存失败：'+e.message); }
+  $('#save').textContent='保存到 GitHub'; updateStatus();
+}
+
+/* ============ helpers ============ */
+function q(){ return $('#q').value.trim().toLowerCase(); }
+function matches(obj){ const s=q(); if(!s) return true; return JSON.stringify(obj).toLowerCase().includes(s); }
+function sortBy(list,key){ const st=sort[view]; if(!st) return list; const [k,dir]=st; return [...list].sort((a,b)=>{ const x=a[k]??'',y=b[k]??''; const c = (typeof x==='number'&&typeof y==='number')? x-y : String(x).localeCompare(String(y),'zh'); return dir*c; }); }
+function th(key,label,cls=''){ const st=sort[view]; const arrow = st&&st[0]===key ? (st[1]>0?' ▲':' ▼') : ''; return `<th class="${cls}" data-sort="${key}">${label}${arrow}</th>`; }
+function stockOf(p){ return Number(p.stock||0); }
+function isLow(p){ return p.minStock!=null && p.minStock!=='' && stockOf(p) <= Number(p.minStock); }
+function onOrderQty(partId){ return db.requests.filter(r=>['ordered','shipped'].includes(r.status)).flatMap(r=>r.items||[]).filter(i=>i.partId===partId).reduce((s,i)=>s+Number(i.qty||0),0); }
+function csv(rows, name){
+  const s = rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['\ufeff'+s],{type:'text/csv'})); a.download=name; a.click();
+}
+function opts(list, cur, blank){ return (blank?`<option value="">${blank}</option>`:'')+list.map(([k,v])=>`<option value="${k}" ${k===cur?'selected':''}>${v}</option>`).join(''); }
+function eqOpts(cur){ return opts(db.equipment.map(e=>[e.id, `${e.model} ${e.serial?'#'+e.serial:''} ${e.nickname?'· '+e.nickname:''} (${e.site||''})`]), cur, '— 选择设备 —'); }
+function siteOpts(cur){ const s=db.meta.sites||[]; return opts(s.map(x=>[x,x]), cur, '— 工地/站点 —'); }
+
+/* ============ render ============ */
+function render(){
+  const proc=isProc();
+  for(const k of ['parts']) $(`nav button[data-view=${k}]`).style.display = proc?'':'none';
+  for(const k of ['undo','redo','save']) $('#'+k).style.display = proc?'':'none';
+  if(!proc&&view==='parts') view='requests';
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
+  const v=$('#view');
+  const fn={dash:renderDash,requests:renderRequests,parts:renderParts,equipment:renderEquipment,service:renderService,docs:renderDocs,settings:renderSettings}[view];
+  $('#title').textContent = {dash:'概览 Dashboard',requests:'配件申请 Parts Requests',parts:'配件目录 Parts Catalog',equipment:'设备台账 Equipment',service:'维修记录 Service Log',docs:'文档库 Documents',settings:'设置 Settings'}[view];
+  v.innerHTML = fn();
+  v.querySelectorAll('th[data-sort]').forEach(h=>h.onclick=()=>{ const k=h.dataset.sort; const st=sort[view]; sort[view] = st&&st[0]===k ? [k,-st[1]] : [k,1]; render(); });
+  bindPipeline();
+  updateStatus();
+}
+
+function renderDash(){
+  const open = db.requests.filter(r=>r.status!=='closed');
+  const low = db.parts.filter(isLow);
+  const down = db.equipment.filter(e=>e.status==='down');
+  const urgent = open.filter(r=>r.urgency==='urgent');
+  const recent = [...db.service].sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,6);
+  const notice = db.meta.notice ? `<div class="note">${esc(db.meta.notice)}</div>` : '';
+  return `${notice}
+  <div class="cards">
+    <div class="card"><div class="k">未关闭申请 Open requests</div><div class="v">${open.length}</div></div>
+    <div class="card"><div class="k">紧急申请 Urgent</div><div class="v ${urgent.length?'bad':''}">${urgent.length}</div></div>
+    <div class="card"><div class="k">库存低于安全线 Low stock</div><div class="v ${low.length?'warn':''}">${low.length}</div></div>
+    <div class="card"><div class="k">停机设备 Equipment down</div><div class="v ${down.length?'bad':''}">${down.length}</div></div>
+    <div class="card"><div class="k">配件目录 Parts</div><div class="v">${db.parts.length}</div></div>
+  </div>
+  <div class="panel"><h2>申请进度 Pipeline <button class="btn sm" onclick="view='requests';render()">查看全部</button></h2>
+    <div style="padding:12px">${pipelineHtml(open)}</div></div>
+  <div class="panel"><h2>库存预警 Low stock</h2>
+    ${low.length? `<table><tr><th>图号 Part No.</th><th>名称</th><th>适用机型</th><th class="num">库存</th><th class="num">安全库存</th><th class="num">在途</th><th>位置</th><th></th></tr>
+      ${low.map(p=>`<tr><td class="mono">${esc(p.partNo)}</td><td>${esc(p.nameZh)}<br><small style="color:var(--muted)">${esc(p.nameEn)}</small></td><td>${esc((p.models||[]).join(', '))}</td><td class="num"><span class="chip low">${stockOf(p)}</span></td><td class="num">${esc(p.minStock)}</td><td class="num">${onOrderQty(p.id)||''}</td><td>${esc(p.location)}</td><td class="row-actions"><button onclick="newRequestFor('${p.id}')">申请补货</button></td></tr>`).join('')}</table>`
+      : `<div class="empty">没有低库存配件</div>`}
+  </div>
+  <div class="panel"><h2>最近维修 Recent service</h2>
+    ${recent.length? `<table><tr><th>日期</th><th>设备</th><th>站点</th><th>故障 / 工作内容</th><th>技工</th></tr>
+      ${recent.map(s=>`<tr><td>${esc(s.date)}</td><td>${esc(eqName(s.equipmentId))}</td><td>${esc(s.site)}</td><td>${esc(s.issue)}${s.work?`<br><small style="color:var(--muted)">${esc(s.work)}</small>`:''}</td><td>${esc(s.technician)}</td></tr>`).join('')}</table>`
+      : `<div class="empty">还没有维修记录</div>`}
+  </div>`;
+}
+
+function pipelineHtml(list){
+  return `<div class="pipe">${STATUSES.map(([k,v])=>{ const items=list.filter(r=>r.status===k);
+    return `<div class="col" data-status="${k}"><h3>${v}<span>${items.length}</span></h3>${items.map(r=>`
+      <div class="rcard" draggable="${isProc()}" data-id="${r.id}" onclick="editRequest('${r.id}')">
+        <b>${esc(r.no)} ${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency).split(' ')[0]}</span>`:''}</b>
+        ${(r.items||[]).slice(0,3).map(i=>`<div>${esc(i.partNo||'')} ${esc(i.name||'')} ×${esc(i.qty)}</div>`).join('')}${(r.items||[]).length>3?`<div class="meta">…共 ${r.items.length} 项</div>`:''}
+        <div class="meta">${esc(r.site||'')} · ${esc(eqName(r.equipmentId))}<br>${esc(r.requester||'')} · ${esc(r.date||'')}${r.eta?` · ETA ${esc(r.eta)}`:''}</div>
+      </div>`).join('')}</div>`; }).join('')}</div>`;
+}
+function bindPipeline(){
+  if(!isProc()) return;
+  let dragId=null;
+  document.querySelectorAll('.rcard[draggable]').forEach(c=>{ c.ondragstart=e=>{dragId=c.dataset.id; e.dataTransfer.effectAllowed='move';}; });
+  document.querySelectorAll('.pipe .col').forEach(col=>{
+    col.ondragover=e=>{e.preventDefault(); col.classList.add('over');};
+    col.ondragleave=()=>col.classList.remove('over');
+    col.ondrop=e=>{ e.preventDefault(); col.classList.remove('over'); if(!dragId) return; setStatus_(dragId, col.dataset.status); dragId=null; };
+  });
+}
+function setStatus_(id, status){
+  const r=db.requests.find(x=>x.id===id); if(!r||r.status===status) return;
+  snapshot(); const prev=r.status; r.status=status;
+  (r.history=r.history||[]).push({ts:new Date().toISOString(), user:me(), action:`${lbl(STATUSES,prev)} → ${lbl(STATUSES,status)}`});
+  if (status==='received' && !r.receivedApplied){ // put stock in
+    for (const i of r.items||[]){ const p=partById(i.partId); if(p) p.stock=stockOf(p)+Number(i.qty||0); }
+    r.receivedApplied=true; r.receivedDate=today();
+  }
+  markDirty(); render();
+}
+
+function renderRequests(){
+  const st = sessionStorage.getItem('f.status')||'';
+  let list = db.requests.filter(matches).filter(r=> st? r.status===st : true);
+  list = sortBy(list,'date');
+  return `<div class="filters">
+      <button class="btn primary" onclick="editRequest()">＋ 新申请 New request</button>
+      <select onchange="sessionStorage.setItem('f.status',this.value);render()">${opts([['','全部状态 All']].concat(STATUSES), st)}</select>
+      ${isProc()?`<label><input type="checkbox" id="kanban" ${sessionStorage.getItem('f.kanban')==='1'?'checked':''} onchange="sessionStorage.setItem('f.kanban',this.checked?'1':'0');render()"> 看板 Kanban</label>`:''}
+      <span style="flex:1"></span>
+      <button class="btn" onclick="exportRequests()">导出 CSV</button></div>
+    ${isProc()&&sessionStorage.getItem('f.kanban')==='1' ? pipelineHtml(list) : `<div class="panel">${list.length? `<table><tr>${th('no','单号 No.')}${th('date','日期')}${th('status','状态')}${th('urgency','紧急度')}<th>配件 Items</th>${th('site','站点')}<th>设备</th>${th('requester','申请人')}${th('poNo','PO#')}${th('eta','ETA')}<th></th></tr>
+      ${list.map(r=>`<tr><td class="mono"><a href="#" onclick="editRequest('${r.id}');return false">${esc(r.no)}</a></td><td>${esc(r.date)}</td><td><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span></td><td>${r.urgency!=='normal'?`<span class="chip u-${r.urgency}">${lbl(URGENCY,r.urgency)}</span>`:''}</td>
+        <td>${(r.items||[]).map(i=>`<div><span class="mono">${esc(i.partNo||'')}</span> ${esc(i.name||'')} <b>×${esc(i.qty)}</b>${i.fig?` <small style="color:var(--muted)">图${esc(i.fig)}</small>`:''}</div>`).join('')}${(r.photos||[]).length?`<small style="color:var(--muted)">📷 ${r.photos.length}</small>`:''}</td>
+        <td>${esc(r.site)}</td><td>${esc(eqName(r.equipmentId))}</td><td>${esc(r.requester)}</td><td class="mono">${esc(r.poNo)}</td><td>${esc(r.eta)}</td>
+        <td class="row-actions"><button onclick="editRequest('${r.id}')">${isProc()?'编辑':'查看/编辑'}</button>${isProc()||(r.status==='requested'&&r.requester===me())?`<button class="del" onclick="del('requests','${r.id}')">删除</button>`:''}</td></tr>`).join('')}</table>` : `<div class="empty">还没有申请。点「新申请」提交第一条。</div>`}</div>`}`;
+}
+function exportRequests(){ csv([['No','Date','Status','Urgency','Site','Equipment','Requester','PartNo','Part','Qty','PO','ETA','Notes'],
+  ...db.requests.flatMap(r=>(r.items||[]).map(i=>[r.no,r.date,r.status,r.urgency,r.site,eqName(r.equipmentId),r.requester,i.partNo,i.name,i.qty,r.poNo,r.eta,r.notes]))],'nflg-requests.csv'); }
+
+function renderParts(){
+  const lowOnly = sessionStorage.getItem('f.low')==='1';
+  let list = db.parts.filter(matches).filter(p=>!lowOnly||isLow(p)); list=sortBy(list,'partNo');
+  return `<div class="filters">
+      <button class="btn primary" onclick="editPart()">＋ 新配件 New part</button>
+      <label><input type="checkbox" ${lowOnly?'checked':''} onchange="sessionStorage.setItem('f.low',this.checked?'1':'0');render()"> 只看低库存</label>
+      <span style="flex:1"></span>
+      <button class="btn" onclick="importPartsCsv()">导入 CSV</button>
+      <button class="btn" onclick="exportParts()">导出 CSV</button></div>
+    <div class="panel">${list.length? `<table><tr>${th('partNo','图号 Part No.')}${th('nameZh','名称 Name')}<th>适用机型 Models</th>${th('unit','单位')}${th('stock','库存','num')}${th('minStock','安全库存','num')}<th class="num">在途</th>${th('lastPrice','最近价格','num')}${th('leadTimeDays','交期(天)','num')}${th('location','库位')}<th></th></tr>
+      ${list.map(p=>`<tr><td class="mono"><a href="#" onclick="editPart('${p.id}');return false">${esc(p.partNo)}</a>${p.oemNo?`<br><small style="color:var(--muted)">OEM ${esc(p.oemNo)}</small>`:''}</td><td>${esc(p.nameZh)}<br><small style="color:var(--muted)">${esc(p.nameEn)}</small></td><td>${esc((p.models||[]).join(', '))}</td><td>${esc(p.unit)}</td>
+        <td class="num">${isLow(p)?`<span class="chip low">${stockOf(p)}</span>`:stockOf(p)}</td><td class="num">${esc(p.minStock)}</td><td class="num">${onOrderQty(p.id)||''}</td><td class="num">${fmtMoney(p.lastPrice,p.currency)}${p.lastPriceDate?`<br><small style="color:var(--muted)">${esc(p.lastPriceDate)}</small>`:''}</td><td class="num">${esc(p.leadTimeDays)}</td><td>${esc(p.location)}</td>
+        <td class="row-actions"><button onclick="newRequestFor('${p.id}')">申请</button><button onclick="editPart('${p.id}')">编辑</button><button class="del" onclick="del('parts','${p.id}')">删除</button></td></tr>`).join('')}</table>` : `<div class="empty">没有配件，点「新配件」或「导入 CSV」</div>`}</div>`;
+}
+function exportParts(){ csv([['PartNo','OEMNo','NameZh','NameEn','Models','Unit','Stock','MinStock','LastPrice','Currency','LastPriceDate','LeadTimeDays','Location','Notes'],
+  ...db.parts.map(p=>[p.partNo,p.oemNo,p.nameZh,p.nameEn,(p.models||[]).join('; '),p.unit,p.stock,p.minStock,p.lastPrice,p.currency,p.lastPriceDate,p.leadTimeDays,p.location,p.notes])],'nflg-parts.csv'); }
+function importPartsCsv(){
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='.csv,text/csv';
+  inp.onchange=async()=>{ const txt=await inp.files[0].text(); const rows=parseCsv(txt); if(rows.length<2) return toast('CSV 为空');
+    const h=rows[0].map(x=>x.trim().toLowerCase()); const col=n=>h.indexOf(n.toLowerCase());
+    const ix={partNo:col('PartNo'),oemNo:col('OEMNo'),nameZh:col('NameZh'),nameEn:col('NameEn'),models:col('Models'),unit:col('Unit'),stock:col('Stock'),minStock:col('MinStock'),lastPrice:col('LastPrice'),currency:col('Currency'),lastPriceDate:col('LastPriceDate'),leadTimeDays:col('LeadTimeDays'),location:col('Location'),notes:col('Notes')};
+    if(ix.partNo<0) return alert('CSV 需要至少有 PartNo 列（列名同导出格式）');
+    snapshot(); let added=0,updated=0;
+    for(const r of rows.slice(1)){ const no=(r[ix.partNo]||'').trim(); if(!no) continue; let p=db.parts.find(x=>x.partNo===no); if(!p){p={id:uid(),partNo:no}; db.parts.push(p); added++;} else updated++;
+      for(const k in ix){ if(ix[k]<0||k==='partNo') continue; let v=r[ix[k]]; if(v==null||v==='') continue; if(k==='models') v=v.split(/[;,]/).map(s=>s.trim()).filter(Boolean); else if(['stock','minStock','lastPrice','leadTimeDays'].includes(k)) v=Number(v); p[k]=v; } }
+    markDirty(); render(); toast(`导入完成：新增 ${added}，更新 ${updated}`); };
+  inp.click();
+}
+function parseCsv(t){ const rows=[]; let row=[],cur='',q=false; t=t.replace(/^\ufeff/,'');
+  for(let i=0;i<t.length;i++){ const c=t[i]; if(q){ if(c==='"'){ if(t[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=c; }
+    else if(c==='"') q=true; else if(c===','){row.push(cur);cur='';} else if(c==='\n'||c==='\r'){ if(c==='\r'&&t[i+1]==='\n') i++; row.push(cur); rows.push(row); row=[]; cur=''; } else cur+=c; }
+  if(cur!==''||row.length){row.push(cur);rows.push(row);} return rows.filter(r=>r.some(x=>x!=='')); }
+
+function renderEquipment(){
+  let list=db.equipment.filter(matches); list=sortBy(list,'model');
+  return `<div class="filters"><button class="btn primary" onclick="editEquipment()">＋ 新设备 New equipment</button><span style="flex:1"></span>
+      <button class="btn" onclick="csv([['Model','Serial','Nickname','Site','Status','Hours','Year','Notes'],...db.equipment.map(e=>[e.model,e.serial,e.nickname,e.site,e.status,e.hours,e.year,e.notes])],'nflg-equipment.csv')">导出 CSV</button></div>
+    <div class="panel">${list.length? `<table><tr>${th('model','机型 Model')}${th('serial','序列号 Serial')}${th('nickname','编号/别名')}${th('site','站点 Site')}${th('status','状态')}${th('hours','小时数','num')}${th('year','年份')}<th>开放申请</th><th>最近维修</th><th></th></tr>
+      ${list.map(e=>{ const open=db.requests.filter(r=>r.equipmentId===e.id&&r.status!=='closed').length; const last=[...db.service].filter(s=>s.equipmentId===e.id).sort((a,b)=>String(b.date).localeCompare(String(a.date)))[0];
+        return `<tr><td><a href="#" onclick="editEquipment('${e.id}');return false">${esc(e.model)}</a></td><td class="mono">${esc(e.serial)}</td><td>${esc(e.nickname)}</td><td>${esc(e.site)}</td><td><span class="chip ${e.status==='down'?'low':''}">${lbl(EQ_STATUS,e.status)}</span></td><td class="num">${esc(e.hours)}</td><td>${esc(e.year)}</td><td>${open||''}</td><td>${last?esc(last.date)+' · '+esc(last.issue):''}</td>
+        <td class="row-actions"><button onclick="editService(null,'${e.id}')">记维修</button><button onclick="editEquipment('${e.id}')">编辑</button><button class="del" onclick="del('equipment','${e.id}')">删除</button></td></tr>`; }).join('')}</table>` : `<div class="empty">还没有设备</div>`}</div>`;
+}
+
+function renderService(){
+  let list=db.service.filter(matches); if(!sort[view]) sort[view]=['date',-1]; list=sortBy(list,'date');
+  return `<div class="filters"><button class="btn primary" onclick="editService()">＋ 新维修记录 New entry</button><span style="flex:1"></span>
+      <button class="btn" onclick="csv([['Date','Equipment','Site','Issue','Work','PartsUsed','Technician','Hours','Downtime','Notes'],...db.service.map(s=>[s.date,eqName(s.equipmentId),s.site,s.issue,s.work,(s.partsUsed||[]).map(i=>i.partNo+' x'+i.qty).join('; '),s.technician,s.hours,s.downtimeHours,s.notes])],'nflg-service.csv')">导出 CSV</button></div>
+    <div class="panel">${list.length? `<table><tr>${th('date','日期')}<th>设备</th>${th('site','站点')}<th>故障 Issue</th><th>处理 Work done</th><th>用料 Parts used</th>${th('technician','技工')}${th('hours','工时','num')}${th('downtimeHours','停机(h)','num')}<th></th></tr>
+      ${list.map(s=>`<tr><td>${esc(s.date)}</td><td>${esc(eqName(s.equipmentId))}</td><td>${esc(s.site)}</td><td>${esc(s.issue)}</td><td>${esc(s.work)}</td><td>${(s.partsUsed||[]).map(i=>`<div><span class="mono">${esc(i.partNo)}</span> ×${esc(i.qty)}</div>`).join('')}</td><td>${esc(s.technician)}</td><td class="num">${esc(s.hours)}</td><td class="num">${esc(s.downtimeHours)}</td>
+        <td class="row-actions"><button onclick="editService('${s.id}')">编辑</button><button class="del" onclick="del('service','${s.id}')">删除</button></td></tr>`).join('')}</table>` : `<div class="empty">还没有维修记录</div>`}</div>`;
+}
+
+/* ============ documents ============ */
+const models = () => db.meta.models || (db.meta.models=[]);
+const modelOpts = cur => opts(models().map(m=>[m.code, m.code+(m.nameZh?' · '+m.nameZh:'')]), cur, '— 机型 Model —');
+const fmtSize = b => !b ? '' : b>1048576 ? (b/1048576).toFixed(1)+' MB' : Math.max(1,Math.round(b/1024))+' KB';
+const docHref = d => d.path ? d.path.split('/').map(encodeURIComponent).join('/') : (d.url||'');
+function curModel(){ const m=sessionStorage.getItem('f.model'); return models().some(x=>x.code===m) ? m : (models()[0]?.code||''); }
+
+function renderDocs(){
+  const ms=models(); const cur=curModel(); const m=ms.find(x=>x.code===cur);
+  const tabs = `<div class="filters" style="gap:6px">${ms.map(x=>`<button class="btn sm ${x.code===cur?'primary':''}" onclick="sessionStorage.setItem('f.model','${esc(x.code)}');render()">${esc(x.code)} <span style="opacity:.7">${(db.docs||[]).filter(d=>d.model===x.code).length}</span></button>`).join('')}
+    <button class="btn sm" onclick="editModel()">＋ 添加机型</button></div>`;
+  if(!m) return tabs+`<div class="panel"><div class="empty">先添加一个机型（例如 NFJ1175），再上传该机型的手册、图纸和选型文件。</div></div>`;
+  const units = db.equipment.filter(e=>e.model===m.code);
+  let list=(db.docs||[]).filter(d=>d.model===m.code).filter(matches);
+  const groups = DOC_CATS.map(([k,v])=>[k,v,list.filter(d=>(d.category||'other')===k)]).filter(g=>g[2].length);
+  const head = `<div class="panel"><h2>${esc(m.code)} ${esc(m.nameZh||'')} ${m.nameEn?`<span style="font-weight:400;color:var(--muted)">${esc(m.nameEn)}</span>`:''}
+      <span><button class="btn sm" onclick="editModel('${esc(m.code)}')">编辑机型</button> <button class="btn sm primary" onclick="editDoc(null,'${esc(m.code)}')">＋ 添加文档 / 上传</button></span></h2>
+    <div style="padding:10px 14px;font-size:13px;color:var(--muted)">${m.engine?`发动机 ${esc(m.engine)} · `:''}${units.length?`在册设备 ${units.map(e=>`<span class="chip">${esc(e.nickname||e.serial||'')} ${esc(e.site||'')}</span>`).join(' ')}`:'暂无在册设备'}${m.notes?`<br>${esc(m.notes)}`:''}</div></div>`;
+  const rows = groups.length ? groups.map(([k,v,ds])=>`<div class="panel"><h2>${v}<span class="count" style="font-size:11px;color:var(--muted)">${ds.length}</span></h2>
+    <table style="table-layout:fixed"><tr><th style="width:34%">文档 Document</th><th style="width:13%">版本 / 日期</th><th style="width:9%">来源</th><th class="num" style="width:8%">大小</th><th style="width:9%">上传人</th><th>备注</th><th style="width:13%"></th></tr>
+    ${ds.map(d=>{ const href=docHref(d); const src = d.path?'<span class="chip">仓库 Pages</span>':d.url?'<span class="chip">链接 Link</span>':'<span class="chip low">未上传</span>';
+      return `<tr><td>${href?`<a href="${esc(href)}" target="_blank" rel="noopener">${esc(d.title)}</a>`:esc(d.title)}${d.fileName&&d.fileName!==d.title?`<br><small class="mono" style="color:var(--muted)">${esc(d.fileName)}</small>`:''}</td>
+        <td>${esc(d.version||'')}${d.version&&d.date?' · ':''}${esc(d.date||'')}</td><td>${src}</td><td class="num">${fmtSize(d.size)}</td><td>${esc(d.uploadedBy||'')}</td><td>${esc(d.notes||'')}</td>
+        <td class="row-actions">${href?`<button onclick="window.open('${esc(href)}','_blank')">打开</button>`:''}<button onclick="editDoc('${d.id}')">${href?'编辑':'上传/链接'}</button><button class="del" onclick="delDoc('${d.id}')">删除</button></td></tr>`; }).join('')}</table></div>`).join('')
+    : `<div class="panel"><div class="empty">${esc(m.code)} 还没有文档。点「添加文档 / 上传」：≤ ${MAX_UPLOAD_MB} MB 的文件可直接上传到仓库；更大的文件（如 200 MB 的操作手册）请填 OneDrive / SharePoint 链接。</div></div>`;
+  return tabs+head+rows;
+}
+
+function editModel(code){
+  const m = code? models().find(x=>x.code===code) : {};
+  openModal(`<h2>${code?'编辑机型':'添加机型'} Model</h2><div class="grid">
+    ${field('m-code','型号 Model code *',inp('m-code',m.code,'text','placeholder="NFJ1175 / NFS550 / NFI1111RS"'))}
+    ${field('m-engine','发动机 Engine',inp('m-engine',m.engine,'text','placeholder="Cat C9.3B"'))}
+    ${field('m-zh','中文名称',inp('m-zh',m.nameZh,'text','placeholder="履带颚式破碎机"'))}
+    ${field('m-en','English name',inp('m-en',m.nameEn,'text','placeholder="Tracked jaw crusher"'))}
+    <div class="full">${field('m-notes','备注',`<textarea id="m-notes">${esc(m.notes||'')}</textarea>`)}</div>
+  </div><div class="actions">${code?`<button class="btn danger" onclick="delModel('${esc(code)}')">删除机型</button><span style="flex:1"></span>`:''}<button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="saveModel('${esc(code||'')}')">保存</button></div>`);
+}
+function saveModel(code){
+  const v=k=>$('#m-'+k).value.trim(); const nc=v('code'); if(!nc) return alert('型号必填');
+  if(models().some(x=>x.code===nc&&x.code!==code)) return alert('该型号已存在');
+  snapshot(); let m; if(code){ m=models().find(x=>x.code===code); if(nc!==code){ (db.docs||[]).forEach(d=>{if(d.model===code)d.model=nc;}); db.equipment.forEach(e=>{if(e.model===code)e.model=nc;}); } } else { m={}; models().push(m); }
+  Object.assign(m,{code:nc,engine:v('engine'),nameZh:v('zh'),nameEn:v('en'),notes:v('notes')});
+  sessionStorage.setItem('f.model',nc); markDirty(); closeModal(); render();
+}
+function delModel(code){
+  const n=(db.docs||[]).filter(d=>d.model===code).length, u=db.equipment.filter(e=>e.model===code).length;
+  if(n||u) return alert(`该机型还有 ${n} 个文档、${u} 台设备，先移走再删除`);
+  if(!confirm('删除机型 '+code+'？')) return; snapshot(); db.meta.models=models().filter(x=>x.code!==code); markDirty(); closeModal(); render();
+}
+
+let docFile=null;
+function editDoc(id, model){
+  const d = id? db.docs.find(x=>x.id===id) : {model:model||curModel(),category:'operation',date:today()};
+  docFile=null;
+  openModal(`<h2>${id?'编辑文档':'添加文档'} Document</h2>
+    <div class="grid">
+      ${field('d-model','机型 Model *',`<select id="d-model">${modelOpts(d.model)}</select>`)}
+      ${field('d-cat','分类 Category',`<select id="d-cat">${opts(DOC_CATS,d.category)}</select>`)}
+      <div class="full">${field('d-title','标题 Title *',inp('d-title',d.title,'text','placeholder="例如 NFJ1175 Spare Parts Manual"'))}</div>
+      ${field('d-version','版本 Version',inp('d-version',d.version,'text','placeholder="V1.0 / 2022 EN"'))}
+      ${field('d-date','日期',inp('d-date',d.date,'date'))}
+      <div class="full"><label class="f">文件来源 Source</label>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="display:flex;gap:8px;align-items:center"><input type="radio" name="d-src" value="upload" ${d.path||(!d.url&&!id)?'checked':''} onchange="docSrc()"> 上传到仓库（≤ ${MAX_UPLOAD_MB} MB，Pages 直接可打开）${d.path?`<span class="mono" style="color:var(--muted)">当前 ${esc(d.path)}</span>`:''}</label>
+          <input type="file" id="d-file" onchange="docFile=this.files[0]||null;if(docFile){const t=document.getElementById('d-title');if(!t.value)t.value=docFile.name.replace(/\\.[^.]+$/,'');}">
+          <label style="display:flex;gap:8px;align-items:center"><input type="radio" name="d-src" value="url" ${d.url?'checked':''} onchange="docSrc()"> 外部链接（OneDrive / SharePoint / 厂家网盘 — 大文件、敏感文件用这个）</label>
+          <input type="text" id="d-url" value="${esc(d.url||'')}" placeholder="https://nanhawaii-my.sharepoint.com/…">
+          <label style="display:flex;gap:8px;align-items:center"><input type="radio" name="d-src" value="none" ${!d.path&&!d.url&&id?'checked':''} onchange="docSrc()"> 暂无文件（先建记录，之后再补）</label>
+        </div></div>
+      <div class="full">${field('d-notes','备注',`<textarea id="d-notes">${esc(d.notes||'')}</textarea>`)}</div>
+    </div>
+    <div class="note" style="margin-top:12px">提示：Pages 站点上的文件任何拿到链接的人都能打开（仓库私有也一样）。只给内部看的报价、合同类文件请用 OneDrive 链接。</div>
+    <div class="actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" id="d-save" onclick="saveDoc('${id||''}')">保存</button></div>`);
+  docSrc();
+}
+function docSrc(){ const s=document.querySelector('input[name=d-src]:checked')?.value; $('#d-file').style.display=s==='upload'?'':'none'; $('#d-url').style.display=s==='url'?'':'none'; }
+async function saveDoc(id){
+  const v=k=>$('#d-'+k).value.trim(); if(!v('model')||!v('title')) return alert('机型和标题必填');
+  const src=document.querySelector('input[name=d-src]:checked').value;
+  if(src==='url'&&v('url')&&!/^https?:\/\//i.test(v('url'))) return alert('链接需以 http(s):// 开头');
+  const existing = id? db.docs.find(x=>x.id===id) : null;
+  let uploaded=null;
+  if(src==='upload'&&docFile){
+    if(!gh.token) return alert('上传文件需要先在「设置」里配置 GitHub token；或者改用外部链接。');
+    if(docFile.size>MAX_UPLOAD_MB*1048576) return alert(`文件 ${fmtSize(docFile.size)} 超过 ${MAX_UPLOAD_MB} MB，请放 OneDrive 后填链接。`);
+    const btn=$('#d-save'); btn.disabled=true; btn.textContent='上传中… '+fmtSize(docFile.size);
+    try { uploaded = await uploadToRepo(`docs/${v('model')}/${docFile.name.replace(/[\\/:*?"<>|]/g,'_')}`, docFile); }
+    catch(e){ btn.disabled=false; btn.textContent='保存'; return alert('上传失败：'+e.message); }
+    if(existing?.path && existing.path!==uploaded.path) deleteFromRepo(existing.path, existing.sha).catch(()=>{});
+  } else if(src==='upload'&&!existing?.path&&!id){ return alert('请选择要上传的文件，或改选其他来源'); }
+  snapshot(); let d; if(id) d=existing; else { d={id:uid()}; (db.docs=db.docs||[]).push(d); }
+  Object.assign(d,{model:v('model'),category:v('cat'),title:v('title'),version:v('version'),date:v('date'),notes:v('notes')});
+  if(uploaded){ Object.assign(d,{path:uploaded.path,sha:uploaded.sha,size:docFile.size,fileName:docFile.name,url:'',uploadedBy:me(),uploadedAt:new Date().toISOString()}); }
+  else if(src==='url'){ if(d.path) deleteFromRepo(d.path,d.sha).catch(()=>{}); Object.assign(d,{url:v('url'),path:'',sha:'',size:'',fileName:''}); }
+  else if(src==='none'){ if(d.path) deleteFromRepo(d.path,d.sha).catch(()=>{}); Object.assign(d,{url:'',path:'',sha:'',size:'',fileName:''}); }
+  sessionStorage.setItem('f.model',d.model); markDirty(); closeModal(); render();
+  if(uploaded) { toast('文件已上传，正在保存记录…'); await save(false); }
+}
+async function delDoc(id){
+  const d=db.docs.find(x=>x.id===id); if(!d) return;
+  if(!confirm(`删除「${d.title}」？${d.path?'\n仓库里的文件也会一起删除。':''}`)) return;
+  if(d.path){ try{ await deleteFromRepo(d.path,d.sha); }catch(e){ if(!confirm('删除仓库文件失败：'+e.message+'\n仍然删除记录？')) return; } }
+  snapshot(); db.docs=db.docs.filter(x=>x.id!==id); markDirty(); render(); if(d.path) await save(false);
+}
+function fileToB64(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(file); }); }
+async function uploadToRepo(path, file){
+  const url=`https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
+  const body={message:`upload ${path} (${me()||'web'})`, content:await fileToB64(file), branch:gh.branch||'main'};
+  const g=await fetch(url+'?ref='+encodeURIComponent(gh.branch||'main'),{headers:ghHeaders(),cache:'no-store'}); if(g.ok){ body.sha=(await g.json()).sha; }
+  const r=await fetch(url,{method:'PUT',headers:{...ghHeaders(),'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok) throw new Error(r.status+' '+(await r.text()).slice(0,200));
+  const j=await r.json(); return {path, sha:j.content.sha};
+}
+async function deleteFromRepo(path, sha){
+  const url=`https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
+  if(!sha){ const g=await fetch(url+'?ref='+encodeURIComponent(gh.branch||'main'),{headers:ghHeaders(),cache:'no-store'}); if(!g.ok) return; sha=(await g.json()).sha; }
+  const r=await fetch(url,{method:'DELETE',headers:{...ghHeaders(),'Content-Type':'application/json'},body:JSON.stringify({message:`delete ${path} (${me()||'web'})`,sha,branch:gh.branch||'main'})});
+  if(!r.ok) throw new Error(r.status+' '+(await r.text()).slice(0,200));
+}
+
+function renderSettings(){
+  return `<div class="panel"><h2>GitHub 连接 Connection</h2><div style="padding:14px">
+    <div class="note">数据保存在同一个仓库的 <code>${DATA_PATH}</code>。浏览只需打开 Pages 链接；要编辑/保存需要一个有该仓库 <b>Contents: Read &amp; write</b> 权限的 fine-grained token，token 只存在你这台电脑的浏览器里。</div>
+    <div class="grid">
+      <div><label class="f">Owner (org / user)</label><input type="text" id="g-owner" value="${esc(gh.owner||'')}" placeholder="NANHAWAII"></div>
+      <div><label class="f">Repo</label><input type="text" id="g-repo" value="${esc(gh.repo||'')}" placeholder="NFLG-Parts-Service"></div>
+      <div><label class="f">Branch</label><input type="text" id="g-branch" value="${esc(gh.branch||'main')}"></div>
+      <div><label class="f">你的名字 Your name（记录在申请单上）</label><input type="text" id="g-user" value="${esc(gh.user||'')}" placeholder="Fang"></div>
+      <div><label class="f">角色 Role</label><select id="g-role">${opts([['requester','申请人 Requester — 只提诉求、看进度'],['procurement','采购部 Procurement — 询价/下单/库存/价格']],gh.role||'requester')}</select></div>
+      <div class="full"><label class="f">Token (fine-grained PAT)</label><input type="password" id="g-token" value="${esc(gh.token||'')}" placeholder="github_pat_…"></div>
+    </div>
+    <div class="actions" style="display:flex;gap:8px;margin-top:12px"><button class="btn primary" onclick="saveGh()">保存连接设置</button><button class="btn" onclick="testGh()">测试连接</button><button class="btn danger" onclick="localStorage.removeItem('nflg.gh');location.reload()">清除 token</button></div>
+  </div></div>
+  ${isProc()?`<div class="panel"><h2>团队链接 Team link（给同事提申请用）</h2><div style="padding:14px">
+    <div class="note">把链接发给同事，点开一次就配好了：以后打开本站直接提申请、传照片，不用 token、不用点保存。链接里带着仓库写权限，只在公司内部发；建议为此单独建一个 token（Contents: Read &amp; write），需要时在 GitHub 上撤销即可。</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn primary" onclick="teamLink()">生成并复制链接</button><input type="text" id="team-link" readonly placeholder="点左边生成" style="flex:1;min-width:280px"></div>
+    <label class="f" style="margin-top:12px">采购部邮箱（申请人提交后可一键发邮件通知）</label><input type="text" id="s-email" value="${esc(db.meta.procurementEmail||'')}" placeholder="fjiang@nanhawaii.com">
+    <div style="margin-top:8px"><button class="btn" onclick="snapshot();db.meta.procurementEmail=$('#s-email').value.trim();markDirty();toast('已应用')">应用</button></div>
+  </div></div>`:''}
+  <div class="panel"><h2>站点 Sites &amp; 公告</h2><div style="padding:14px">
+    <label class="f">站点列表（逗号分隔）</label><input type="text" id="s-sites" value="${esc((db.meta.sites||[]).join(', '))}">
+    <label class="f" style="margin-top:10px">概览页公告 Notice（显示在 Dashboard 顶部）</label><textarea id="s-notice">${esc(db.meta.notice||'')}</textarea>
+    <div style="margin-top:10px"><button class="btn primary" onclick="saveMeta()">应用</button></div>
+  </div></div>
+  <div class="panel"><h2>数据 Data</h2><div style="padding:14px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn" onclick="downloadJson()">下载 db.json 备份</button>
+    <button class="btn" onclick="uploadJson()">从 JSON 恢复</button>
+    <button class="btn" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme==='dark'?'light':'dark'">切换深色/浅色</button>
+  </div></div>`;
+}
+function saveGh(){ Object.assign(gh,{owner:$('#g-owner').value.trim(),repo:$('#g-repo').value.trim(),branch:$('#g-branch').value.trim()||'main',user:$('#g-user').value.trim(),token:$('#g-token').value.trim(),role:$('#g-role').value}); localStorage.setItem('nflg.gh',JSON.stringify(gh)); toast('已保存连接设置'); render(); }
+function teamLink(){ if(!gh.token||!gh.owner||!gh.repo) return alert('先填好 Owner / Repo / Token 并保存'); const t=btoa(JSON.stringify({owner:gh.owner,repo:gh.repo,branch:gh.branch||'main',token:gh.token})).replace(/\+/g,'-').replace(/\//g,'_'); const url=location.origin+location.pathname+'#t='+t; $('#team-link').value=url; navigator.clipboard?.writeText(url).then(()=>toast('已复制到剪贴板')).catch(()=>{}); }
+async function testGh(){ saveGh(); try{ const r=await fetch(`https://api.github.com/repos/${gh.owner}/${gh.repo}`,{headers:ghHeaders()}); const j=await r.json(); if(!r.ok) throw new Error(j.message||r.status); alert(`连接成功：${j.full_name}\n权限 push: ${j.permissions?.push}`); } catch(e){ alert('连接失败：'+e.message); } }
+function saveMeta(){ snapshot(); db.meta.sites=$('#s-sites').value.split(',').map(s=>s.trim()).filter(Boolean); db.meta.notice=$('#s-notice').value.trim(); markDirty(); toast('已应用'); }
+function downloadJson(){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'})); a.download=`db-${today()}.json`; a.click(); }
+function uploadJson(){ const inp=document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange=async()=>{ try{ const j=JSON.parse(await inp.files[0].text()); if(!j.parts||!j.requests) throw new Error('不是本系统的 db.json'); snapshot(); db=Object.assign(emptyDb(),j); markDirty(); render(); toast('已恢复，记得保存'); }catch(e){alert(e.message);} }; inp.click(); }
+
+/* ============ modals ============ */
+function openModal(html){ $('#modal').innerHTML=html; $('#overlay').classList.add('open'); const f=$('#modal').querySelector('input,select,textarea'); if(f) f.focus(); }
+function closeModal(){ $('#overlay').classList.remove('open'); }
+$('#overlay').onclick=e=>{ if(e.target.id==='overlay') closeModal(); };
+const field=(id,label,inner)=>`<div><label class="f" for="${id}">${label}</label>${inner}</div>`;
+const inp=(id,val,type='text',extra='')=>`<input type="${type}" id="${id}" value="${esc(val??'')}" ${extra}>`;
+function del(coll,id){ if(!confirm('确定删除？')) return; snapshot(); db[coll]=db[coll].filter(x=>x.id!==id); markDirty(); render(); }
+
+/* --- equipment --- */
+function editEquipment(id){
+  const e = id? db.equipment.find(x=>x.id===id) : {status:'active'};
+  openModal(`<h2>${id?'编辑设备':'新设备'} Equipment</h2><div class="grid">
+    ${field('e-model','机型 Model *',inp('e-model',e.model,'text','list="models-dl" placeholder="例如 NFJ1175 / NFS550 / NFI1111RS"')+`<datalist id="models-dl">${models().map(m=>`<option value="${esc(m.code)}">${esc(m.nameZh||m.nameEn||'')}</option>`).join('')}</datalist>`)}
+    ${field('e-serial','序列号 Serial',inp('e-serial',e.serial))}
+    ${field('e-nick','编号/别名 Unit no.',inp('e-nick',e.nickname))}
+    ${field('e-site','站点 Site',`<select id="e-site">${siteOpts(e.site)}</select>`)}
+    ${field('e-status','状态',`<select id="e-status">${opts(EQ_STATUS,e.status)}</select>`)}
+    <details class="full" ${(e.hours||e.year||e.contact||e.notes)?'open':''}><summary style="cursor:pointer;color:var(--muted);font-size:12px;margin:4px 0">更多：小时数 / 年份 / 联系人 / 备注</summary><div class="grid" style="margin-top:8px">
+    ${field('e-hours','运行小时 Hours',inp('e-hours',e.hours,'number'))}
+    ${field('e-year','出厂年份 Year',inp('e-year',e.year,'number'))}
+    ${field('e-contact','NFLG 服务联系人',inp('e-contact',e.contact))}
+    <div class="full">${field('e-notes','备注',`<textarea id="e-notes">${esc(e.notes||'')}</textarea>`)}</div>
+    </div></details>
+  </div><div class="actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="saveEquipment('${id||''}')">保存</button></div>`);
+}
+function saveEquipment(id){
+  const v=k=>$('#e-'+k).value.trim(); if(!v('model')) return alert('机型必填');
+  snapshot(); const e = id? db.equipment.find(x=>x.id===id) : (db.equipment.push({id:uid()}), db.equipment.at(-1));
+  Object.assign(e,{model:v('model'),serial:v('serial'),nickname:v('nick'),site:v('site'),status:v('status'),hours:v('hours')?Number(v('hours')):'',year:v('year')?Number(v('year')):'',contact:v('contact'),notes:v('notes')});
+  if(!models().some(m=>m.code===e.model)) models().push({code:e.model,engine:'',nameZh:'',nameEn:'',notes:''}); // new model shows up in 文档库 automatically
+  markDirty(); closeModal(); render();
+}
+
+/* --- parts --- */
+function editPart(id){
+  const p = id? partById(id) : {currency:'USD',unit:'pc'};
+  openModal(`<h2>${id?'编辑配件':'新配件'} Part</h2><div class="grid">
+    ${field('p-no','南方路机图号 NFLG Part No. *',inp('p-no',p.partNo))}
+    ${field('p-oem','OEM / 原厂号',inp('p-oem',p.oemNo))}
+    ${field('p-zh','中文名称 *',inp('p-zh',p.nameZh))}
+    ${field('p-en','English name',inp('p-en',p.nameEn))}
+    ${field('p-models','适用机型（逗号分隔）',inp('p-models',(p.models||[]).join(', '),'text','placeholder="NFS350, GLB4000"'))}
+    ${field('p-unit','单位 Unit',inp('p-unit',p.unit))}
+    ${field('p-stock','库存 Stock on hand',inp('p-stock',p.stock,'number'))}
+    ${field('p-min','安全库存 Min stock',inp('p-min',p.minStock,'number'))}
+    <details class="full" ${(p.lastPrice||p.location||p.leadTimeDays||p.notes)?'open':''}><summary style="cursor:pointer;color:var(--muted);font-size:12px;margin:4px 0">更多：价格 / 交期 / 库位 / 重量 / 备注</summary><div class="grid" style="margin-top:8px">
+    ${field('p-price','最近单价 Last price',inp('p-price',p.lastPrice,'number','step="0.01"'))}
+    ${field('p-cur','币种',`<select id="p-cur">${opts(CURRENCIES.map(c=>[c,c]),p.currency)}</select>`)}
+    ${field('p-pdate','报价日期',inp('p-pdate',p.lastPriceDate,'date'))}
+    ${field('p-lead','交期 Lead time（天）',inp('p-lead',p.leadTimeDays,'number'))}
+    ${field('p-loc','库位 Location',inp('p-loc',p.location,'text','placeholder="Honolulu Yard A-3"'))}
+    ${field('p-weight','重量 kg / 尺寸（海运用）',inp('p-weight',p.weight))}
+    <div class="full">${field('p-notes','备注 / 替代件 / 易损件周期',`<textarea id="p-notes">${esc(p.notes||'')}</textarea>`)}</div>
+    </div></details>
+  </div><div class="actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="savePart('${id||''}')">保存</button></div>`);
+}
+function savePart(id){
+  const v=k=>$('#p-'+k).value.trim(); if(!v('no')||!v('zh')) return alert('图号和中文名称必填');
+  const dup=db.parts.find(x=>x.partNo===v('no')&&x.id!==id); if(dup) return alert('图号已存在：'+dup.nameZh);
+  snapshot(); const p = id? partById(id) : (db.parts.push({id:uid()}), db.parts.at(-1));
+  const num=k=>v(k)===''?'':Number(v(k));
+  Object.assign(p,{partNo:v('no'),oemNo:v('oem'),nameZh:v('zh'),nameEn:v('en'),models:v('models').split(/[,，;]/).map(s=>s.trim()).filter(Boolean),unit:v('unit'),stock:num('stock'),minStock:num('min'),lastPrice:num('price'),currency:v('cur'),lastPriceDate:v('pdate'),leadTimeDays:num('lead'),location:v('loc'),weight:v('weight'),notes:v('notes')});
+  markDirty(); closeModal(); render();
+}
+
+/* --- requests --- */
+let draftItems=[], draftPhotos=[];
+const manualIndex={};   // model -> {figures, parts} loaded from data/manual-index/<model>.json
+async function loadManualIndex(model){
+  if(!model) return null; if(model in manualIndex) return manualIndex[model];
+  try{ const r=await fetch(`data/manual-index/${encodeURIComponent(model)}.json`,{cache:'force-cache'}); manualIndex[model]= r.ok? await r.json() : null; }catch(e){ manualIndex[model]=null; }
+  return manualIndex[model];
+}
+function partsManualDoc(model){ return (db.docs||[]).find(d=>d.model===model&&d.category==='parts'&&(d.path||d.url)); }
+function manualLink(model,page){ const d=partsManualDoc(model); if(!d) return ''; const h=docHref(d); return d.path&&page? h+'#page='+page : h; }
+function newRequestFor(partId){ view='requests'; render(); editRequest(null, partId); }
+function editRequest(id, partId){
+  const r = id? db.requests.find(x=>x.id===id) : {date:today(),status:'requested',urgency:'normal',requester:me(),items:[],photos:[]};
+  if(!id && !isProc() && !ensureName()) return; if(!id) r.requester=me();
+  draftItems = JSON.parse(JSON.stringify(r.items||[])); draftPhotos=[];
+  if(partId){ const p=partById(partId); if(p) draftItems.push({partId:p.id,partNo:p.partNo,name:p.nameZh,qty:Math.max(1,(Number(p.minStock)||0)*2-stockOf(p))}); }
+  if(!draftItems.length) draftItems.push({partId:'',partNo:'',name:'',qty:1});
+  const proc=isProc();
+  const statusHtml = proc ? `<select id="r-status">${opts(STATUSES,r.status)}</select>` : `<div style="padding:7px 0"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.eta?` <span class="chip">ETA ${esc(r.eta)}</span>`:''}</div>`;
+  openModal(`<h2>${id?'申请 '+esc(r.no):'新配件申请 New Parts Request'}</h2>
+    ${proc?'':`<div class="note">填好后点「提交」即可，采购部会向南方路机询价、下单并跟踪物流，进度在本页查看。零件号不清楚的话，在下方「查手册」里按名称搜，点「添加」自动带入。</div>`}
+    <div class="grid">
+      ${field('r-req','申请人 Requester *',inp('r-req',r.requester))}
+      ${field('r-site','站点 Site',`<select id="r-site">${siteOpts(r.site)}</select>`)}
+      ${field('r-eq','设备 Equipment',`<select id="r-eq" onchange="syncFromEq()">${eqOpts(r.equipmentId)}</select>`)}
+      ${field('r-model','机型 Model',`<select id="r-model" onchange="manualSearch()">${modelOpts(r.model||db.equipment.find(e=>e.id===r.equipmentId)?.model||'')}</select>`)}
+      ${field('r-urg','紧急度 Urgency',`<select id="r-urg">${opts(URGENCY,r.urgency)}</select>`)}
+      ${field('r-need','需要日期 Need by',inp('r-need',r.needBy,'date'))}
+      <div class="full"><label class="f">配件 Items *</label><div class="items" id="items"></div></div>
+      <div class="full"><label class="f">查手册 Find in parts manual <span id="manual-link"></span></label>
+        <input type="text" id="r-search" placeholder="输入零件号、英文或中文名，如 jaw plate / 颚板 / 1100024929" oninput="manualSearch()"><div id="manual-results" style="margin-top:6px"></div></div>
+      <div class="full">${field('r-reason','用途 / 故障原因 Reason',inp('r-reason',r.reason,'text','placeholder="例如：动颚板磨损严重，出料粒径偏大"'))}</div>
+      <div class="full"><label class="f">照片 Photos（损坏部位、铭牌等）</label><input type="file" id="r-photos" accept="image/*" multiple onchange="draftPhotos=[...this.files]">
+        <div id="photo-list" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${(r.photos||[]).map((p,i)=>`<a href="${esc(docHref(p))}" target="_blank"><img src="${esc(docHref(p))}" style="height:64px;border-radius:6px;border:1px solid var(--line)"></a>`).join('')}</div></div>
+      ${proc?`<div class="full"><hr style="border:0;border-top:1px solid var(--line)"><small style="color:var(--muted)">采购部 Procurement</small></div>
+      ${field('r-status','状态 Status',statusHtml)}
+      ${field('r-date','申请日期',inp('r-date',r.date,'date'))}
+      ${field('r-quote','报价 Quote（总价）',inp('r-quote',r.quoteTotal,'text','placeholder="USD 1,250 / CNY 8,600"'))}
+      ${field('r-po','PO#',inp('r-po',r.poNo))}
+      ${field('r-ship','运输方式 / 单号 Tracking',inp('r-ship',r.shipping,'text','placeholder="DHL 1234567890 / 海运 Matson"'))}
+      ${field('r-eta','预计到货 ETA',inp('r-eta',r.eta,'date'))}`
+      : `${field('r-status','状态 Status',statusHtml)}`}
+      <div class="full">${field('r-notes','备注',`<textarea id="r-notes">${esc(r.notes||'')}</textarea>`)}</div>
+      ${r.history?.length?`<div class="full"><label class="f">进度记录</label><div class="hist">${r.history.slice().reverse().map(h=>`<div>${esc(h.ts.replace('T',' ').slice(0,16))} ${esc(h.user)} — ${esc(h.action)}</div>`).join('')}</div></div>`:''}
+    </div><div class="actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" id="r-save" onclick="saveRequest('${id||''}')">${id?'保存':(proc?'保存':'提交申请')}</button></div>`);
+  renderItems(); manualSearch();
+}
+function syncFromEq(){ const e=db.equipment.find(x=>x.id===$('#r-eq').value); if(!e) return; if(e.site) $('#r-site').value=e.site; if(e.model){ $('#r-model').value=e.model; manualSearch(); } }
+function renderItems(){
+  const dl = `<datalist id="parts-dl">${db.parts.map(p=>`<option value="${esc(p.partNo)}">${esc(p.nameZh)} ${esc(p.nameEn)} (库存 ${stockOf(p)})</option>`).join('')}</datalist>`;
+  $('#items').innerHTML = dl+`<table><tr><th style="width:30%">零件号 Part No.</th><th>名称 / 描述</th><th style="width:70px">数量</th><th style="width:40px"></th></tr>
+    ${draftItems.map((i,n)=>`<tr><td><input list="parts-dl" value="${esc(i.partNo)}" oninput="itemNo(${n},this.value)" placeholder="可不填，按名称搜"></td><td><input value="${esc(i.name)}" oninput="draftItems[${n}].name=this.value" placeholder="名称或描述（手填也可以）">${i.fig?`<small style="color:var(--muted)">手册图 ${esc(i.fig)}${i.item?' 项 '+esc(i.item):''}${i.page?` · <a href="${esc(manualLink($('#r-model')?.value,i.page))}" target="_blank">p.${esc(i.page)}</a>`:''}</small>`:''}</td><td><input type="number" min="1" value="${esc(i.qty)}" oninput="draftItems[${n}].qty=Number(this.value)"></td><td><button class="btn sm" onclick="draftItems.splice(${n},1);renderItems()">✕</button></td></tr>`).join('')}
+    </table><button class="btn sm" style="margin-top:6px" onclick="draftItems.push({partId:'',partNo:'',name:'',qty:1});renderItems()">＋ 添加一行</button>`;
+}
+function itemNo(n,val){ const i=draftItems[n]; i.partNo=val; const p=db.parts.find(x=>x.partNo===val); if(p){ i.partId=p.id; i.name=p.nameZh; renderItems(); const rows=$('#items').querySelectorAll('tr'); rows[n+1]?.querySelectorAll('input')[1]?.focus(); } else i.partId=''; }
+async function manualSearch(){
+  const model=$('#r-model')?.value, box=$('#manual-results'), lk=$('#manual-link'); if(!box) return;
+  const doc=partsManualDoc(model); lk.innerHTML = doc? `· <a href="${esc(docHref(doc))}" target="_blank">打开 ${esc(model)} 零配件手册</a>` : (model?`· <span style="color:var(--muted)">${esc(model)} 的零配件手册还没上传到文档库</span>`:'');
+  const q=($('#r-search')?.value||'').trim().toLowerCase(); if(!model||q.length<2){ box.innerHTML=''; return; }
+  const idx=await loadManualIndex(model); if(!idx){ box.innerHTML=`<div class="empty" style="padding:8px">${esc(model)} 还没有手册索引（用 tools/build_manual_index.py 生成）</div>`; return; }
+  const terms=q.split(/\s+/); const hits=idx.parts.filter(p=>{ const s=(p.pn+' '+p.en+' '+p.zh).toLowerCase(); return terms.every(t=>s.includes(t)); });
+  const figName=f=>(idx.figures.find(x=>x.fig===f)||{}).name||'';
+  box.innerHTML = hits.length? `<table style="font-size:12px">${hits.slice(0,25).map(p=>`<tr><td class="mono">${esc(p.pn)}</td><td>${esc(p.en)}<br><span style="color:var(--muted)">${esc(p.zh)}</span></td><td style="color:var(--muted)">图 ${esc(p.fig)} ${esc(figName(p.fig))}<br>项 ${esc(p.item)} · 装机数 ${esc(p.qty)}</td><td class="row-actions">${doc?`<a href="${esc(manualLink(model,p.page))}" target="_blank">p.${esc(p.page)}</a> `:''}<button onclick='addFromManual(${JSON.stringify(p).replace(/'/g,"&#39;")})'>添加</button></td></tr>`).join('')}</table>${hits.length>25?`<small style="color:var(--muted)">还有 ${hits.length-25} 条，请输入更具体的词</small>`:''}` : `<small style="color:var(--muted)">没找到，可以直接在上面手填名称和描述</small>`;
+}
+function addFromManual(p){ const cat=db.parts.find(x=>x.partNo===p.pn); const blank=draftItems.findIndex(i=>!i.partNo&&!i.name); const it={partId:cat?cat.id:'',partNo:p.pn,name:(p.zh||'')+(p.en?' '+p.en:''),qty:1,fig:p.fig,item:p.item,page:p.page};
+  if(blank>=0) draftItems[blank]=it; else draftItems.push(it); renderItems(); $('#r-search').value=''; $('#manual-results').innerHTML=''; }
+function compressImage(file){ return new Promise(res=>{ const img=new Image(); img.onload=()=>{ const s=Math.min(1,1400/Math.max(img.width,img.height)); const c=document.createElement('canvas'); c.width=Math.round(img.width*s); c.height=Math.round(img.height*s); c.getContext('2d').drawImage(img,0,0,c.width,c.height); c.toBlob(b=>res(b),'image/jpeg',.82); }; img.onerror=()=>res(file); img.src=URL.createObjectURL(file); }); }
+async function saveRequest(id){
+  const v=k=>$('#r-'+k)?.value.trim()??''; if(!v('req')) return alert('申请人必填');
+  const items=draftItems.filter(i=>i.partNo||i.name).map(i=>({...i,qty:Number(i.qty)||1})); if(!items.length) return alert('至少添加一项配件');
+  const btn=$('#r-save'); btn.disabled=true;
+  let photos=[];
+  if(draftPhotos.length){ if(!gh.token){ alert('上传照片需要通过团队链接打开本页（或配置 token）。本次先不带照片提交。'); }
+    else for(const [k,f] of draftPhotos.entries()){ btn.textContent=`上传照片 ${k+1}/${draftPhotos.length}…`; try{ const blob=await compressImage(f); const path=`attachments/${(id? db.requests.find(x=>x.id===id).no : 'PR-'+String(db.meta.nextReqNo||1).padStart(4,'0'))}/${Date.now()}-${k}.jpg`; const up=await uploadToRepo(path,blob); photos.push({path:up.path,sha:up.sha,name:f.name}); }catch(e){ alert('照片上传失败：'+e.message); } } }
+  snapshot(); let r; const isNew=!id;
+  if(id) r=db.requests.find(x=>x.id===id); else { const n=db.meta.nextReqNo||1; db.meta.nextReqNo=n+1; r={id:uid(),no:'PR-'+String(n).padStart(4,'0'),date:today(),status:'requested',history:[{ts:new Date().toISOString(),user:me(),action:'创建'}]}; db.requests.push(r); }
+  const prev=r.status;
+  Object.assign(r,{requester:v('req'),site:v('site'),equipmentId:v('eq'),model:v('model'),urgency:v('urg'),items,reason:v('reason'),needBy:v('need'),notes:v('notes'),photos:[...(r.photos||[]),...photos]});
+  if(isProc()) Object.assign(r,{status:v('status')||r.status,date:v('date')||r.date,quoteTotal:v('quote'),poNo:v('po'),shipping:v('ship'),eta:v('eta')});
+  if(prev&&prev!==r.status){ (r.history=r.history||[]).push({ts:new Date().toISOString(),user:me(),action:`${lbl(STATUSES,prev)} → ${lbl(STATUSES,r.status)}`});
+    if(r.status==='received'&&!r.receivedApplied){ for(const i of items){ const p=partById(i.partId); if(p) p.stock=stockOf(p)+i.qty; } r.receivedApplied=true; r.receivedDate=today(); } }
+  else if(!isNew){ (r.history=r.history||[]).push({ts:new Date().toISOString(),user:me(),action:'修改'}); }
+  for(const i of items){ if(!i.partId&&i.partNo){ const p={id:uid(),partNo:i.partNo,nameZh:i.name,nameEn:'',models:v('model')?[v('model')]:[],unit:'pc',stock:0,minStock:'',currency:'USD'}; db.parts.push(p); i.partId=p.id; } }
+  markDirty(); closeModal(); render();
+  if(!isProc()||photos.length){ if(gh.token){ await save(false); } else toast('已记录在本机，需要通过团队链接打开本页才能提交到服务器'); }
+  if(isNew&&!isProc()&&db.meta.procurementEmail&&confirm('申请已提交。要顺便发邮件通知采购部吗？')) {
+    const body=`${r.no} ${r.site||''} ${eqName(r.equipmentId)||r.model||''}\n申请人：${r.requester}  紧急度：${lbl(URGENCY,r.urgency)}  需要日期：${r.needBy||'-'}\n${items.map(i=>`- ${i.partNo||''} ${i.name||''} ×${i.qty}`).join('\n')}\n原因：${r.reason||''}\n\n${location.href.split('#')[0]}`;
+    location.href=`mailto:${db.meta.procurementEmail}?subject=${encodeURIComponent('配件申请 '+r.no+' '+(r.urgency==='urgent'?'【紧急】':''))}&body=${encodeURIComponent(body)}`; }
+}
+
+/* --- service --- */
+let draftUsed=[];
+function editService(id, eqId){
+  const s = id? db.service.find(x=>x.id===id) : {date:today(),equipmentId:eqId||'',technician:''};
+  if(!id&&eqId){ const e=db.equipment.find(x=>x.id===eqId); if(e) s.site=e.site; }
+  draftUsed = JSON.parse(JSON.stringify(s.partsUsed||[]));
+  openModal(`<h2>${id?'编辑维修记录':'新维修记录'} Service</h2><div class="grid">
+    ${field('s-date','日期',inp('s-date',s.date,'date'))}
+    ${field('s-eq','设备 *',`<select id="s-eq" onchange="const e=db.equipment.find(x=>x.id===this.value);if(e&&e.site)document.getElementById('s-site').value=e.site">${eqOpts(s.equipmentId)}</select>`)}
+    ${field('s-site','站点',`<select id="s-site">${siteOpts(s.site)}</select>`)}
+    ${field('s-tech','技工 / 负责人',inp('s-tech',s.technician))}
+    <div class="full">${field('s-issue','故障现象 Issue *',inp('s-issue',s.issue))}</div>
+    <div class="full">${field('s-work','处理过程 Work done',`<textarea id="s-work">${esc(s.work||'')}</textarea>`)}</div>
+    <div class="full"><label class="f">用料 Parts used（保存时自动扣库存）</label><div class="items" id="used"></div></div>
+    ${field('s-hours','工时 Labor hours',inp('s-hours',s.hours,'number','step="0.5"'))}
+    ${field('s-down','停机时间 Downtime (h)',inp('s-down',s.downtimeHours,'number','step="0.5"'))}
+    ${field('s-meter','设备小时表读数',inp('s-meter',s.meter,'number'))}
+    ${field('s-nflg','是否已反馈 NFLG',`<select id="s-nflg">${opts([['','否'],['yes','是 – 已反馈厂家'],['warranty','是 – 保修索赔']],s.nflg)}</select>`)}
+    <div class="full">${field('s-notes','备注',`<textarea id="s-notes">${esc(s.notes||'')}</textarea>`)}</div>
+  </div><div class="actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="saveService('${id||''}')">保存</button></div>`);
+  renderUsed();
+}
+function renderUsed(){
+  const dl=`<datalist id="used-dl">${db.parts.map(p=>`<option value="${esc(p.partNo)}">${esc(p.nameZh)} (库存 ${stockOf(p)})</option>`).join('')}</datalist>`;
+  $('#used').innerHTML = dl+`<table>${draftUsed.map((i,n)=>`<tr><td><input list="used-dl" value="${esc(i.partNo)}" oninput="const p=db.parts.find(x=>x.partNo===this.value);draftUsed[${n}].partNo=this.value;draftUsed[${n}].partId=p?p.id:''"></td><td style="width:90px"><input type="number" min="1" value="${esc(i.qty)}" oninput="draftUsed[${n}].qty=Number(this.value)"></td><td style="width:40px"><button class="btn sm" onclick="draftUsed.splice(${n},1);renderUsed()">✕</button></td></tr>`).join('')}</table>
+    <button class="btn sm" style="margin-top:6px" onclick="draftUsed.push({partId:'',partNo:'',qty:1});renderUsed()">＋ 添加用料</button>`;
+}
+function saveService(id){
+  const v=k=>$('#s-'+k).value.trim(); if(!v('eq')||!v('issue')) return alert('设备和故障现象必填');
+  snapshot(); let s; if(id) s=db.service.find(x=>x.id===id); else { s={id:uid()}; db.service.push(s); }
+  const used=draftUsed.filter(i=>i.partNo).map(i=>({...i,qty:Number(i.qty)||1}));
+  // stock adjustment: reverse old usage, apply new
+  for(const i of s.partsUsed||[]){ const p=partById(i.partId); if(p) p.stock=stockOf(p)+Number(i.qty||0); }
+  for(const i of used){ const p=partById(i.partId); if(p) p.stock=stockOf(p)-i.qty; }
+  const num=k=>v(k)===''?'':Number(v(k));
+  Object.assign(s,{date:v('date'),equipmentId:v('eq'),site:v('site'),technician:v('tech'),issue:v('issue'),work:v('work'),partsUsed:used,hours:num('hours'),downtimeHours:num('down'),meter:num('meter'),nflg:v('nflg'),notes:v('notes')});
+  if(s.meter!==''){ const e=db.equipment.find(x=>x.id===s.equipmentId); if(e) e.hours=s.meter; }
+  markDirty(); closeModal(); render();
+}
+
+/* ============ wiring ============ */
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{ view=b.dataset.view; render(); });
+$('#q').oninput=()=>render();
+$('#undo').onclick=undo; $('#redo').onclick=redo;
+$('#save').onclick=()=>save(false);
+$('#reload').onclick=()=>{ if(dirty&&!confirm('有未保存的修改，重新加载会丢弃它们。继续？')) return; localStorage.removeItem('nflg.draft'); load(); };
+document.addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='z'&&!e.shiftKey){e.preventDefault();undo();} else if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.key==='z'&&e.shiftKey))){e.preventDefault();redo();} else if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();save(false);} else if(e.key==='Escape') closeModal(); });
+window.addEventListener('beforeunload',e=>{ if(dirty){ e.preventDefault(); e.returnValue=''; } });
+load();
+</script>
+</body>
+</html>
