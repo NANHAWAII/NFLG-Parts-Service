@@ -928,7 +928,7 @@ function editRequest(id, partId){
   if(!draftItems.length) draftItems.push({partId:'',partNo:'',name:'',qty:1});
   const proc=isProc();
   const statusHtml = proc ? `<select id="r-status">${opts(STATUSES,r.status)}</select>` : `<div style="padding:7px 0"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.eta?` <span class="chip">ETA ${esc(r.eta)}</span>`:''}</div>`;
-  openModal(`<h2 class="mtitle"><span>${id?'申请 '+esc(r.no):'新配件申请 New Parts Request'}</span>${id?`<button class="btn sm" onclick="exportRequestPDF('${id}')">⤓ 导出 PDF</button>`:''}</h2>
+  openModal(`<h2 class="mtitle"><span>${id?'申请 '+esc(r.no):'新配件申请 New Parts Request'}</span></h2>
     ${gh.token?'':`<div class="note warn">⚠ 这台浏览器还没连上 GitHub，提交的申请不会保存到服务器，刷新就会丢。请用采购部发的团队链接打开本站，或在 Settings 填 token。</div>`}
     ${id?'':`<div class="note">填好后点「提交」即可，采购部会向南方路机询价、下单并跟踪物流，进度在本页查看。零件号不清楚的话，在下方「查手册」里按名称搜，点「添加」自动带入。</div>`}
     <div class="sec${secOpen.req?'':' collapsed'}" data-k="req"><div class="sec-h" onclick="toggleSec(this)"><span class="n">1</span>申请信息 Request<small>申请人填写 · filled by requester</small><span class="sec-sum">${esc(r.model||'')} · ${(r.items||[]).length} ${(r.items||[]).length===1?'item':'items'}</span><span class="chev">▾</span></div><div class="grid">
@@ -944,7 +944,7 @@ function editRequest(id, partId){
       <div class="full"><label class="f">照片 Photos（损坏部位、铭牌等）</label><input type="file" id="r-photos" accept="image/*" multiple onchange="draftPhotos=[...this.files]">
         <div id="photo-list" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${(r.photos||[]).map((p,i)=>`<div class="pthumb"><a href="${esc(rawHref(p))}" target="_blank" rel="noopener"><img src="${esc(rawHref(p))}" alt="${esc(p.name||'photo')}"></a>${id?`<button type="button" title="Delete photo" onclick="removePhoto('${id}',${i})">✕</button>`:''}</div>`).join('')}</div></div>
       <div class="full">${field('r-notes','备注',`<textarea id="r-notes" rows="2">${esc(r.notes||'')}</textarea>`)}</div>
-      ${id?`<div class="full sec-act"><span class="hint">Enter ↵</span><button class="btn primary" id="r-save-req" onclick="saveRequest('${id}','req')">保存申请信息</button></div>`:''}
+      ${id?`<div class="full sec-act"><button class="btn" style="margin-right:auto" onclick="exportRequestPDF('${id}')">⤓ 导出 PDF</button><span class="hint">Enter ↵</span><button class="btn primary" id="r-save-req" onclick="saveRequest('${id}','req')">保存申请信息</button></div>`:''}
     </div></div>
     ${id?`<div class="sec proc${secOpen.proc?'':' collapsed'}" data-k="proc"><div class="sec-h" onclick="toggleSec(this)"><span class="n">2</span>采购与物流 Procurement &amp; shipping<small>采购部更新 · updated by procurement</small><span class="sec-sum"><span class="chip s-${r.status}">${lbl(STATUSES,r.status)}</span>${r.poNo?` PO ${esc(r.poNo)}`:''}${r.eta?` · ETA ${esc(r.eta)}`:''}</span><span class="chev">▾</span></div><div class="grid">
       ${field('r-status','状态 Status',statusHtml)}
