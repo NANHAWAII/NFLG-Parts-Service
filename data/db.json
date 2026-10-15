@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-15T20:45:41.672Z",
+    "updated": "2026-10-15T20:45:50.924Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 3,
     "sites": [
@@ -276,16 +276,7 @@
           "kind": "edited"
         }
       ],
-      "files": [
-        {
-          "path": "attachments/NFLG-0001/1792096714775-CI-PL.pdf",
-          "sha": "c2f4a95a771598d5560e8df98ff8453dee4ad646",
-          "name": "CI-PL.pdf",
-          "size": 57601,
-          "ts": "2026-10-15T20:38:36.529Z",
-          "user": "Fang Jiang"
-        }
-      ]
+      "files": []
     }
   ],
   "service": [],
