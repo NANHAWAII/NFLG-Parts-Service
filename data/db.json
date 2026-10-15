@@ -1,0 +1,424 @@
+{
+  "meta": {
+    "version": 1,
+    "updated": null,
+    "updatedBy": null,
+    "nextReqNo": 4,
+    "sites": [
+      "Palamanui",
+      "Waikoloa",
+      "Shipman",
+      "Honolulu Yard",
+      "Guam"
+    ],
+    "notice": "配件申请统一由采购部向南方路机询价/下单。紧急件请在申请里标「紧急」并同时电话通知采购部。",
+    "models": [
+      {
+        "code": "NFJ1175",
+        "engine": "Cat C9.3B",
+        "nameZh": "履带颚式破碎机",
+        "nameEn": "Tracked jaw crusher",
+        "notes": ""
+      },
+      {
+        "code": "NFS550",
+        "engine": "",
+        "nameZh": "",
+        "nameEn": "",
+        "notes": ""
+      },
+      {
+        "code": "NFI1111RS",
+        "engine": "",
+        "nameZh": "",
+        "nameEn": "",
+        "notes": ""
+      }
+    ]
+  },
+  "equipment": [
+    {
+      "id": "eq01",
+      "model": "NFJ1175",
+      "serial": "示例-001",
+      "nickname": "Crusher #1",
+      "site": "Waikoloa",
+      "status": "active",
+      "hours": 3120,
+      "year": 2024,
+      "contact": "",
+      "notes": "示例数据 – 请替换为实际设备"
+    },
+    {
+      "id": "eq02",
+      "model": "NFS550",
+      "serial": "示例-002",
+      "nickname": "Screen #1",
+      "site": "Palamanui",
+      "status": "standby",
+      "hours": 870,
+      "year": 2025,
+      "contact": "",
+      "notes": "示例数据"
+    }
+  ],
+  "parts": [
+    {
+      "id": "pt01",
+      "partNo": "NFJ1175-JAW-01",
+      "oemNo": "",
+      "nameZh": "颚板（动）",
+      "nameEn": "Jaw plate, movable",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 1,
+      "minStock": 2,
+      "lastPrice": 1850,
+      "currency": "USD",
+      "lastPriceDate": "2026-08-15",
+      "leadTimeDays": 45,
+      "location": "Honolulu Yard A-3",
+      "weight": "",
+      "notes": "示例数据 – 易损件"
+    },
+    {
+      "id": "pt02",
+      "partNo": "NFJ1175-JAW-02",
+      "oemNo": "",
+      "nameZh": "颚板（定）",
+      "nameEn": "Jaw plate, fixed",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 2,
+      "minStock": 2,
+      "lastPrice": 1790,
+      "currency": "USD",
+      "lastPriceDate": "2026-08-15",
+      "leadTimeDays": 45,
+      "location": "Honolulu Yard A-3",
+      "weight": "",
+      "notes": "示例数据"
+    },
+    {
+      "id": "pt03",
+      "partNo": "NFJ1175-BRG-6320",
+      "oemNo": "SKF 6320",
+      "nameZh": "主轴轴承",
+      "nameEn": "Main shaft bearing",
+      "models": [
+        "NFJ1175"
+      ],
+      "unit": "pc",
+      "stock": 0,
+      "minStock": 1,
+      "lastPrice": 420,
+      "currency": "USD",
+      "lastPriceDate": "2026-06-02",
+      "leadTimeDays": 30,
+      "location": "",
+      "weight": "",
+      "notes": "示例数据 – 可本地采购替代"
+    },
+    {
+      "id": "pt04",
+      "partNo": "NFS550-BURNER-NOZ",
+      "oemNo": "",
+      "nameZh": "燃烧器喷嘴",
+      "nameEn": "Burner nozzle",
+      "models": [
+        "NFS550"
+      ],
+      "unit": "pc",
+      "stock": 4,
+      "minStock": 2,
+      "lastPrice": 310,
+      "currency": "USD",
+      "lastPriceDate": "2026-07-20",
+      "leadTimeDays": 25,
+      "location": "Palamanui container",
+      "weight": "",
+      "notes": "示例数据"
+    }
+  ],
+  "requests": [
+    {
+      "id": "rq01",
+      "no": "PR-0001",
+      "date": "2026-10-01",
+      "requester": "示例申请人",
+      "site": "Waikoloa",
+      "equipmentId": "eq01",
+      "urgency": "high",
+      "status": "ordered",
+      "items": [
+        {
+          "partId": "pt01",
+          "partNo": "NFJ1175-JAW-01",
+          "name": "颚板（动）",
+          "qty": 2
+        }
+      ],
+      "reason": "磨损更换",
+      "needBy": "2026-11-15",
+      "quoteTotal": "USD 3,700",
+      "poNo": "PO-26-1042",
+      "shipping": "海运 Matson",
+      "eta": "2026-11-20",
+      "notes": "示例数据",
+      "history": [
+        {
+          "ts": "2026-10-01T18:00:00Z",
+          "user": "示例申请人",
+          "action": "创建"
+        },
+        {
+          "ts": "2026-10-03T19:30:00Z",
+          "user": "Fang",
+          "action": "已申请 Requested → 询价中 Quoting"
+        },
+        {
+          "ts": "2026-10-06T21:10:00Z",
+          "user": "Fang",
+          "action": "询价中 Quoting → 已下单 Ordered"
+        }
+      ]
+    },
+    {
+      "id": "rq02",
+      "no": "PR-0002",
+      "date": "2026-10-10",
+      "requester": "示例申请人",
+      "site": "Waikoloa",
+      "equipmentId": "eq01",
+      "urgency": "urgent",
+      "status": "quoting",
+      "items": [
+        {
+          "partId": "pt03",
+          "partNo": "NFJ1175-BRG-6320",
+          "name": "主轴轴承",
+          "qty": 1
+        }
+      ],
+      "reason": "轴承异响",
+      "needBy": "2026-10-25",
+      "quoteTotal": "",
+      "poNo": "",
+      "shipping": "",
+      "eta": "",
+      "notes": "示例数据 – 正在比较 NFLG 与本地 SKF 价格",
+      "history": [
+        {
+          "ts": "2026-10-10T18:00:00Z",
+          "user": "示例申请人",
+          "action": "创建"
+        }
+      ]
+    },
+    {
+      "id": "rq03",
+      "no": "PR-0003",
+      "date": "2026-10-12",
+      "requester": "示例申请人",
+      "site": "Palamanui",
+      "equipmentId": "eq02",
+      "urgency": "normal",
+      "status": "requested",
+      "items": [
+        {
+          "partId": "pt04",
+          "partNo": "NFS550-BURNER-NOZ",
+          "name": "燃烧器喷嘴",
+          "qty": 2
+        }
+      ],
+      "reason": "备件",
+      "needBy": "",
+      "quoteTotal": "",
+      "poNo": "",
+      "shipping": "",
+      "eta": "",
+      "notes": "示例数据",
+      "history": [
+        {
+          "ts": "2026-10-12T18:00:00Z",
+          "user": "示例申请人",
+          "action": "创建"
+        }
+      ]
+    }
+  ],
+  "service": [
+    {
+      "id": "sv01",
+      "date": "2026-09-28",
+      "equipmentId": "eq01",
+      "site": "Waikoloa",
+      "technician": "示例技工",
+      "issue": "动颚板磨损，出料粒径偏大",
+      "work": "测量颚板厚度，剩余约 20%，安排更换；调整排料口",
+      "partsUsed": [],
+      "hours": 3,
+      "downtimeHours": 2,
+      "meter": 3120,
+      "nflg": "",
+      "notes": "示例数据"
+    }
+  ],
+  "docs": [
+    {
+      "id": "dc01",
+      "model": "NFJ1175",
+      "category": "operation",
+      "title": "NFJ1175 Operation Manual",
+      "version": "EN P2-228",
+      "date": "",
+      "fileName": "NFJ1175 Operation Manual EN-P2-228.pdf",
+      "size": 254822400,
+      "path": "",
+      "sha": "",
+      "url": "",
+      "uploadedBy": "",
+      "notes": "243 MB，超过仓库上限 — 用 OneDrive 链接"
+    },
+    {
+      "id": "dc02",
+      "model": "NFJ1175",
+      "category": "maintenance",
+      "title": "NFJ1175 Maintenance Manual",
+      "version": "V1.0",
+      "date": "",
+      "fileName": "NFJ1175 Maintenance V1.0.pdf",
+      "size": 3651584,
+      "path": "",
+      "sha": "",
+      "url": "",
+      "uploadedBy": "",
+      "notes": ""
+    },
+    {
+      "id": "dc03",
+      "model": "NFJ1175",
+      "category": "parts",
+      "title": "NFJ1175 Spare Parts Manual",
+      "version": "",
+      "date": "",
+      "fileName": "NFJ1175 Spare Parts Manual.pdf",
+      "size": 42080256,
+      "path": "",
+      "sha": "",
+      "url": "",
+      "uploadedBy": "",
+      "notes": ""
+    },
+    {
+      "id": "dc04",
+      "model": "NFJ1175",
+      "category": "spec",
+      "title": "NFJ1175 Technical Specification",
+      "version": "",
+      "date": "",
+      "fileName": "NFJ1175 Technical Specification.pdf",
+      "size": 1692672,
+      "path": "",
+      "sha": "",
+      "url": "",
+      "uploadedBy": "",
+      "notes": ""
+    },
+    {
+      "id": "dc05",
+      "model": "NFJ1175",
+      "category": "control",
+      "title": "NFJ1175 Control System Manual",
+      "version": "EN 2022",
+      "date": "",
+      "fileName": "NFJ1175 Control System Manual_EN 2022.pdf",
+      "size": 3124224,
+      "path": "",
+      "sha": "",
+      "url": "",
+      "uploadedBy": "",
+      "notes": ""
+    },
+    {
+      "id": "dc06",
+      "model": "NFJ1175",
+      "category": "hydraulic",
+      "title": "NFJ1175 Hydraulic Diagram",
+      "version": "1001-NF",
+      "date": "",
+      "fileName": "NFJ1175-1001-NF-Hydraulic Diagram.pdf",
+      "size": 112640,
+      "path": "",
+      "sha": "",
+      "url": "",
+      "uploadedBy": "",
+      "notes": ""
+    },
+    {
+      "id": "dc07",
+      "model": "NFJ1175",
+      "category": "electrical",
+      "title": "NFJ1175 Electric Control Diagram",
+      "version": "C1.201",
+      "date": "",
+      "fileName": "NFJ1175C1.201_Electric Control Diagram.pdf",
+      "size": 5993472,
+      "path": "",
+      "sha": "",
+      "url": "",
+      "uploadedBy": "",
+      "notes": ""
+    },
+    {
+      "id": "dc08",
+      "model": "NFJ1175",
+      "category": "engine",
+      "title": "C9.3B Engine Manual",
+      "version": "M0081783EN-US",
+      "date": "",
+      "fileName": "C9.3B Engine Manual_M0081783EN-US.pdf",
+      "size": 3544064,
+      "path": "",
+      "sha": "",
+      "url": "",
+      "uploadedBy": "",
+      "notes": ""
+    },
+    {
+      "id": "dc09",
+      "model": "NFJ1175",
+      "category": "engine",
+      "title": "C9.3B Engine Parts Manual",
+      "version": "M0092333EN-US",
+      "date": "",
+      "fileName": "C9.3B Engine Parts Manual_M0092333EN-US.pdf",
+      "size": 29942784,
+      "path": "",
+      "sha": "",
+      "url": "",
+      "uploadedBy": "",
+      "notes": ""
+    },
+    {
+      "id": "dc10",
+      "model": "NFJ1175",
+      "category": "selection",
+      "title": "NFJ1175 Nan Selection",
+      "version": "",
+      "date": "",
+      "fileName": "NFJ1175_Nan Selection.xlsx",
+      "size": 40960,
+      "path": "",
+      "sha": "",
+      "url": "",
+      "uploadedBy": "",
+      "notes": "选型表"
+    }
+  ]
+}
