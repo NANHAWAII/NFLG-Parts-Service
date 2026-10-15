@@ -4,7 +4,6 @@
     "updated": null,
     "updatedBy": null,
     "nextReqNo": 4,
-    "notice": "Parts requests go through Procurement, which handles quotes and orders with NFLG. For urgent items mark the request Urgent and also phone Procurement. / 配件申请统一由采购部向南方路机询价下单；紧急件请标「紧急」并电话通知采购部。",
     "models": [
       {
         "code": "NFJ1175",
