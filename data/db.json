@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-16T01:37:01.833Z",
+    "updated": "2026-10-16T01:37:06.141Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
     "sites": [
@@ -519,15 +519,6 @@
         }
       ],
       "files": [
-        {
-          "path": "attachments/NFLG-0001/1792102161824-ONEYTAOGF0288300_Cutoms Docs.pdf",
-          "sha": "dfd312f8377cd7f74a10adca109a8bac3863b37d",
-          "name": "ONEYTAOGF0288300_Cutoms Docs.pdf",
-          "size": 1177372,
-          "ts": "2026-10-15T22:09:24.165Z",
-          "user": "Fang Jiang",
-          "cat": "freight"
-        },
         {
           "path": "attachments/NFLG-0001/1792102169032-ONEYTAOGF0288300_Cutoms Docs.pdf",
           "sha": "dfd312f8377cd7f74a10adca109a8bac3863b37d",
