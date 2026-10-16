@@ -207,11 +207,12 @@
   .dochead .ds{font-size:13px;color:var(--muted);margin-top:2px}
   /* documents: category label on the left, each document a clear clickable row */
   .doctab td{padding:10px 14px;vertical-align:middle;border-bottom:1px solid var(--line)}
-  .doctab tr.grp-m{display:none}
-  .doctab tr.gfirst td{border-top:1px solid color-mix(in srgb,var(--muted) 30%,var(--line))}
-  .doctab tr:first-child td{border-top:0}
-  .doctab td.dcat{width:200px;vertical-align:top;padding-top:16px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-right:1px solid var(--line)}
-  .doctab tr:hover td:not(.dcat){background:var(--accent-soft)}
+  /* category = small heading above its documents (same column, no side split) */
+  .doctab tr.grp-m td{padding:18px 16px 2px;border-bottom:0;font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--panel)}
+  .doctab tr.grp-m:first-child td{padding-top:12px}
+  .doctab tr.grp-m:hover td{background:var(--panel)}
+  .doctab td.ddoc{padding-left:16px}
+  .doctab tr:not(.grp-m):hover td{background:var(--accent-soft)}
   .dlink{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
   .ficon{flex:0 0 auto;width:40px;height:44px;border-radius:6px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-size:10px;font-weight:800;letter-spacing:.03em;color:#fff;background:#d64545;position:relative}
   .ficon::before{content:'';position:absolute;top:0;right:0;border-style:solid;border-width:0 11px 11px 0;border-color:transparent var(--panel) rgba(0,0,0,.18) transparent}
@@ -343,9 +344,6 @@
     .items td .btn.sm{width:38px;height:100%;padding:0}
     .pn-dd{min-width:0;left:0;right:0}
     .pn-opt{grid-template-columns:96px 1fr}.pn-fig{display:none}
-    .doctab td.dcat{display:none}
-    .doctab tr.grp-m{display:table-row}
-    .doctab tr.grp-m td{background:var(--bg);font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:7px 12px}
     .doctab td.dact .ghost{display:none}
     .sec-act .hint{display:none}
     .rq-cards{grid-template-columns:1fr}
@@ -790,10 +788,10 @@ function renderDocs(){
       <div style="display:flex;gap:8px"><button class="btn sm" onclick="editModel('${esc(m.code)}')">编辑机型</button><button class="btn sm primary" onclick="editDoc(null,'${esc(m.code)}')">＋ 添加文档 / 上传</button></div></div>`;
   const ftype = d => { if(!d.path&&d.url) return 'LINK'; const e=String(d.fileName||d.path||'').split('.').pop().toUpperCase(); return e&&e.length<=4?e:'FILE'; };
   const rows = groups.length ? `<div class="panel"><table class="doctab">
-    ${groups.map(([k,v,ds])=>`<tr class="grp-m"><td colspan="3">${v}</td></tr>${ds.map((d,n)=>{ const href=docHref(d);
+    ${groups.map(([k,v,ds])=>`<tr class="grp-m"><td colspan="2">${v}</td></tr>${ds.map((d,n)=>{ const href=docHref(d);
       const meta=[d.version, d.date, fmtSize(d.size)].filter(Boolean).map(esc).join(' · ');
       const ft=ftype(d);
-      return `<tr class="${n===0?'gfirst':''}">${n===0?`<td class="dcat" rowspan="${ds.length}">${v}</td>`:''}
+      return `<tr class="${n===0?'gfirst':''}">
         <td class="ddoc">${href?`<a class="dlink" href="${esc(href)}" target="_blank" rel="noopener">`:'<div class="dlink nofile">'}
           <span class="ficon f-${ft.toLowerCase()}">${ft}</span>
           <span class="dtxt"><span class="dtitle">${esc(d.title)}</span><span class="dmeta">${meta}${href?'':' · <span class="chip low">未上传</span>'}${d.notes?' · '+esc(d.notes):''}</span></span>
