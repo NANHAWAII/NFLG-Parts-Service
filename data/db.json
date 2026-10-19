@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-16T01:37:30.060Z",
+    "updated": "2026-10-19T06:29:43.775Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
     "sites": [
@@ -317,7 +317,7 @@
       "reason": "",
       "needBy": "2026-10-30",
       "quoteTotal": "10",
-      "poNo": "EQ-002-XXXX",
+      "poNo": "EQ-002-2489",
       "shipping": "",
       "eta": "2026-10-22",
       "notes": "",
@@ -519,6 +519,11 @@
         },
         {
           "ts": "2026-10-16T01:37:29.781Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
+        },
+        {
+          "ts": "2026-10-19T06:29:43.470Z",
           "user": "Fang Jiang",
           "kind": "edited"
         }
