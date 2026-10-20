@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updated": "2026-10-20T17:42:58.574Z",
+    "updated": "2026-10-20T17:43:07.537Z",
     "updatedBy": "Fang Jiang",
     "nextReqNo": 2,
     "sites": [
@@ -531,10 +531,15 @@
           "ts": "2026-10-20T17:42:58.250Z",
           "user": "Fang Jiang",
           "kind": "edited"
+        },
+        {
+          "ts": "2026-10-20T17:43:07.234Z",
+          "user": "Fang Jiang",
+          "kind": "edited"
         }
       ],
       "files": [],
-      "materialCost": "0.00",
+      "materialCost": "wavived",
       "freightCost": "200.00"
     }
   ],
