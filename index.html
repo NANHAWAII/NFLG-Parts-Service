@@ -422,7 +422,8 @@ const STATUSES = [['requested','已申请 Requested'],['processing','处理中 P
 // older statuses: still readable in History, mapped onto the four current ones
 const OLD_STATUSES = [['quoting','询价中 Quoting'],['ordered','已下单 Ordered'],['closed','关闭 Closed']];
 const STATUS_MAP = {quoting:'processing', ordered:'processing', closed:'received'};
-function normStatuses(){ for(const r of db.requests||[]) if(STATUS_MAP[r.status]) r.status=STATUS_MAP[r.status]; }
+function normStatuses(){ for(const r of db.requests||[]){ if(STATUS_MAP[r.status]) r.status=STATUS_MAP[r.status];
+    const p=parseNo(r.no); if(r.no&&!p.y) r.no=fmtNo(yy(r.date||undefined), p.s); } }   // old NFLG-0001 style -> NFLG-26001
 const FILE_CATS = [['quote','报价单 Parts Quote'],['freight','运费发票 Freight Invoice'],['customs','清关文件 Customs Docs']];
 const URGENCY = [['normal','正常 Normal'],['high','加急 High'],['urgent','紧急 Urgent']];
 const EQ_STATUS = [['active','在用 Active'],['down','停机 Down'],['standby','备用 Standby'],['retired','退役 Retired']];
@@ -526,10 +527,8 @@ function merge3(b,l,r){
   out.meta.models=mergeColl(bm.models,lm.models,rm.models,'code');
   // two people created a request at the same time → give the newer local one the next free number
   const used=new Set((r.requests||[]).map(x=>x.no)), remoteIds=new Set((r.requests||[]).map(x=>x.id));
-  const num=no=>parseInt(String(no||'').replace(/\D/g,''))||0;
-  let next=Math.max(0,...out.requests.map(x=>num(x.no)))+1;
-  for(const x of out.requests){ if(!remoteIds.has(x.id) && used.has(x.no)){ x.no='NFLG-'+String(next++).padStart(4,'0'); } }
-  out.meta.nextReqNo=Math.max(0,...out.requests.map(x=>num(x.no)))+1;
+  for(const x of out.requests){ if(!remoteIds.has(x.id) && used.has(x.no)){ x.no=fmtNo(yy(), nextSeqIn(out.requests)); } }
+  out.meta.nextReqNo=nextSeqIn(out.requests);
   return out; }
 
 const apiUrl = () => `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${DATA_PATH}`;
@@ -959,8 +958,13 @@ const trackLink=(t,cls='')=>{ const u=trackUrl(t); return u?`<a class="${cls}" h
 const field=(id,label,inner)=>`<div><label class="f" for="${id}">${label}</label>${inner}</div>`;
 const inp=(id,val,type='text',extra='')=>`<input type="${type}" id="${id}" value="${esc(val??'')}" ${extra}>`;
 // next request number = highest existing + 1 (deleting the newest request frees its number)
-const reqNum = no => parseInt(String(no||'').replace(/\D/g,''))||0;
-const nextReqNo = () => Math.max(0,...db.requests.map(x=>reqNum(x.no)))+1;
+// Request numbers: NFLG-YYnnn (two-digit year + 3-digit sequence, restarting each year), e.g. NFLG-26001
+const yy = (d) => String(d ? new Date(d).getFullYear() : new Date().getFullYear()).slice(-2);
+const parseNo = no => { const m=String(no||'').match(/(\d+)$/); if(!m) return {y:'',s:0}; const d=m[1]; return d.length===5?{y:d.slice(0,2),s:+d.slice(2)}:{y:'',s:+d}; };
+const fmtNo = (y,s) => 'NFLG-'+y+String(s).padStart(3,'0');
+const nextSeqIn = list => { const y=yy(); return Math.max(0,...(list||[]).map(x=>parseNo(x.no)).filter(p=>p.y===y).map(p=>p.s))+1; };
+const nextReqNo = () => nextSeqIn(db.requests);
+const newReqNo = () => fmtNo(yy(), nextReqNo());
 function del(coll,id){ if(!confirm('确定删除？')) return; snapshot();
   const gone=(db[coll]||[]).find(x=>x.id===id);
   db[coll]=db[coll].filter(x=>x.id!==id);
@@ -1217,9 +1221,9 @@ async function saveRequest(id, part){
   const btn=$('#r-save-'+part)||$('#r-save')||document.createElement('button'); const btnTxt=btn.textContent; btn.disabled=true;
   let photos=[]; const later = !id ? draftPhotos.slice() : [];   // new request: photos go up after its number is final
   if(doReq&&draftPhotos.length&&id){ if(!gh.token){ alert('上传照片需要通过团队链接打开本页（或配置 token）。本次先不带照片提交。'); }
-    else for(const [k,f] of draftPhotos.entries()){ btn.textContent=L(`上传照片 ${k+1}/${draftPhotos.length}…`); try{ const blob=await compressImage(f); const path=`attachments/${(id? db.requests.find(x=>x.id===id).no : 'NFLG-'+String(nextReqNo()).padStart(4,'0'))}/${Date.now()}-${k}.jpg`; const up=await uploadToRepo(path,blob); photos.push({path:up.path,sha:up.sha,name:f.name}); }catch(e){ alert('照片上传失败：'+e.message); } } }
+    else for(const [k,f] of draftPhotos.entries()){ btn.textContent=L(`上传照片 ${k+1}/${draftPhotos.length}…`); try{ const blob=await compressImage(f); const path=`attachments/${(id? db.requests.find(x=>x.id===id).no : newReqNo())}/${Date.now()}-${k}.jpg`; const up=await uploadToRepo(path,blob); photos.push({path:up.path,sha:up.sha,name:f.name}); }catch(e){ alert('照片上传失败：'+e.message); } } }
   snapshot(); let r; const isNew=!id;
-  if(id) r=db.requests.find(x=>x.id===id); else { const n=nextReqNo(); db.meta.nextReqNo=n+1; r={id:uid(),no:'NFLG-'+String(n).padStart(4,'0'),date:today(),status:'requested',history:[{ts:new Date().toISOString(),user:me(),kind:'created'}]}; db.requests.push(r); }
+  if(id) r=db.requests.find(x=>x.id===id); else { const no=newReqNo(); db.meta.nextReqNo=nextReqNo()+1; r={id:uid(),no,date:today(),status:'requested',history:[{ts:new Date().toISOString(),user:me(),kind:'created'}]}; db.requests.push(r); }
   const prev=r.status;
   if(doReq) Object.assign(r,{requester:v('req'),unit:v('unit'),model:v('model'),urgency:v('urg'),items,reason:v('reason'),needBy:v('need'),notes:'',photos:[...(r.photos||[]),...photos]});
   if(doProc) Object.assign(r,{status:v('status')||r.status,date:v('date')||r.date,materialCost:moneyFmt(v('mcost')),freightCost:moneyFmt(v('fcost')),poNo:v('po'),shipping:v('ship'),eta:v('eta')});
