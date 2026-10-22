@@ -241,6 +241,7 @@ S = [
  ('— 工地/站点 —', '— 工地/站点 —', '— site —'), ('— 机型 Model —', '— 机型 —', '— model —'), ('— 选择设备 —', '— 选择设备 —', '— equipment —'),
  ('(库存 ', '(库存 ', '(stock '),
  ('导出 PDF', '导出 PDF', 'Export PDF'),
+ ('报价与发票 Quote & Invoice', '报价与发票', 'Quote & Invoice'),
  ('打开 ↗', '打开 ↗', 'Open ↗'),
  ('照片已上传', '照片已上传', 'Photos uploaded'),
  ('查询 Track ↗', '查询 ↗', 'Track ↗'),
